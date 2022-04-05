@@ -20,9 +20,4 @@ rm installer.sh
 echo "Use Vim and input command"
 echo ":call dein#install()"
 
-# git-credential-manager settings
-curl -LO https://raw.githubusercontent.com/GitCredentialManager/git-credential-manager/main/src/linux/Packaging.Linux/install-from-source.sh &&
-sh ./install-from-source.sh &&
-git-credential-manager-core configure
-
 . ~/.bashrc
