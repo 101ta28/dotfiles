@@ -7,8 +7,8 @@ let g:denops_disable_version_check = v:true
 
 " パス定義
 const s:dpp_base = expand('~/.cache/dpp')
-const s:dpp_src = s:dpp_base .. '/repos/github.com/Shougo/dpp.vim'
 const s:denops_src = s:dpp_base .. '/repos/github.com/vim-denops/denops.vim'
+const s:dpp_src = s:dpp_base .. '/repos/github.com/Shougo/dpp.vim'
 const s:dpp_ts = expand('~/.config/nvim/dpp.ts')
 
 " runtimepath に dpp.vim を先に追加
