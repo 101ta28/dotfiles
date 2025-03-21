@@ -11,14 +11,14 @@ const s:denops_src = s:dpp_base .. '/repos/github.com/vim-denops/denops.vim'
 const s:dpp_src = s:dpp_base .. '/repos/github.com/Shougo/dpp.vim'
 const s:dpp_ts = expand('~/.config/nvim/dpp.ts')
 
-" runtimepath に dpp.vim を先に追加
+" runtimepath に denops.vim を先に追加（順番注意）
+execute 'set runtimepath^=' .. fnameescape(s:denops_src)
+
+" 次に dpp.vim を追加
 execute 'set runtimepath^=' .. fnameescape(s:dpp_src)
 
 " 状態復元または初回初期化
 if dpp#min#load_state(s:dpp_base)
-  " denops.vim の runtimepath を追加
-  execute 'set runtimepath^=' .. fnameescape(s:denops_src)
-
   " Denops の初期化完了後に make_state 実行
   autocmd User DenopsReady
     \ call dpp#make_state(s:dpp_base, s:dpp_ts)
