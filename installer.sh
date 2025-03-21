@@ -29,51 +29,28 @@ ln -sf "$DFILE_PATH/.profile" ~/.profile
 mkdir -p ~/.config/nvim
 ln -sf "$DFILE_PATH/init.vim" ~/.config/nvim/init.vim
 
+# Vim 設定リンク
+ln -sf "$DFILE_PATH/init.vim" ~/.vimrc
+
 # undo ディレクトリ
 mkdir -p ~/.local/share/nvim/undo
 
-# dpp/denops クローン（~/.cache/dpp に配置）
-DPP_DIR="$HOME/.cache/dpp"
-DPP_REPOS="$DPP_DIR/repos/github.com"
-
-if [ ! -d "$DPP_REPOS/Shougo/dpp.vim" ]; then
-  echo "Cloning dpp.vim..."
-  mkdir -p "$DPP_REPOS/Shougo"
-  git clone https://github.com/Shougo/dpp.vim "$DPP_REPOS/Shougo/dpp.vim"
+# dein.vim をインストール
+DEIN_DIR="$HOME/.cache/dein"
+if [ ! -d "$DEIN_DIR/repos/github.com/Shougo/dein.vim" ]; then
+  echo "Installing dein.vim..."
+  curl -sfL https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s "$DEIN_DIR"
 fi
 
-if [ ! -d "$DPP_REPOS/vim-denops/denops.vim" ]; then
-  echo "Cloning denops.vim..."
-  mkdir -p "$DPP_REPOS/vim-denops"
-  git clone https://github.com/vim-denops/denops.vim "$DPP_REPOS/vim-denops/denops.vim"
-fi
-
-# dpp.ts（存在しない場合のみ生成）
-DPP_TS="$HOME/.config/nvim/dpp.ts"
-if [ ! -f "$DPP_TS" ]; then
-  echo "Creating dpp.ts..."
-  cat > "$DPP_TS" <<EOF
-export const plugins = [
-  { repo: "Shougo/dpp.vim" },
-  { repo: "vim-denops/denops.vim" },
-  { repo: "Shougo/dpp-ext-installer" },
-  { repo: "Shougo/dpp-ext-lazy" },
-  { repo: "itchyny/lightline.vim" },
-  { repo: "cohama/lexima.vim" },
-];
-EOF
-fi
+# 不要になった dpp 関連を削除
+rm -rf ~/.cache/dpp
+rm -f ~/.config/nvim/dpp.ts
 
 # パッケージインストール
 echo "Installing packages..."
 
 sudo apt update
 sudo apt install -y curl git build-essential unzip ca-certificates
-
-# Neovim
-if ! command -v nvim >/dev/null 2>&1; then
-  sudo apt install -y neovim
-fi
 
 # nvm + node
 if [ ! -d "$HOME/.nvm" ]; then
@@ -126,14 +103,9 @@ if ! command -v deno >/dev/null 2>&1; then
   curl -fsSL https://deno.land/install.sh | sh
 fi
 
-# 所有者の修正（念のため）
-sudo chown -R "$USER":"$USER" "$DPP_DIR"
-
 # 完了メッセージ
 echo ""
 echo "Setup complete!"
-echo "Launch Neovim and run:"
-echo "  :call dpp#make_state()"
-echo "  :call dpp#check_plugins()"
+echo "Launch Vim or Neovim and run:"
+echo "  :call dein#install()"
 echo ""
-echo "Or just restart Neovim and it will run automatically on DenopsReady."
