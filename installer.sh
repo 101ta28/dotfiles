@@ -123,6 +123,13 @@ if ! command -v uv >/dev/null 2>&1; then
   curl https://astral.sh/uv/install.sh | sh
 fi
 
+# deno のインストール
+if ! command -v deno >/dev/null 2>&1; then
+  echo "Installing deno..."
+  curl -fsSL https://deno.land/install.sh | sh
+  export PATH="$HOME/.deno/bin:$PATH"
+fi
+
 # 完了メッセージ
 echo ""
 echo "Dotfiles and packages installed successfully."
