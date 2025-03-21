@@ -11,14 +11,13 @@ if [ ! -d "${ZDOTDIR:-$HOME}/.zprezto" ]; then
 fi
 
 # dotfiles のシンボリックリンク作成
-ln -sf "$DFILE_PATH/.zshrc" ~/.zshrc          # zsh 設定
+ln -sf "$DFILE_PATH/.zshrc" ~/.zshrc
 ln -sf "$DFILE_PATH/.zpreztorc" ~/.zpreztorc
 ln -sf "$DFILE_PATH/.zlogin" ~/.zlogin
 ln -sf "$DFILE_PATH/.zlogout" ~/.zlogout
 ln -sf "$DFILE_PATH/.zprofile" ~/.zprofile
-
-ln -sf "$DFILE_PATH/.gitconfig" ~/.gitconfig  # Git 設定
-ln -sf "$DFILE_PATH/.profile" ~/.profile      # シェル用プロフィール
+ln -sf "$DFILE_PATH/.gitconfig" ~/.gitconfig
+ln -sf "$DFILE_PATH/.profile" ~/.profile
 
 # vim 設定
 mkdir -p ~/.vim/undo
@@ -51,6 +50,8 @@ if [ ! -f "$DPP_TS" ]; then
 export const plugins = [
   { repo: "Shougo/dpp.vim" },
   { repo: "vim-denops/denops.vim" },
+  { repo: "Shougo/dpp-ext-installer" },
+  { repo: "Shougo/dpp-ext-lazy" },
   { repo: "itchyny/lightline.vim" },
   { repo: "cohama/lexima.vim" },
 ];
@@ -61,40 +62,37 @@ fi
 
 echo "Installing required packages..."
 
-# Detect OS for package manager
-install_with_package_manager() {
-  PKG=$1
-  if command -v apt >/dev/null 2>&1; then
-    sudo apt update && sudo apt install -y "$PKG"
-  elif command -v brew >/dev/null 2>&1; then
-    brew install "$PKG"
-  elif command -v pacman >/dev/null 2>&1; then
-    sudo pacman -S --noconfirm "$PKG"
-  elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y "$PKG"
-  fi
-}
+# 基本依存のインストール（Ubuntu前提）
+sudo apt update
+sudo apt install -y curl git build-essential unzip ca-certificates
 
 # nvm + node
 if [ ! -d "$HOME/.nvm" ]; then
   echo "Installing nvm..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-  nvm install --lts
 fi
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvm install --lts
 
 # rust
 if ! command -v rustc >/dev/null 2>&1; then
   echo "Installing Rust..."
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  export PATH="$HOME/.cargo/bin:$PATH"
 fi
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # gh (GitHub CLI)
 if ! command -v gh >/dev/null 2>&1; then
-  echo "Installing GitHub CLI..."
-  install_with_package_manager gh
+  echo "Installing GitHub CLI (latest method)..."
+  (type -p wget >/dev/null || sudo apt install wget -y) \
+    && sudo mkdir -p -m 755 /etc/apt/keyrings \
+    && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
 fi
 
 # lsd
@@ -103,7 +101,7 @@ if ! command -v lsd >/dev/null 2>&1; then
   if command -v cargo >/dev/null 2>&1; then
     cargo install lsd
   else
-    install_with_package_manager lsd
+    sudo apt install -y lsd
   fi
 fi
 
@@ -116,12 +114,14 @@ fi
 # uv
 if ! command -v uv >/dev/null 2>&1; then
   echo "Installing uv..."
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+  curl https://astral.sh/uv/install.sh | sh
 fi
 
-echo "Package installation complete."
-
-# 終了メッセージ
-echo "Setup complete. Please launch Vim and run:"
+# 完了メッセージ
+echo ""
+echo "Dotfiles and packages installed successfully."
+echo "To finish Vim setup, launch Vim and run:"
 echo "  :call dpp#make_state()"
 echo "  :call dpp#check_plugins()"
+echo ""
+echo "You may now run 'exec zsh' or restart your terminal to start using zsh + prezto."
