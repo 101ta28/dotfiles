@@ -74,4 +74,3 @@ endif
 
 " Lightline settings
 let g:lightline = {'colorscheme': 'wombat'}
-colorscheme wombat
