@@ -6,8 +6,10 @@
 let g:denops_disable_version_check = v:true
 
 " runtimepath に dpp と denops を追加
-set runtimepath^=~/.config/nvim/dpp/repos/github.com/Shougo/dpp.vim
-set runtimepath^=~/.config/nvim/dpp/repos/github.com/vim-denops/denops.vim
+let s:dpp = expand('~/.config/nvim/dpp/repos/github.com/Shougo/dpp.vim')
+let s:denops = expand('~/.config/nvim/dpp/repos/github.com/vim-denops/denops.vim')
+execute 'set runtimepath^=' . s:dpp
+execute 'set runtimepath^=' . s:denops
 
 " dpp.ts の設定を読み込む
 try
