@@ -42,10 +42,6 @@ if [ ! -d "$DEIN_DIR/repos/github.com/Shougo/dein.vim" ]; then
   curl -sfL https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s "$DEIN_DIR"
 fi
 
-# 不要になった dpp 関連を削除
-rm -rf ~/.cache/dpp
-rm -f ~/.config/nvim/dpp.ts
-
 # パッケージインストール
 echo "Installing packages..."
 
