@@ -1,42 +1,24 @@
-"dein Scripts-----------------------------
-if &compatible
-  set nocompatible               " Be iMproved
+" dpp + denops ---------------------------
+
+" runtimepath に dpp と denops を追加
+set runtimepath^=~/.vim/dpp/repos/github.com/Shougo/dpp.vim
+set runtimepath^=~/.vim/dpp/repos/github.com/vim-denops/denops.vim
+
+" TypeScript 設定ファイルのパス（必須）
+call dpp#make_state('~/.vim/dpp.ts')
+call dpp#check_plugins()
+
+" 起動時に未インストールならインストール
+if dpp#has_not_installed_plugins()
+  call dpp#install()
 endif
 
-" Required:
-set runtimepath+=/home/tatsuya/.cache/dein/repos/github.com/Shougo/dein.vim
-
-" Required:
-call dein#begin('/home/tatsuya/.cache/dein')
-
-" Let dein manage dein
-" Required:
-call dein#add('/home/tatsuya/.cache/dein/repos/github.com/Shougo/dein.vim')
-
-" Add or remove your plugins here like this:
-"call dein#add('Shougo/neosnippet.vim')
-"call dein#add('Shougo/neosnippet-snippets')
-"call dein#add("42Paris/42header")
-call dein#add("itchyny/lightline.vim")
-call dein#add("cohama/lexima.vim")
-
-" Required:
-call dein#end()
-
-" Required:
-filetype plugin indent on
-syntax enable
-
-" If you want to install not installed plugins on startup.
-"if dein#check_install()
-"  call dein#install()
-"endif
-
-"End dein Scripts-------------------------
-
+" dpp 終了 -----------------------------
 
 filetype plugin indent on
 syntax on
+
+" 基本設定 -----------------------------
 set nowrap
 set hlsearch
 set incsearch
@@ -57,16 +39,12 @@ set laststatus=2
 set cursorline
 set clipboard+=unnamed
 
-"undo settings"
+" undo settings
 if has('persistent_undo')
-	let undo_path = expand('~/.vim/undo')
-	exe 'set undodir=' .. undo_path
-	set undofile
+  let undo_path = expand('~/.vim/undo')
+  exe 'set undodir=' .. undo_path
+  set undofile
 endif
 
-"42Header"
-"let g:user42 = 'timai'
-"let g:mail42 = 'timai@student.42tokyo.jp'
-
-"Lightline settings"
+" Lightline settings
 let g:lightline = {'colorscheme': 'wombat'}
