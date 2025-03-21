@@ -2,21 +2,21 @@
 
 set -e
 
-# ~/.dfiles が存在しない場合は GitHub から clone
 DFILE_PATH="$HOME/.dfiles"
 
+# dotfiles リポジトリがなければ clone
 if [ ! -d "$DFILE_PATH" ]; then
   echo "Cloning dotfiles into $DFILE_PATH..."
   git clone https://github.com/101ta28/dotfiles.git "$DFILE_PATH"
 fi
 
-# prezto のインストール
+# prezto インストール
 if [ ! -d "${ZDOTDIR:-$HOME}/.zprezto" ]; then
-  echo "Cloning prezto..."
+  echo "Installing prezto..."
   git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
 fi
 
-# dotfiles のシンボリックリンク作成
+# シンボリックリンク作成
 ln -sf "$DFILE_PATH/.zshrc" ~/.zshrc
 ln -sf "$DFILE_PATH/.zpreztorc" ~/.zpreztorc
 ln -sf "$DFILE_PATH/.zlogin" ~/.zlogin
@@ -25,36 +25,33 @@ ln -sf "$DFILE_PATH/.zprofile" ~/.zprofile
 ln -sf "$DFILE_PATH/.gitconfig" ~/.gitconfig
 ln -sf "$DFILE_PATH/.profile" ~/.profile
 
-# init.vim 設定
+# Neovim 設定リンク
 mkdir -p ~/.config/nvim
 ln -sf "$DFILE_PATH/init.vim" ~/.config/nvim/init.vim
 
-# undo ディレクトリ作成（Neovim用）
+# undo ディレクトリ
 mkdir -p ~/.local/share/nvim/undo
 
-# dpp.vim インストール（Neovim用ディレクトリ）
-DPP_DIR="$HOME/.config/nvim/dpp"
+# dpp/denops クローン（~/.cache/dpp に配置）
+DPP_DIR="$HOME/.cache/dpp"
 DPP_REPOS="$DPP_DIR/repos/github.com"
-DPP_INSTALLER="$DPP_REPOS/Shougo/dpp.vim"
 
-if [ ! -d "$DPP_INSTALLER" ]; then
-  echo "Installing dpp.vim..."
+if [ ! -d "$DPP_REPOS/Shougo/dpp.vim" ]; then
+  echo "Cloning dpp.vim..."
   mkdir -p "$DPP_REPOS/Shougo"
-  git clone https://github.com/Shougo/dpp.vim "$DPP_INSTALLER"
+  git clone https://github.com/Shougo/dpp.vim "$DPP_REPOS/Shougo/dpp.vim"
 fi
 
-# denops.vim のインストール
-DENOPS_DIR="$DPP_REPOS/vim-denops/denops.vim"
-if [ ! -d "$DENOPS_DIR" ]; then
-  echo "Installing denops.vim..."
+if [ ! -d "$DPP_REPOS/vim-denops/denops.vim" ]; then
+  echo "Cloning denops.vim..."
   mkdir -p "$DPP_REPOS/vim-denops"
-  git clone https://github.com/vim-denops/denops.vim "$DENOPS_DIR"
+  git clone https://github.com/vim-denops/denops.vim "$DPP_REPOS/vim-denops/denops.vim"
 fi
 
-# dpp.ts の存在確認（なければテンプレート生成）
+# dpp.ts（存在しない場合のみ生成）
 DPP_TS="$HOME/.config/nvim/dpp.ts"
 if [ ! -f "$DPP_TS" ]; then
-  echo "Creating default dpp.ts..."
+  echo "Creating dpp.ts..."
   cat > "$DPP_TS" <<EOF
 export const plugins = [
   { repo: "Shougo/dpp.vim" },
@@ -67,52 +64,46 @@ export const plugins = [
 EOF
 fi
 
-# --- Package Installation Section ---
+# パッケージインストール
+echo "Installing packages..."
 
-echo "Installing required packages..."
-
-# 基本依存のインストール（Ubuntu前提）
 sudo apt update
 sudo apt install -y curl git build-essential unzip ca-certificates
 
-# Neovim のインストール
+# Neovim
 if ! command -v nvim >/dev/null 2>&1; then
-  echo "Installing Neovim..."
   sudo apt install -y neovim
 fi
 
 # nvm + node
 if [ ! -d "$HOME/.nvm" ]; then
-  echo "Installing nvm..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
 fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 nvm install --lts
 
-# rust
+# Rust
 if ! command -v rustc >/dev/null 2>&1; then
-  echo "Installing Rust..."
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 fi
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# gh (GitHub CLI)
+# GitHub CLI
 if ! command -v gh >/dev/null 2>&1; then
-  echo "Installing GitHub CLI (latest method)..."
-  (type -p wget >/dev/null || sudo apt install wget -y) \
-    && sudo mkdir -p -m 755 /etc/apt/keyrings \
-    && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-    && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install gh -y
+  (type -p wget >/dev/null || sudo apt install wget -y)
+  sudo mkdir -p -m 755 /etc/apt/keyrings
+  wget -nv -O- https://cli.github.com/packages/githubcli-archive-keyring.gpg |
+    sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+  sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |
+    sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+  sudo apt update
+  sudo apt install gh -y
 fi
 
 # lsd
 if ! command -v lsd >/dev/null 2>&1; then
-  echo "Installing lsd..."
   if command -v cargo >/dev/null 2>&1; then
     cargo install lsd
   else
@@ -122,30 +113,27 @@ fi
 
 # bun
 if [ ! -d "$HOME/.bun" ]; then
-  echo "Installing bun..."
   curl -fsSL https://bun.sh/install | bash
 fi
 
 # uv
 if ! command -v uv >/dev/null 2>&1; then
-  echo "Installing uv..."
   curl https://astral.sh/uv/install.sh | sh
 fi
 
-# deno のインストール
+# deno
 if ! command -v deno >/dev/null 2>&1; then
-  echo "Installing deno..."
   curl -fsSL https://deno.land/install.sh | sh
 fi
 
-echo "Fixing ownership of ~/.config/nvim/dpp..."
-sudo chown -R "$USER":"$USER" "$HOME/.config/nvim/dpp"
+# 所有者の修正（念のため）
+sudo chown -R "$USER":"$USER" "$DPP_DIR"
 
 # 完了メッセージ
 echo ""
-echo "Dotfiles and packages installed successfully."
-echo "To finish Neovim setup, launch Neovim and run:"
+echo "Setup complete!"
+echo "Launch Neovim and run:"
 echo "  :call dpp#make_state()"
 echo "  :call dpp#check_plugins()"
 echo ""
-echo "You may now run 'exec zsh' or restart your terminal to start using zsh + prezto."
+echo "Or just restart Neovim and it will run automatically on DenopsReady."
