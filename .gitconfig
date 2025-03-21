@@ -45,6 +45,3 @@
 	co = "checkout"
 	br = "branch"
 	sw = "switch"
-	# プルリクをローカルに持ってくるコマンド
-	# git cpr <プルリク番号>
-	cpr = "!f(){ git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; };f"
