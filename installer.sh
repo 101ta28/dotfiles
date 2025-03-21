@@ -2,7 +2,13 @@
 
 set -e
 
+# ~/.dfiles が存在しない場合は GitHub から clone
 DFILE_PATH="$HOME/.dfiles"
+
+if [ ! -d "$DFILE_PATH" ]; then
+  echo "Cloning dotfiles into $DFILE_PATH..."
+  git clone https://github.com/101ta28/dotfiles.git "$DFILE_PATH"
+fi
 
 # prezto のインストール
 if [ ! -d "${ZDOTDIR:-$HOME}/.zprezto" ]; then
