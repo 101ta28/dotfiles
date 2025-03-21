@@ -1,27 +1,40 @@
 " ---------------------------------------------
-" dpp + denops 設定（Neovim 向け、~/.cache/dpp 構成）
+" dein.vim 設定
 " ---------------------------------------------
 
-" Denops のバージョンチェックを無効化（Neovim 0.10 未満の対応）
-let g:denops_disable_version_check = v:true
+if &compatible
+  set nocompatible
+endif
 
-" パス定義
-const s:dpp_base = expand('~/.cache/dpp')
-const s:denops_src = s:dpp_base .. '/repos/github.com/vim-denops/denops.vim'
-const s:dpp_src = s:dpp_base .. '/repos/github.com/Shougo/dpp.vim'
-const s:dpp_ts = expand('~/.config/nvim/dpp.ts')
+" dein のベースディレクトリとリポジトリパス
+let s:dein_base = expand('~/.cache/dein')
+let s:dein_repo = s:dein_base . '/repos/github.com/Shougo/dein.vim'
 
-" runtimepath に denops.vim を先に追加（順番注意）
-execute 'set runtimepath^=' .. fnameescape(s:denops_src)
+" dein.vim がなければ自動クローン
+if !isdirectory(s:dein_repo)
+  execute '!git clone https://github.com/Shougo/dein.vim ' . s:dein_repo
+endif
 
-" 次に dpp.vim を追加
-execute 'set runtimepath^=' .. fnameescape(s:dpp_src)
+" runtimepath に追加
+execute 'set runtimepath^=' . s:dein_repo
 
-" 状態復元または初回初期化
-if dpp#min#load_state(s:dpp_base)
-  " Denops の初期化完了後に make_state 実行
-  autocmd User DenopsReady
-    \ call dpp#make_state(s:dpp_base, s:dpp_ts)
+" dein.vim のプラグイン定義開始
+call dein#begin(s:dein_base)
+
+" dein 自身を管理対象に
+call dein#add('Shougo/dein.vim')
+
+" プラグイン一覧（必要に応じて追加）
+call dein#add('itchyny/lightline.vim')
+call dein#add('cohama/lexima.vim')
+
+" プラグイン定義終了
+call dein#end()
+call dein#save_state()
+
+" プラグイン未インストール時は自動インストール
+if dein#check_install()
+  call dein#install()
 endif
 
 " ---------------------------------------------
@@ -51,7 +64,7 @@ set laststatus=2
 set cursorline
 set clipboard+=unnamed
 
-" undo settings（Neovim 向け）
+" undo settings（Neovim/Vim 両対応）
 if has('persistent_undo')
   let undo_path = expand('~/.local/share/nvim/undo')
   call mkdir(undo_path, 'p')
