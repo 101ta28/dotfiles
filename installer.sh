@@ -138,6 +138,9 @@ if ! command -v deno >/dev/null 2>&1; then
   curl -fsSL https://deno.land/install.sh | sh
 fi
 
+echo "Fixing ownership of ~/.config/nvim/dpp..."
+sudo chown -R "$USER":"$USER" "$HOME/.config/nvim/dpp"
+
 # 完了メッセージ
 echo ""
 echo "Dotfiles and packages installed successfully."
