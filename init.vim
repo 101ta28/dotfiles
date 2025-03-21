@@ -1,31 +1,28 @@
 " ---------------------------------------------
-" dpp + denops 設定（Neovim 向け）
+" dpp + denops 設定（Neovim 向け、~/.cache/dpp 構成）
 " ---------------------------------------------
 
-" denops のバージョンチェックを無効化（Neovim 0.10 未満の対応）
+" Denops のバージョンチェックを無効化（Neovim 0.10 未満の対応）
 let g:denops_disable_version_check = v:true
 
-" runtimepath に dpp と denops を追加
-let s:dpp = expand('~/.config/nvim/dpp/repos/github.com/Shougo/dpp.vim')
-let s:denops = expand('~/.config/nvim/dpp/repos/github.com/vim-denops/denops.vim')
+" パス定義
+const s:dpp_base = expand('~/.cache/dpp')
+const s:dpp_src = s:dpp_base .. '/repos/github.com/Shougo/dpp.vim'
+const s:denops_src = s:dpp_base .. '/repos/github.com/vim-denops/denops.vim'
+const s:dpp_ts = expand('~/.config/nvim/dpp.ts')
 
-" runtimepath に先頭追加
-execute 'set runtimepath^=' . fnameescape(s:dpp)
-execute 'set runtimepath^=' . fnameescape(s:denops)
+" runtimepath に dpp.vim を先に追加
+execute 'set runtimepath^=' .. fnameescape(s:dpp_src)
 
-" dpp.ts の設定を読み込む
-try
-  call dpp#make_state(expand('~/.config/nvim/dpp.ts'))
-  call dpp#check_plugins()
+" 状態復元または初回初期化
+if dpp#min#load_state(s:dpp_base)
+  " denops.vim の runtimepath を追加
+  execute 'set runtimepath^=' .. fnameescape(s:denops_src)
 
-  if dpp#has_not_installed_plugins()
-    call dpp#install()
-  endif
-catch
-  echohl ErrorMsg
-  echom "dpp setup failed. Check ~/.config/nvim/dpp.ts"
-  echohl None
-endtry
+  " Denops の初期化完了後に make_state 実行
+  autocmd User DenopsReady
+    \ call dpp#make_state(s:dpp_base, s:dpp_ts)
+endif
 
 " ---------------------------------------------
 " 基本設定
@@ -64,3 +61,4 @@ endif
 
 " Lightline settings
 let g:lightline = {'colorscheme': 'wombat'}
+colorscheme wombat
