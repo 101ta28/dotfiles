@@ -15,7 +15,7 @@ eval "$(uv generate-shell-completion zsh)"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$HOME/.local/bin/env:$HOME/.cargo/env:/usr/local/cuda-12.4/bin:/usr/local/go/bin:$PATH"
+export PATH="$BUN_INSTALL/bin:$HOME/.local/bin/env:$HOME/.cargo/env:/usr/local/cuda-12.4/bin:/usr/local/go/bin:$HOME/.deno/bin:$PATH"
 
 eval "$(uv generate-shell-completion zsh)"
 
