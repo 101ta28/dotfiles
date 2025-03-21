@@ -25,12 +25,15 @@ ln -sf "$DFILE_PATH/.zprofile" ~/.zprofile
 ln -sf "$DFILE_PATH/.gitconfig" ~/.gitconfig
 ln -sf "$DFILE_PATH/.profile" ~/.profile
 
-# vim 設定
-mkdir -p ~/.vim/undo
-ln -sf "$DFILE_PATH/.vimrc" ~/.vimrc
+# init.vim 設定
+mkdir -p ~/.config/nvim
+ln -sf "$DFILE_PATH/init.vim" ~/.config/nvim/init.vim
 
-# dpp.vim インストール
-DPP_DIR="$HOME/.vim/dpp"
+# undo ディレクトリ作成（Neovim用）
+mkdir -p ~/.local/share/nvim/undo
+
+# dpp.vim インストール（Neovim用ディレクトリ）
+DPP_DIR="$HOME/.config/nvim/dpp"
 DPP_REPOS="$DPP_DIR/repos/github.com"
 DPP_INSTALLER="$DPP_REPOS/Shougo/dpp.vim"
 
@@ -40,7 +43,7 @@ if [ ! -d "$DPP_INSTALLER" ]; then
   git clone https://github.com/Shougo/dpp.vim "$DPP_INSTALLER"
 fi
 
-# 必要な依存もチェック
+# denops.vim のインストール
 DENOPS_DIR="$DPP_REPOS/vim-denops/denops.vim"
 if [ ! -d "$DENOPS_DIR" ]; then
   echo "Installing denops.vim..."
@@ -49,7 +52,7 @@ if [ ! -d "$DENOPS_DIR" ]; then
 fi
 
 # dpp.ts の存在確認（なければテンプレート生成）
-DPP_TS="$HOME/.vim/dpp.ts"
+DPP_TS="$HOME/.config/nvim/dpp.ts"
 if [ ! -f "$DPP_TS" ]; then
   echo "Creating default dpp.ts..."
   cat > "$DPP_TS" <<EOF
@@ -71,6 +74,12 @@ echo "Installing required packages..."
 # 基本依存のインストール（Ubuntu前提）
 sudo apt update
 sudo apt install -y curl git build-essential unzip ca-certificates
+
+# Neovim のインストール
+if ! command -v nvim >/dev/null 2>&1; then
+  echo "Installing Neovim..."
+  sudo apt install -y neovim
+fi
 
 # nvm + node
 if [ ! -d "$HOME/.nvm" ]; then
@@ -127,13 +136,12 @@ fi
 if ! command -v deno >/dev/null 2>&1; then
   echo "Installing deno..."
   curl -fsSL https://deno.land/install.sh | sh
-  export PATH="$HOME/.deno/bin:$PATH"
 fi
 
 # 完了メッセージ
 echo ""
 echo "Dotfiles and packages installed successfully."
-echo "To finish Vim setup, launch Vim and run:"
+echo "To finish Neovim setup, launch Neovim and run:"
 echo "  :call dpp#make_state()"
 echo "  :call dpp#check_plugins()"
 echo ""
