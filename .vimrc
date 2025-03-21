@@ -1,11 +1,16 @@
-" dpp + denops ---------------------------
+" ---------------------------------------------
+" dpp + denops 設定
+" ---------------------------------------------
+
+" denops のバージョンチェックを無効化（Vim 9.1 未満の環境向け）
+let g:denops_disable_version_check = v:true
 
 " runtimepath に dpp と denops を追加
 set runtimepath^=~/.vim/dpp/repos/github.com/Shougo/dpp.vim
 set runtimepath^=~/.vim/dpp/repos/github.com/vim-denops/denops.vim
 
-" TypeScript 設定ファイルのパス（必須）
-call dpp#make_state('~/.vim/dpp.ts')
+" TypeScript 設定ファイルのパス（expand でチルダ展開）
+call dpp#make_state(expand('~/.vim/dpp.ts'))
 call dpp#check_plugins()
 
 " 起動時に未インストールならインストール
@@ -13,12 +18,13 @@ if dpp#has_not_installed_plugins()
   call dpp#install()
 endif
 
-" dpp 終了 -----------------------------
+" ---------------------------------------------
+" 基本設定
+" ---------------------------------------------
 
 filetype plugin indent on
 syntax on
 
-" 基本設定 -----------------------------
 set nowrap
 set hlsearch
 set incsearch
