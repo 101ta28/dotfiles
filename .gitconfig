@@ -1,12 +1,45 @@
-# This is Git's per-user configuration file.
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
 [user]
-	name = 101ta28
-	email = workta28@gmail.com
+        name = 101ta28
+        email = workta28@gmail.com
+        signingkey = DDEC7C9789DA48D8798F53A4ACF92881F31DA3B4
+[filter "lfs"]
+        smudge = git-lfs smudge -- %f
+        process = git-lfs filter-process
+        required = true
+        clean = git-lfs clean -- %f
+[gpg]
+        program = /usr/bin/gpg
+[init]
+        defaultBranch = main
 [credential]
-	helper = /usr/local/share/gcm-core/git-credential-manager-core
-	credentialStore = secretservice
-[credential "https://dev.azure.com"]
-	useHttpPath = true
+	helper = store
+[column]
+	ui = auto
+[branch]
+	sort = -comitterdate
+[tag]
+	sort = version:refname
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+[help]
+	autocorrect = prompt
 [alias]
 	cm = "commit"
 	co = "checkout"
@@ -15,5 +48,3 @@
 	# プルリクをローカルに持ってくるコマンド
 	# git cpr <プルリク番号>
 	cpr = "!f(){ git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; };f"
-[init]
-	defaultBranch = main
