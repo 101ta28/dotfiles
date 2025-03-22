@@ -5,24 +5,24 @@
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [user]
-        name = 101ta28
-        email = workta28@gmail.com
-        signingkey = DDEC7C9789DA48D8798F53A4ACF92881F31DA3B4
+	name = 101ta28
+	email = workta28@gmail.com
+	signingkey = DDEC7C9789DA48D8798F53A4ACF92881F31DA3B4
 [filter "lfs"]
-        smudge = git-lfs smudge -- %f
-        process = git-lfs filter-process
-        required = true
-        clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
 [gpg]
-        program = /usr/bin/gpg
+	program = /usr/bin/gpg
 [init]
-        defaultBranch = main
+	defaultBranch = main
 [credential]
 	helper = store
 [column]
 	ui = auto
 [branch]
-	sort = -comitterdate
+	sort = -committerdate
 [tag]
 	sort = version:refname
 [diff]
