@@ -12,6 +12,7 @@ alias ls="lsd"
 
 # uv completions
 eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
