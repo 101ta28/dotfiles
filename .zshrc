@@ -18,8 +18,6 @@ eval "$(uvx --generate-shell-completion zsh)"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$HOME/.local/bin:$HOME/.local/bin/env:$HOME/.cargo/env:$HOME/.cargo/bin:/usr/local/cuda-12.4/bin:/usr/local/go/bin:$HOME/.deno/bin:$PATH"
 
-eval "$(uv generate-shell-completion zsh)"
-
 _uv_run_mod() {
     if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
         _arguments '*:filename:_files'
