@@ -1,0 +1,65 @@
+{
+  "name": "Claude Code Sandbox",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:Asia/Tokyo}"
+    }
+  },
+  "runArgs": [
+    "--cap-add=NET_ADMIN",
+    "--cap-add=NET_RAW"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
+        }
+      }
+    }
+  },
+  "remoteUser": "node",
+  "mounts": [
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume",
+    "source=${localWorkspaceFolder}/.config/.claude,target=/home/node/.config/.claude,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.zshrc,target=/home/node/.zshrc,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.zpreztorc,target=/home/node/.zpreztorc,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.zprofile,target=/home/node/.zprofile,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.zshenv,target=/home/node/.zshenv,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/init.vim,target=/home/node/.vimrc,type=bind,consistency=cached"
+  ],
+  "remoteEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "POWERLEVEL10K_DISABLE_GITSTATUS": "true",
+    "TZ": "Asia/Tokyo",
+    "LANG": "en_US.UTF-8",
+    "SHELL": "/bin/zsh"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": [
+    "sudo /usr/local/bin/init-firewall.sh",
+    "bash .devcontainer/setup-dotfiles.sh"
+  ]
+}

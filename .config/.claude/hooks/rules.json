@@ -1,0 +1,248 @@
+{
+  "ngWords": {
+    "description": "AIが不確定な提案や余計な改善提案をした際に検出するワード",
+    "words": [
+      "はず",
+      "代わり",
+      "別の",
+      "かもしれません",
+      "と思います",
+      "おそらく",
+      "たぶん",
+      "恐らく",
+      "多分",
+      "推測",
+      "想定",
+      "提案",
+      "見直し",
+      "最適化",
+      "アップデート",
+      "更新",
+      "変更してみて",
+      "試してみて",
+      "検討",
+      "いかがでしょうか",
+      "どうでしょうか"
+    ]
+  },
+  "dangerousCommands": {
+    "description": "システムに重大な損害を与える可能性のある危険なコマンド",
+    "patterns": [
+      {
+        "pattern": "rm -rf",
+        "severity": "critical",
+        "reason": "ファイルシステムの破壊的削除",
+        "alternatives": ["個別ファイル削除", "明示的な確認後の実行"]
+      },
+      {
+        "pattern": "sudo rm",
+        "severity": "critical",
+        "reason": "管理者権限での破壊的削除",
+        "alternatives": ["ユーザー権限での削除", "個別ファイル削除"]
+      },
+      {
+        "pattern": "dd if=",
+        "severity": "critical",
+        "reason": "ディスクの直接書き込み",
+        "alternatives": ["適切なバックアップツール使用"]
+      },
+      {
+        "pattern": "mkfs",
+        "severity": "critical",
+        "reason": "ファイルシステムの初期化",
+        "alternatives": ["明示的な確認後の実行"]
+      },
+      {
+        "pattern": "fdisk",
+        "severity": "high",
+        "reason": "パーティションテーブルの変更",
+        "alternatives": ["GUI パーティションツール使用"]
+      },
+      {
+        "pattern": "format",
+        "severity": "critical",
+        "reason": "ディスクのフォーマット",
+        "alternatives": ["明示的な確認後の実行"]
+      },
+      {
+        "pattern": "shutdown",
+        "severity": "medium",
+        "reason": "システムのシャットダウン",
+        "alternatives": ["GUI からのシャットダウン"]
+      },
+      {
+        "pattern": "reboot",
+        "severity": "medium",
+        "reason": "システムの再起動",
+        "alternatives": ["GUI からの再起動"]
+      },
+      {
+        "pattern": "halt",
+        "severity": "medium",
+        "reason": "システムの停止",
+        "alternatives": ["GUI からの停止"]
+      },
+      {
+        "pattern": "poweroff",
+        "severity": "medium",
+        "reason": "システムの電源オフ",
+        "alternatives": ["GUI からの電源オフ"]
+      }
+    ]
+  },
+  "restrictedCommands": {
+    "description": "制限されたコマンドとその理由・代替案",
+    "commands": {
+      "curl": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "セキュリティ上の理由により直接実行を制限",
+        "alternatives": ["WebFetch tool", "適切なAPIクライアント"]
+      },
+      "wget": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "セキュリティ上の理由により直接実行を制限",
+        "alternatives": ["WebFetch tool", "適切なAPIクライアント"]
+      },
+      "npm install": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "npmではなくbunの使用を推奨",
+        "alternatives": ["bun install", "bunが非対応の場合はyarn install"]
+      },
+      "npm": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "npmではなくbunの使用を推奨",
+        "alternatives": ["bun (対応コマンド)", "bunが非対応の場合はyarn"]
+      },
+      "npm run": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "npmではなくbunの使用を推奨",
+        "alternatives": ["bun run", "bunが非対応の場合はyarn run"]
+      },
+      "npm start": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "npmではなくbunの使用を推奨",
+        "alternatives": ["bun start", "bunが非対応の場合はyarn start"]
+      },
+      "npm test": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "npmではなくbunの使用を推奨",
+        "alternatives": ["bun test", "bunが非対応の場合はyarn test"]
+      },
+      "npx": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "npxではなくbunx（またはuvx）の使用を推奨",
+        "alternatives": ["bunx", "uvx", "bunが非対応の場合はyarn dlx"]
+      },
+      "pip install": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "pipではなくuvを使用してパッケージ管理を行う",
+        "alternatives": ["uv add <package>", "uv sync", "uv pip install（仮想環境内）"]
+      },
+      "pip": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "pipではなくuvを使用してパッケージ管理を行う",
+        "alternatives": ["uv add", "uv remove", "uv sync", "uv pip（仮想環境内のみ）"]
+      },
+      "python -m venv": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "uvの仮想環境機能を使用する",
+        "alternatives": ["uv venv", "uv init"]
+      },
+      "virtualenv": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "uvの仮想環境機能を使用する",
+        "alternatives": ["uv venv", "uv init"]
+      },
+      "sudo": {
+        "blocked": true,
+        "severity": "high",
+        "reason": "管理者権限でのコマンド実行は制限",
+        "alternatives": ["ユーザー権限での実行", "明示的な許可後の実行"]
+      },
+      "su": {
+        "blocked": true,
+        "severity": "high",
+        "reason": "ユーザー切り替えは制限",
+        "alternatives": ["適切な権限での実行"]
+      },
+      "chmod 777": {
+        "blocked": true,
+        "severity": "high",
+        "reason": "過度な権限付与は危険",
+        "alternatives": ["適切な権限設定 (644, 755など)"]
+      },
+      "chown": {
+        "blocked": true,
+        "severity": "medium",
+        "reason": "ファイル所有者の変更は制限",
+        "alternatives": ["明示的な許可後の実行"]
+      }
+    }
+  },
+  "preferredTools": {
+    "description": "このdotfiles環境で推奨されるツール",
+    "tools": {
+      "python": {
+        "packageManager": "uv",
+        "virtualEnv": "uv venv",
+        "installation": "uv add <package>",
+        "sync": "uv sync",
+        "reasons": [
+          "uvは高速で現代的なPythonパッケージマネージャー",
+          "依存関係の解決が高速",
+          "pyproject.tomlネイティブサポート"
+        ]
+      },
+      "nodejs": {
+        "primary": "bun",
+        "fallback": "yarn",
+        "installation": "bun install",
+        "execution": "bun run",
+        "reasons": [
+          "bunは非常に高速なJavaScript/TypeScriptランタイム",
+          "npm互換性を持ちながら大幅に高速",
+          "非対応プロジェクトではyarnを代替として使用"
+        ]
+      },
+      "executors": {
+        "npm_equivalent": "bunx",
+        "python_scripts": "uvx",
+        "reasons": [
+          "bunxはnpxの高速代替",
+          "uvxはPythonスクリプトの分離実行"
+        ]
+      }
+    }
+  },
+  "allowedPatterns": {
+    "description": "許可されるパターンや条件",
+    "patterns": [
+      "明示的にユーザーが要求した場合",
+      "セキュリティ上安全と判断される場合",
+      "テスト環境での実行",
+      "--force フラグが指定された場合",
+      "レガシープロジェクトでbun/uvが非対応の場合"
+    ]
+  },
+  "severityLevels": {
+    "description": "重要度レベルの定義",
+    "levels": {
+      "critical": "システムに重大な損害を与える可能性があり、即座に停止",
+      "high": "重要なセキュリティリスクがあり、警告表示",
+      "medium": "一般的な制限事項、確認後実行可能",
+      "low": "軽微な注意事項、情報表示のみ"
+    }
+  }
+}
