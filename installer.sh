@@ -261,17 +261,25 @@ fi
 
 # Claude Code CLI
 if command_exists "bun"; then
+  # Check if Claude Code CLI is actually installed
   if ! command_exists "claude"; then
     log_info "Installing Claude Code CLI..."
     bun install -g @anthropic-ai/claude-code
     log_success "Claude Code CLI installed"
     
-    # Migrate installer
+    # Run migrate-installer for new installations
     log_info "Running Claude Code migrate installer..."
     bunx claude migrate-installer
     log_success "Claude Code migrate installer completed"
   else
     log_info "Claude Code CLI already installed"
+    
+    # Check if migration is needed (if local claude binary doesn't exist)
+    if [ ! -f "$HOME/.claude/local/claude" ]; then
+      log_info "Claude Code migration needed - running migrate-installer..."
+      bunx claude migrate-installer
+      log_success "Claude Code migrate installer completed"
+    fi
   fi
   
   # Claude Code設定のコピー
@@ -345,3 +353,5 @@ echo "To configure your personal Git settings, run:"
 echo "  bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/setup-user.sh)\""
 echo "  or: ./setup-user.sh"
 echo ""
+log_warn "IMPORTANT: Please restart your shell or run 'source ~/.zshrc' to apply changes."
+echo "  exec zsh  # or restart your terminal"
