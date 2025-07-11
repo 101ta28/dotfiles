@@ -85,7 +85,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo
 - **その他**: Go、GitHub CLI
-- **GPU/CUDA** (オプション): NVIDIA Container Toolkit, CUDA Toolkit, PyTorch with CUDA
+- **GPU/CUDA** (オプション): NVIDIA Container Toolkit, CUDA Toolkit
 
 ## よく使うコマンド
 
