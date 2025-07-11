@@ -2,6 +2,8 @@
 
 Personal dotfiles for development environment setup.
 
+[日本語のREADMEはこちら](./README.ja.md)
+
 ## Installation
 
 ### Basic Installation (CPU only)

@@ -2,6 +2,8 @@
 
 開発環境セットアップ用の個人dotfilesです。
 
+[English README is here](./README.md)
+
 ## インストール
 
 ### 基本インストール（CPU環境）
