@@ -302,13 +302,6 @@ if [ "$INSTALL_GPU" = true ]; then
     log_info "CUDA Toolkit already installed"
   fi
   
-  # PyTorch with CUDA support (Python)
-  if command_exists "uv"; then
-    log_info "Installing PyTorch with CUDA support..."
-    uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-    log_success "PyTorch with CUDA support installed"
-  fi
-  
   log_success "GPU/CUDA development tools installation complete!"
   echo ""
   log_info "Note: You may need to restart your system for GPU drivers to work properly."
