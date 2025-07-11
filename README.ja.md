@@ -60,8 +60,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `.gitconfig.template` - プレースホルダー付きGit設定テンプレート
 - `setup-user.sh` - 個人設定用インタラクティブスクリプト
 - `installer.sh` - メインインストールスクリプト
-- `init.vim` - Vim/Neovim設定
+- `init.vim` - Vim/Neovim設定 (dpp.vimによるプラグイン管理)
+- `.config/nvim/dpp.ts` - dpp.vimのTypeScript設定ファイル
 - `.zshrc` - Prezto使用のZshシェル設定
+- `CLAUDE.md` - このリポジトリのAI向け指示書
 
 ## アーキテクチャ概要
 
@@ -84,10 +86,17 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - **JavaScript/TypeScript**: NVM、Bun、Deno
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo
-- **その他**: Go、GitHub CLI
-- **GPU/CUDA** (オプション): NVIDIA Container Toolkit, CUDA Toolkit
+- **その他**: Go、CUDA（GPU計算）、GitHub CLI
+- **GPU/CUDA** (オプション): NVIDIA Container Toolkit、CUDA Toolkit 12.6
 
 ## よく使うコマンド
+
+### 初期セットアップ
+
+```bash
+# dotfilesのインストール（新規環境で実行）
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/installer.sh)"
+```
 
 ### Vim/Neovim関連
 
@@ -136,6 +145,7 @@ git config --global commit.gpgSign true
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
 - dpp.vimはDeno 1.45+が必要です（installer.shで自動インストール）
+- Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 
 ## トラブルシューティング
 
