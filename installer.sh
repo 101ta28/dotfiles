@@ -160,8 +160,6 @@ mkdir -p ~/.config/nvim
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.config/nvim/init.vim"
 create_symlink "$DFILE_PATH/.config/nvim/dpp.ts" "$HOME/.config/nvim/dpp.ts"
 
-# Claude Code 設定
-create_symlink "$DFILE_PATH/.config/.claude" "$HOME/.claude"
 
 # Vim 設定
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.vimrc"
@@ -269,6 +267,15 @@ if command_exists "bun"; then
     log_success "Claude Code CLI installed"
   else
     log_info "Claude Code CLI already installed"
+  fi
+  
+  # Claude Code設定のコピー
+  if [ -d "$DFILE_PATH/.config/.claude" ]; then
+    log_info "Copying Claude Code configuration..."
+    mkdir -p "$HOME/.claude"
+    # 設定ファイルをコピー（既存のファイルは上書きしない）
+    cp -rn "$DFILE_PATH/.config/.claude/"* "$HOME/.claude/" 2>/dev/null || true
+    log_success "Claude Code configuration copied"
   fi
 else
   log_warn "Bun not found, skipping Claude Code CLI installation"
