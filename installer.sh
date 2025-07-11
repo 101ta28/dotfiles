@@ -161,8 +161,7 @@ create_symlink "$DFILE_PATH/init.vim" "$HOME/.config/nvim/init.vim"
 create_symlink "$DFILE_PATH/.config/nvim/dpp.ts" "$HOME/.config/nvim/dpp.ts"
 
 # Claude Code 設定
-mkdir -p ~/.config
-create_symlink "$DFILE_PATH/.config/.claude" "$HOME/.config/.claude"
+create_symlink "$DFILE_PATH/.config/.claude" "$HOME/.claude"
 
 # Vim 設定
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.vimrc"
@@ -260,6 +259,19 @@ fi
 # bun
 if [ ! -d "$HOME/.bun" ]; then
   install_via_curl "Bun" "https://bun.sh/install" "dummy"  # bunはディレクトリで判定
+fi
+
+# Claude Code CLI
+if command_exists "bun"; then
+  if ! command_exists "claude"; then
+    log_info "Installing Claude Code CLI..."
+    bun install -g @anthropic-ai/claude-code
+    log_success "Claude Code CLI installed"
+  else
+    log_info "Claude Code CLI already installed"
+  fi
+else
+  log_warn "Bun not found, skipping Claude Code CLI installation"
 fi
 
 # uv
