@@ -24,7 +24,6 @@ This will install:
 
 - NVIDIA Container Toolkit (Docker with GPU support)
 - CUDA Toolkit 12.6
-- PyTorch with CUDA support
 
 ## Post-Installation Setup
 

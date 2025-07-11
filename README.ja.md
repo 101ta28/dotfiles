@@ -24,7 +24,6 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/in
 
 - NVIDIA Container Toolkit（Docker GPU サポート）
 - CUDA Toolkit 12.6
-- PyTorch with CUDA support
 
 ## インストール後の設定
 
