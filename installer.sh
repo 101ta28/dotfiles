@@ -265,6 +265,11 @@ if command_exists "bun"; then
     log_info "Installing Claude Code CLI..."
     bun install -g @anthropic-ai/claude-code
     log_success "Claude Code CLI installed"
+    
+    # Migrate installer
+    log_info "Running Claude Code migrate installer..."
+    bunx claude migrate-installer
+    log_success "Claude Code migrate installer completed"
   else
     log_info "Claude Code CLI already installed"
   fi
