@@ -172,8 +172,8 @@ git config --global commit.gpgSign true
 
 ### Claude Code hooks not working
 
-1. Check hook file permissions: `ls -la ~/.config/.claude/hooks/`
-2. Ensure hooks have execute permissions: `chmod +x ~/.config/.claude/hooks/*.sh`
+1. Check hook file permissions: `ls -la ~/.claude/hooks/`
+2. Ensure hooks have execute permissions: `chmod +x ~/.claude/hooks/*.sh`
 3. Check hook logs: `cat ~/.claude/hooks.log`
 4. Verify rules.json syntax: validate JSON structure
 
@@ -196,11 +196,11 @@ This repository includes custom hooks for Claude Code that provide:
 
 ```bash
 # Make hooks executable
-chmod +x ~/.config/.claude/hooks/*.sh
+chmod +x ~/.claude/hooks/*.sh
 
 # Test hook functionality
-~/.config/.claude/hooks/stop_words.sh "This might be a suggestion"
-~/.config/.claude/hooks/pre_commands.sh "npm install"
+~/.claude/hooks/stop_words.sh "This might be a suggestion"
+~/.claude/hooks/pre_commands.sh "npm install"
 ```
 
 See `.config/.claude/hooks/README.md` for detailed configuration and customization options.

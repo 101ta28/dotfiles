@@ -172,8 +172,8 @@ git config --global commit.gpgSign true
 
 ### Claude Codeフックが動作しない場合
 
-1. フックファイルの権限を確認：`ls -la ~/.config/.claude/hooks/`
-2. フックに実行権限があることを確認：`chmod +x ~/.config/.claude/hooks/*.sh`
+1. フックファイルの権限を確認：`ls -la ~/.claude/hooks/`
+2. フックに実行権限があることを確認：`chmod +x ~/.claude/hooks/*.sh`
 3. フックログを確認：`cat ~/.claude/hooks.log`
 4. rules.jsonの構文を確認：JSON構造を検証
 
@@ -196,11 +196,11 @@ git config --global commit.gpgSign true
 
 ```bash
 # フックを実行可能にする
-chmod +x ~/.config/.claude/hooks/*.sh
+chmod +x ~/.claude/hooks/*.sh
 
 # フック機能をテスト
-~/.config/.claude/hooks/stop_words.sh "これは提案かもしれません"
-~/.config/.claude/hooks/pre_commands.sh "npm install"
+~/.claude/hooks/stop_words.sh "これは提案かもしれません"
+~/.claude/hooks/pre_commands.sh "npm install"
 ```
 
 詳細な設定とカスタマイズオプションについては`.config/.claude/hooks/README.md`を参照してください。
