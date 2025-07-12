@@ -1,88 +1,90 @@
 # Claude Code Custom Hooks
 
-このディレクトリには、Claude Codeの動作を制御するカスタムフックが含まれています。
+This directory contains custom hooks that control Claude Code's behavior.
 
-## 概要
+[日本語のREADMEはこちら](./README.ja.md)
 
-これらのフックは、AIが不適切な提案や危険なコマンドを実行することを防ぐためのセーフティネットとして機能します。
+## Overview
 
-## ファイル構成
+These hooks function as a safety net to prevent the AI from making inappropriate suggestions or executing dangerous commands.
+
+## File Structure
 
 ### `rules.json`
 
-- NG Word集と制限されたコマンドのルール定義
-- JSON形式で設定を管理
+- Defines NG words and restricted command rules
+- Configuration managed in JSON format
 
 ### `stop_words.sh`
 
-- AIの応答に不適切なワードが含まれているかチェック
-- 推測や不確定な提案を検出
+- Checks AI responses for inappropriate words
+- Detects speculative or uncertain suggestions
 
 ### `pre_commands.sh`
 
-- コマンド実行前に危険性をチェック
-- 制限されたコマンドの実行を阻止
+- Checks command safety before execution
+- Blocks execution of restricted commands
 
 ### `post_commands.sh`
 
-- コマンド実行後の結果を分析
-- セキュリティチェックと統計記録
+- Analyzes command execution results
+- Security checks and statistics logging
 
-## 使用方法
+## Usage
 
-### 1. 実行権限の付与
+### 1. Grant Execute Permissions
 
 ```bash
 chmod +x ~/.config/.claude/hooks/*.sh
 ```
 
-### 2. Claude Codeでの自動実行
+### 2. Automatic Execution by Claude Code
 
-Claude Codeは以下のタイミングで自動的にフックを実行します：
+Claude Code automatically executes hooks at the following times:
 
-- **stop_words.sh**: AI応答生成時
-- **pre_commands.sh**: コマンド実行前
-- **post_commands.sh**: コマンド実行後
+- **stop_words.sh**: During AI response generation
+- **pre_commands.sh**: Before command execution
+- **post_commands.sh**: After command execution
 
-### 3. 手動実行（テスト用）
+### 3. Manual Execution (for testing)
 
 ```bash
-# NG Wordチェック
-~/.config/.claude/hooks/stop_words.sh "これは代替案として提案します"
+# NG Word check
+~/.config/.claude/hooks/stop_words.sh "This is suggested as an alternative"
 
-# コマンドチェック
+# Command check
 ~/.config/.claude/hooks/pre_commands.sh "curl https://example.com"
 
-# 実行後処理
-~/.config/.claude/hooks/post_commands.sh "git clone repo" 0 "クローン完了"
+# Post-execution processing
+~/.config/.claude/hooks/post_commands.sh "git clone repo" 0 "Clone completed"
 ```
 
-## ログ
+## Logs
 
-- `~/.claude/hooks.log`: フックの実行ログ
-- `~/.claude/command_stats.log`: コマンド実行統計
+- `~/.claude/hooks.log`: Hook execution logs
+- `~/.claude/command_stats.log`: Command execution statistics
 
-## カスタマイズ
+## Customization
 
-### NG Wordの追加
+### Adding NG Words
 
-`rules.json`の`ngWords.words`配列に新しいワードを追加：
+Add new words to the `ngWords.words` array in `rules.json`:
 
 ```json
 {
   "ngWords": {
     "words": [
-      "はず",
-      "代わり",
-      "新しいワード"
+      "should",
+      "instead",
+      "new word"
     ]
   }
 }
 ```
 
-### 制限コマンドの追加
+### Adding Restricted Commands
 
-`rules.json`の`restrictedCommands.commands`オブジェクトに新しいコマンドを追加：
+Add new commands to the `restrictedCommands.commands` object in `rules.json`:
 
 ```json
 {
@@ -91,17 +93,17 @@ Claude Codeは以下のタイミングで自動的にフックを実行します
       "dangerous-command": {
         "blocked": true,
         "severity": "high",
-        "reason": "危険なコマンド",
-        "alternatives": ["安全な代替案"]
+        "reason": "Dangerous command",
+        "alternatives": ["Safe alternative"]
       }
     }
   }
 }
 ```
 
-### 危険なコマンドパターンの追加
+### Adding Dangerous Command Patterns
 
-`rules.json`の`dangerousCommands.patterns`配列に新しいパターンを追加：
+Add new patterns to the `dangerousCommands.patterns` array in `rules.json`:
 
 ```json
 {
@@ -110,30 +112,56 @@ Claude Codeは以下のタイミングで自動的にフックを実行します
       {
         "pattern": "dangerous-pattern",
         "severity": "critical",
-        "reason": "システム破壊の可能性",
-        "alternatives": ["安全な代替方法"]
+        "reason": "Potential system destruction",
+        "alternatives": ["Safe alternative method"]
       }
     ]
   }
 }
 ```
 
-## トラブルシューティング
+## Troubleshooting
 
-### フックが実行されない場合
+### Hooks Not Executing
 
-1. 実行権限を確認
-2. ファイルパスを確認
-3. ログファイルを確認
+1. Check execution permissions
+2. Verify file paths
+3. Check log files
 
-### 誤検出が多い場合
+### Too Many False Positives
 
-1. `rules.json`のルールを調整
-2. 特定のパターンを許可リストに追加
-3. フックスクリプトの条件を調整
+1. Adjust rules in `rules.json`
+2. Add specific patterns to allow list
+3. Adjust conditions in hook scripts
 
-## セキュリティ注意事項
+## Security Notes
 
-- フックスクリプトは重要なセキュリティ機能です
-- 不用意に無効化しないでください
-- 定期的にルールを見直してください
+- Hook scripts are important security features
+- Do not disable them carelessly
+- Review rules regularly
+
+## Preferred Tools
+
+This dotfiles environment enforces the use of modern tools:
+
+### Python Development
+- **uv** instead of pip for package management
+- **uv venv** instead of python -m venv for virtual environments
+- **uvx** instead of pipx for script execution
+
+### JavaScript/TypeScript Development
+- **bun** instead of npm for package management and execution
+- **bunx** instead of npx for package execution
+- **yarn** as fallback when bun is not compatible
+
+### Security Restrictions
+- **curl/wget**: Blocked in favor of WebFetch tool
+- **sudo operations**: Restricted to prevent unauthorized system changes
+- **Destructive commands**: rm -rf, mkfs, dd, etc. are blocked
+
+## Severity Levels
+
+- **critical**: Can cause severe system damage, immediately blocked
+- **high**: Significant security risk, warning displayed
+- **medium**: General restrictions, execution possible after confirmation
+- **low**: Minor warnings, information display only
