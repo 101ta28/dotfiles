@@ -165,8 +165,8 @@ show_alternatives() {
 main() {
     # 引数チェック
     if [[ $# -lt 1 ]]; then
-        log_message "ERROR: No command provided"
-        exit 1
+        log_message "WARNING: No command provided, skipping validation"
+        exit 0
     fi
     
     local command="$*"

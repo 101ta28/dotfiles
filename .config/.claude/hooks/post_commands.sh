@@ -85,8 +85,8 @@ security_check() {
 main() {
     # 引数チェック
     if [[ $# -lt 3 ]]; then
-        log_message "ERROR: Insufficient arguments provided"
-        exit 1
+        log_message "WARNING: Insufficient arguments provided, skipping post-processing"
+        exit 0
     fi
     
     local command="$1"

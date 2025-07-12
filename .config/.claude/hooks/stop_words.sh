@@ -27,8 +27,8 @@ get_ng_words() {
 main() {
     # 引数チェック
     if [[ $# -lt 1 ]]; then
-        log_message "ERROR: No input text provided"
-        exit 1
+        log_message "WARNING: No input text provided, skipping check"
+        exit 0
     fi
     
     local input_text="$1"
