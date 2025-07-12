@@ -18,12 +18,12 @@
 - AIの応答に不適切なワードが含まれているかチェック
 - 推測や不確定な提案を検出
 
-### `pre_command.sh`
+### `pre_commands.sh`
 
 - コマンド実行前に危険性をチェック
 - 制限されたコマンドの実行を阻止
 
-### `post_command.sh`
+### `post_commands.sh`
 
 - コマンド実行後の結果を分析
 - セキュリティチェックと統計記録
@@ -41,8 +41,8 @@ chmod +x ~/.config/.claude/hooks/*.sh
 Claude Codeは以下のタイミングで自動的にフックを実行します：
 
 - **stop_words.sh**: AI応答生成時
-- **pre_command.sh**: コマンド実行前
-- **post_command.sh**: コマンド実行後
+- **pre_commands.sh**: コマンド実行前
+- **post_commands.sh**: コマンド実行後
 
 ### 3. 手動実行（テスト用）
 
@@ -51,10 +51,10 @@ Claude Codeは以下のタイミングで自動的にフックを実行します
 ~/.config/.claude/hooks/stop_words.sh "これは代替案として提案します"
 
 # コマンドチェック
-~/.config/.claude/hooks/pre_command.sh "curl https://example.com"
+~/.config/.claude/hooks/pre_commands.sh "curl https://example.com"
 
 # 実行後処理
-~/.config/.claude/hooks/post_command.sh "git clone repo" 0 "クローン完了"
+~/.config/.claude/hooks/post_commands.sh "git clone repo" 0 "クローン完了"
 ```
 
 ## ログ
@@ -82,18 +82,38 @@ Claude Codeは以下のタイミングで自動的にフックを実行します
 
 ### 制限コマンドの追加
 
-`rules.json`の`ngCommands.commands`オブジェクトに新しいコマンドを追加：
+`rules.json`の`restrictedCommands.commands`オブジェクトに新しいコマンドを追加：
 
 ```json
 {
-  "ngCommands": {
+  "restrictedCommands": {
     "commands": {
       "dangerous-command": {
         "blocked": true,
+        "severity": "high",
         "reason": "危険なコマンド",
         "alternatives": ["安全な代替案"]
       }
     }
+  }
+}
+```
+
+### 危険なコマンドパターンの追加
+
+`rules.json`の`dangerousCommands.patterns`配列に新しいパターンを追加：
+
+```json
+{
+  "dangerousCommands": {
+    "patterns": [
+      {
+        "pattern": "dangerous-pattern",
+        "severity": "critical",
+        "reason": "システム破壊の可能性",
+        "alternatives": ["安全な代替方法"]
+      }
+    ]
   }
 }
 ```
