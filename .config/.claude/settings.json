@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/stop_words.sh"
+            "command": "~/.claude/hooks/stop_words.sh"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/pre_commands.sh"
+            "command": "~/.claude/hooks/pre_commands.sh"
           }
         ]
       }
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/post_commands.sh"
+            "command": "~/.claude/hooks/post_commands.sh"
           }
         ]
       }
