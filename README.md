@@ -63,6 +63,7 @@ This will prompt you to enter:
 - `init.vim` - Vim/Neovim configuration (using dpp.vim for plugin management)
 - `.config/nvim/dpp.ts` - TypeScript configuration file for dpp.vim
 - `.zshrc` - Zsh shell configuration with Prezto
+- `.config/.claude/hooks/` - Claude Code custom hooks for security and workflow control
 - `CLAUDE.md` - AI instructions for this repository
 
 ## Architecture Overview
@@ -146,6 +147,7 @@ git config --global commit.gpgSign true
 - Japanese input is configured with fcitx
 - dpp.vim requires Deno 1.45+ (auto-installed by installer.sh)
 - Git LFS is enabled for handling large files
+- Claude Code hooks provide security controls and workflow automation
 
 ## Troubleshooting
 
@@ -167,6 +169,41 @@ git config --global commit.gpgSign true
 2. Verify CUDA Toolkit installation: `nvcc --version`
 3. System restart may be required
 4. For Ubuntu versions other than 22.04, CUDA installation script may need adjustments
+
+### Claude Code hooks not working
+
+1. Check hook file permissions: `ls -la ~/.config/.claude/hooks/`
+2. Ensure hooks have execute permissions: `chmod +x ~/.config/.claude/hooks/*.sh`
+3. Check hook logs: `cat ~/.claude/hooks.log`
+4. Verify rules.json syntax: validate JSON structure
+
+## Claude Code Integration
+
+This repository includes custom hooks for Claude Code that provide:
+
+### Security Features
+- **Command filtering**: Prevents execution of dangerous commands (rm -rf, sudo operations, etc.)
+- **Word filtering**: Detects uncertain or speculative language in AI responses
+- **Preferred tooling**: Enforces use of modern tools (bun over npm, uv over pip)
+
+### Hook Files
+- `.config/.claude/hooks/rules.json` - Configuration for security rules and preferred tools
+- `.config/.claude/hooks/stop_words.sh` - Filters AI responses for problematic language
+- `.config/.claude/hooks/pre_commands.sh` - Validates commands before execution  
+- `.config/.claude/hooks/post_commands.sh` - Analyzes command results and logs statistics
+
+### Setup Claude Code Hooks
+
+```bash
+# Make hooks executable
+chmod +x ~/.config/.claude/hooks/*.sh
+
+# Test hook functionality
+~/.config/.claude/hooks/stop_words.sh "This might be a suggestion"
+~/.config/.claude/hooks/pre_commands.sh "npm install"
+```
+
+See `.config/.claude/hooks/README.md` for detailed configuration and customization options.
 
 ## License
 

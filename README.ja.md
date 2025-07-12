@@ -63,6 +63,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `init.vim` - Vim/Neovim設定 (dpp.vimによるプラグイン管理)
 - `.config/nvim/dpp.ts` - dpp.vimのTypeScript設定ファイル
 - `.zshrc` - Prezto使用のZshシェル設定
+- `.config/.claude/hooks/` - Claude Codeのセキュリティ・ワークフロー制御用カスタムフック
 - `CLAUDE.md` - このリポジトリのAI向け指示書
 
 ## アーキテクチャ概要
@@ -146,6 +147,7 @@ git config --global commit.gpgSign true
 - 日本語入力にはfcitxが設定されています
 - dpp.vimはDeno 1.45+が必要です（installer.shで自動インストール）
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
+- Claude Codeフックによりセキュリティ制御とワークフロー自動化を提供
 
 ## トラブルシューティング
 
@@ -167,6 +169,41 @@ git config --global commit.gpgSign true
 2. CUDA Toolkitのインストール確認：`nvcc --version`
 3. システムの再起動が必要な場合があります
 4. Ubuntu 22.04以外のバージョンでは、CUDAインストールスクリプトの調整が必要な場合があります
+
+### Claude Codeフックが動作しない場合
+
+1. フックファイルの権限を確認：`ls -la ~/.config/.claude/hooks/`
+2. フックに実行権限があることを確認：`chmod +x ~/.config/.claude/hooks/*.sh`
+3. フックログを確認：`cat ~/.claude/hooks.log`
+4. rules.jsonの構文を確認：JSON構造を検証
+
+## Claude Code連携
+
+このリポジトリにはClaude Code用のカスタムフックが含まれており、以下の機能を提供します：
+
+### セキュリティ機能
+- **コマンドフィルタリング**: 危険なコマンド（rm -rf、sudo操作等）の実行を防止
+- **単語フィルタリング**: AI応答内の不確定・推測的な言葉を検出
+- **推奨ツール強制**: モダンツールの使用を強制（npmよりbun、pipよりuv）
+
+### フックファイル
+- `.config/.claude/hooks/rules.json` - セキュリティルールと推奨ツールの設定
+- `.config/.claude/hooks/stop_words.sh` - AI応答の問題言語フィルタ
+- `.config/.claude/hooks/pre_commands.sh` - コマンド実行前の検証
+- `.config/.claude/hooks/post_commands.sh` - コマンド結果の分析と統計ログ
+
+### Claude Codeフックのセットアップ
+
+```bash
+# フックを実行可能にする
+chmod +x ~/.config/.claude/hooks/*.sh
+
+# フック機能をテスト
+~/.config/.claude/hooks/stop_words.sh "これは提案かもしれません"
+~/.config/.claude/hooks/pre_commands.sh "npm install"
+```
+
+詳細な設定とカスタマイズオプションについては`.config/.claude/hooks/README.md`を参照してください。
 
 ## ライセンス
 
