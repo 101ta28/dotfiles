@@ -33,7 +33,7 @@
 ### 1. 実行権限の付与
 
 ```bash
-chmod +x ~/.config/.claude/hooks/*.sh
+chmod +x ~/.claude/hooks/*.sh
 ```
 
 ### 2. Claude Codeでの自動実行
@@ -48,13 +48,13 @@ Claude Codeは以下のタイミングで自動的にフックを実行します
 
 ```bash
 # NG Wordチェック
-~/.config/.claude/hooks/stop_words.sh "これは代替案として提案します"
+~/.claude/hooks/stop_words.sh "これは代替案として提案します"
 
 # コマンドチェック
-~/.config/.claude/hooks/pre_commands.sh "curl https://example.com"
+~/.claude/hooks/pre_commands.sh "curl https://example.com"
 
 # 実行後処理
-~/.config/.claude/hooks/post_commands.sh "git clone repo" 0 "クローン完了"
+~/.claude/hooks/post_commands.sh "git clone repo" 0 "クローン完了"
 ```
 
 ## ログ

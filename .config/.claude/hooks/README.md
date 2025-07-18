@@ -35,7 +35,7 @@ These hooks function as a safety net to prevent the AI from making inappropriate
 ### 1. Grant Execute Permissions
 
 ```bash
-chmod +x ~/.config/.claude/hooks/*.sh
+chmod +x ~/.claude/hooks/*.sh
 ```
 
 ### 2. Automatic Execution by Claude Code
@@ -50,13 +50,13 @@ Claude Code automatically executes hooks at the following times:
 
 ```bash
 # NG Word check
-~/.config/.claude/hooks/stop_words.sh "This is suggested as an alternative"
+~/.claude/hooks/stop_words.sh "This is suggested as an alternative"
 
 # Command check
-~/.config/.claude/hooks/pre_commands.sh "curl https://example.com"
+~/.claude/hooks/pre_commands.sh "curl https://example.com"
 
 # Post-execution processing
-~/.config/.claude/hooks/post_commands.sh "git clone repo" 0 "Clone completed"
+~/.claude/hooks/post_commands.sh "git clone repo" 0 "Clone completed"
 ```
 
 ## Logs
