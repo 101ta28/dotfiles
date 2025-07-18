@@ -47,14 +47,34 @@ get_command_info() {
                 echo "medium"
                 ;;
             "reason")
-                jq -r --arg cmd "$command_key" '.dangerousCommands.patterns[] | select(.pattern == $cmd) | .reason' "$RULES_FILE" 2>/dev/null ||
-                jq -r --arg cmd "$command_key" '.restrictedCommands.commands[$cmd].reason' "$RULES_FILE" 2>/dev/null ||
-                echo "制限されたコマンド"
+                # Try dangerous patterns first
+                local result=$(jq -r --arg cmd "$command_key" '.dangerousCommands.patterns[] | select(.pattern == $cmd) | .reason' "$RULES_FILE" 2>/dev/null)
+                if [[ -n "$result" ]]; then
+                    echo "$result"
+                else
+                    # Try restricted commands
+                    result=$(jq -r --arg cmd "$command_key" '.restrictedCommands.commands[$cmd].reason' "$RULES_FILE" 2>/dev/null)
+                    if [[ -n "$result" ]]; then
+                        echo "$result"
+                    else
+                        echo "制限されたコマンド"
+                    fi
+                fi
                 ;;
             "alternatives")
-                jq -r --arg cmd "$command_key" '.dangerousCommands.patterns[] | select(.pattern == $cmd) | .alternatives[]' "$RULES_FILE" 2>/dev/null ||
-                jq -r --arg cmd "$command_key" '.restrictedCommands.commands[$cmd].alternatives[]' "$RULES_FILE" 2>/dev/null ||
-                echo "より安全な方法を検討してください"
+                # Try dangerous patterns first
+                local result=$(jq -r --arg cmd "$command_key" '.dangerousCommands.patterns[] | select(.pattern == $cmd) | .alternatives[]' "$RULES_FILE" 2>/dev/null)
+                if [[ -n "$result" ]]; then
+                    echo "$result"
+                else
+                    # Try restricted commands
+                    result=$(jq -r --arg cmd "$command_key" '.restrictedCommands.commands[$cmd].alternatives[]' "$RULES_FILE" 2>/dev/null)
+                    if [[ -n "$result" ]]; then
+                        echo "$result"
+                    else
+                        echo "より安全な方法を検討してください"
+                    fi
+                fi
                 ;;
         esac
     else
