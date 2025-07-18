@@ -17,7 +17,7 @@ CUDA_PATH="/usr/local/cuda-${CUDA_VERSION}"
 # Aliases
 # ============================================================================
 alias ls="lsd"
-alias claude="${HOME}/.claude/local/claude"
+alias claude="~/.claude/local/claude"
 
 # ============================================================================
 # Environment Variables
