@@ -198,7 +198,7 @@ done
 # =============================================================================
 log_info "Installing system packages..."
 sudo apt update
-sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim
+sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim kleopatra
 
 # =============================================================================
 # 開発ツールのインストール
