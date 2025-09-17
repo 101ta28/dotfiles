@@ -119,6 +119,7 @@ done
 # =============================================================================
 # メイン処理
 # =============================================================================
+sudo apt install -y curl git build-essential
 
 # dotfiles リポジトリがなければ clone
 clone_repo "https://github.com/101ta28/dotfiles.git" "$DFILE_PATH" "dotfiles"
@@ -196,7 +197,7 @@ done
 # =============================================================================
 log_info "Installing system packages..."
 sudo apt update
-sudo apt install -y curl git build-essential unzip ca-certificates jq ripgrep fzf neovim
+sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim
 
 # =============================================================================
 # 開発ツールのインストール
