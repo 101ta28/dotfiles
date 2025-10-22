@@ -70,19 +70,20 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-# curlでインストールする汎用関数
+# curlでインストールする汎用関数（第5引数でシェルを指定可）
 install_via_curl() {
   local tool_name="$1"
   local install_url="$2"
   local check_command="$3"
   local install_args="${4:-}"
-  
+  local shell_bin="${5:-sh}"  # デフォルトはsh
+
   if ! command_exists "$check_command"; then
     log_info "Installing $tool_name..."
     if [ -n "$install_args" ]; then
-      curl -fsSL "$install_url" | sh -s -- $install_args
+      curl -fsSL "$install_url" | $shell_bin -s -- $install_args
     else
-      curl -fsSL "$install_url" | sh
+      curl -fsSL "$install_url" | $shell_bin
     fi
     log_success "$tool_name installed"
   else
@@ -119,6 +120,7 @@ done
 # =============================================================================
 # メイン処理
 # =============================================================================
+sudo apt install -y curl git build-essential
 
 # dotfiles リポジトリがなければ clone
 clone_repo "https://github.com/101ta28/dotfiles.git" "$DFILE_PATH" "dotfiles"
@@ -196,7 +198,7 @@ done
 # =============================================================================
 log_info "Installing system packages..."
 sudo apt update
-sudo apt install -y curl git build-essential unzip ca-certificates jq ripgrep fzf neovim
+sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim kleopatra zsh
 
 # =============================================================================
 # 開発ツールのインストール
@@ -254,9 +256,9 @@ else
   log_info "lsd already installed"
 fi
 
-# bun
+# bun（bashでインストールするように変更）
 if [ ! -d "$HOME/.bun" ]; then
-  install_via_curl "Bun" "https://bun.sh/install" "dummy"  # bunはディレクトリで判定
+  install_via_curl "Bun" "https://bun.sh/install" "dummy" "" "bash"  # bashで実行
 fi
 
 # Claude Code CLI
