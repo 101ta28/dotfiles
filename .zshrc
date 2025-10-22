@@ -26,7 +26,7 @@ alias claude="~/.claude/local/claude"
 # Input Method
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
+export XMODIFIERS=@im=fcitx
 
 # Bun
 export BUN_INSTALL="${HOME}/.bun"
@@ -101,3 +101,11 @@ claude-devcontainer() {
     return 1
   fi
 }
+
+# bun completions
+[ -s "/home/tatsuya/.bun/_bun" ] && source "/home/tatsuya/.bun/_bun"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/tatsuya/.lmstudio/bin"
+# End of LM Studio CLI section
+
