@@ -35,7 +35,7 @@ export BUN_INSTALL="${HOME}/.bun"
 typeset -U path
 path=(
   "${BUN_INSTALL}/bin"
-  "${HOME}/.local/bin/env"
+  "${HOME}/.local/bin"
   "${HOME}/.cargo/bin"
   "${CUDA_PATH}/bin"
   "/usr/local/go/bin"
