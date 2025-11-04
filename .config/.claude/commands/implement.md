@@ -48,7 +48,7 @@ bunx <package>
 
 #### エディタ
 
-- Neovim + dpp.vim設定を活用
+- Neovim + dein.vim設定を活用
 - 設定済みのプラグインを最大限活用
 
 ### 3. コード品質の確保

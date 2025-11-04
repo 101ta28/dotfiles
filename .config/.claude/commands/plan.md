@@ -22,7 +22,7 @@
 
 - **Python環境**: `uv venv`, `uv add`, `uv sync`
 - **Node.js環境**: `bun install`, `bun run`, `bunx`
-- **エディタ**: Neovim + dpp.vim設定
+- **エディタ**: Neovim + dein.vim設定
 - **開発コンテナ**: 必要に応じてdevcontainer設定
 
 ### 3. 実装計画の策定

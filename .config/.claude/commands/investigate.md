@@ -29,7 +29,7 @@
 
 - **Python**: uvを使用（pipは非推奨）
 - **Node.js**: bunを使用（npmは非推奨、bunが非対応の場合はyarn）
-- **エディタ**: Neovim + dpp.vim
+- **エディタ**: Neovim + dein.vim
 - **シェル**: Zsh + Prezto + Powerlevel10k
 
 ### 4. 調査結果の整理

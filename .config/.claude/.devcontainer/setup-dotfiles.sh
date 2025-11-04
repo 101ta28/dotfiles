@@ -58,15 +58,11 @@ main() {
     # Neovim設定ディレクトリの作成
     mkdir -p /home/node/.config/nvim
     
-    # dpp.vim関連のディレクトリ作成（存在しない場合のみ）
-    if [[ ! -d "/home/node/.cache/dpp/repos/github.com/Shougo/dpp.vim" ]]; then
-        log_info "Setting up dpp.vim..."
-        mkdir -p /home/node/.cache/dpp/repos/github.com/{Shougo,denops}
-        
-        # dpp.vim関連のリポジトリをクローン
-        git clone https://github.com/Shougo/dpp.vim /home/node/.cache/dpp/repos/github.com/Shougo/dpp.vim
-        git clone https://github.com/denops/denops.vim /home/node/.cache/dpp/repos/github.com/denops/denops.vim
-        git clone https://github.com/Shougo/dpp-ext-installer /home/node/.cache/dpp/repos/github.com/Shougo/dpp-ext-installer
+    # dein.vim関連のディレクトリ作成（存在しない場合のみ）
+    if [[ ! -d "/home/node/.cache/dein/repos/github.com/Shougo/dein.vim" ]]; then
+        log_info "Setting up dein.vim..."
+        mkdir -p /home/node/.cache/dein/repos/github.com/Shougo
+        git clone https://github.com/Shougo/dein.vim /home/node/.cache/dein/repos/github.com/Shougo/dein.vim
     fi
     
     # Neovim設定ファイルのリンク（dotfilesがマウントされている場合）
@@ -74,9 +70,12 @@ main() {
         ln -sf /home/node/.vimrc /home/node/.config/nvim/init.vim
     fi
     
-    # dpp.ts設定ファイルのリンク
-    if [[ -f "/home/node/.config/.claude/../nvim/dpp.ts" && ! -L "/home/node/.config/nvim/dpp.ts" ]]; then
-        ln -sf /home/node/.config/.claude/../nvim/dpp.ts /home/node/.config/nvim/dpp.ts
+    # dein.toml設定ファイルのリンク
+    if [[ -f "/home/node/.config/.claude/../nvim/dein.toml" && ! -L "/home/node/.config/nvim/dein.toml" ]]; then
+        ln -sf /home/node/.config/.claude/../nvim/dein.toml /home/node/.config/nvim/dein.toml
+    fi
+    if [[ -f "/home/node/.config/.claude/../nvim/dein_lazy.toml" && ! -L "/home/node/.config/nvim/dein_lazy.toml" ]]; then
+        ln -sf /home/node/.config/.claude/../nvim/dein_lazy.toml /home/node/.config/nvim/dein_lazy.toml
     fi
     
     # undoディレクトリの作成

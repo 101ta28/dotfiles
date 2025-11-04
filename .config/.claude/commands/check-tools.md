@@ -42,19 +42,19 @@ node --version 2>/dev/null || echo "Node.js not installed"
 # その他のツール
 deno --version 2>/dev/null || echo "deno not installed"
 gh --version 2>/dev/null || echo "GitHub CLI not installed"
+codex --version 2>/dev/null || echo "codex not installed"
 ```
 
 ### 2. エディタ環境の確認
 
-#### Neovim + dpp.vim
+#### Neovim + dein.vim
 
 ```bash
 # Neovim
 nvim --version | head -1
 
-# dpp.vim設定の確認
-ls -la ~/.cache/dpp/repos/github.com/Shougo/dpp.vim 2>/dev/null || echo "dpp.vim not found"
-ls -la ~/.cache/dpp/repos/github.com/denops/denops.vim 2>/dev/null || echo "denops.vim not found"
+# dein.vim設定の確認
+ls -la ~/.cache/dein/repos/github.com/Shougo/dein.vim 2>/dev/null || echo "dein.vim not found"
 ls -la ~/.config/nvim/ 2>/dev/null || echo "Neovim config not found"
 ```
 
@@ -101,7 +101,8 @@ ls -la ~/.config/.claude/.devcontainer/ 2>/dev/null || echo "Devcontainer config
 - uv: [バージョン]
 - bun: [バージョン]
 - Neovim: [バージョン]
-- dpp.vim: [状態]
+- dein.vim: [状態]
+- codex: [状態]
 
 ### ❌ 問題が発見されたツール
 - [ツール名]: [問題の詳細]
