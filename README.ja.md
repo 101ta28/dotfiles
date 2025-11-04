@@ -63,6 +63,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `init.vim` - Vim/Neovim設定 (dein.vimによるプラグイン管理)
 - `.config/nvim/dein.toml` - dein.vimのプラグイン定義（即時読み込み）
 - `.config/nvim/dein_lazy.toml` - dein.vimのプラグイン定義（遅延読み込み）
+- `AGENTS.md` - `~/.codex/AGENTS.md` と同期されるエージェント指示書
 - `.zshrc` - Prezto使用のZshシェル設定
 - `.config/.claude/hooks/` - Claude Codeのセキュリティ・ワークフロー制御用カスタムフック
 - `CLAUDE.md` - このリポジトリのAI向け指示書
@@ -114,6 +115,16 @@ nvim ~/.config/nvim/dein.toml
 :call dein#install()
 ```
 
+### Codex CLI
+
+```bash
+# インストール済みバージョンを確認
+codex --version
+
+# 同期されたエージェント指示書を編集
+nvim ~/.codex/AGENTS.md
+```
+
 ### dotfilesの更新
 
 ```bash
@@ -147,6 +158,7 @@ git config --global commit.gpgSign true
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
 - dein.vimは`dein.toml`で定義したプラグインを自動で取得します
+- Codex CLIは `AGENTS.md` を参照します。指示書を更新したい場合はインストーラーを再実行するか、同ファイルを `~/.codex/AGENTS.md` にコピーしてください
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 - Claude Codeフックによりセキュリティ制御とワークフロー自動化を提供
 
@@ -178,22 +190,24 @@ git config --global commit.gpgSign true
 3. フックログを確認：`cat ~/.claude/hooks.log`
 4. rules.jsonの構文を確認：JSON構造を検証
 
-## Claude Code連携
+## AIツール連携
 
-このリポジトリにはClaude Code用のカスタムフックが含まれており、以下の機能を提供します：
+このリポジトリでは Claude Code と Codex のCLIを活用した開発フローを提供します。
 
-### セキュリティ機能
+### Claude Code
+
+#### セキュリティ機能
 - **コマンドフィルタリング**: 危険なコマンド（rm -rf、sudo操作等）の実行を防止
 - **単語フィルタリング**: AI応答内の不確定・推測的な言葉を検出
 - **推奨ツール強制**: モダンツールの使用を強制（npmよりbun、pipよりuv）
 
-### フックファイル
+#### フックファイル
 - `.config/.claude/hooks/rules.json` - セキュリティルールと推奨ツールの設定
 - `.config/.claude/hooks/stop_words.sh` - AI応答の問題言語フィルタ
 - `.config/.claude/hooks/pre_commands.sh` - コマンド実行前の検証
 - `.config/.claude/hooks/post_commands.sh` - コマンド結果の分析と統計ログ
 
-### Claude Codeフックのセットアップ
+#### Claude Codeフックのセットアップ
 
 ```bash
 # フックを実行可能にする
@@ -205,6 +219,11 @@ chmod +x ~/.claude/hooks/*.sh
 ```
 
 詳細な設定とカスタマイズオプションについては`.config/.claude/hooks/README.md`を参照してください。
+
+### Codex CLI
+- `bun install -g @openai/codex` でインストールされます
+- 設定ディレクトリ: `~/.codex/`
+- エージェント指示書: `~/.codex/AGENTS.md`（本リポジトリの `AGENTS.md` から同期）
 
 ## ライセンス
 

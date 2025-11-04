@@ -63,6 +63,7 @@ This will prompt you to enter:
 - `init.vim` - Vim/Neovim configuration (using dein.vim for plugin management)
 - `.config/nvim/dein.toml` - dein.vim plugin definition (eager load)
 - `.config/nvim/dein_lazy.toml` - dein.vim plugin definition (lazy load)
+- `AGENTS.md` - Shared agent instructions synced to `~/.codex/AGENTS.md`
 - `.zshrc` - Zsh shell configuration with Prezto
 - `.config/.claude/hooks/` - Claude Code custom hooks for security and workflow control
 - `CLAUDE.md` - AI instructions for this repository
@@ -114,6 +115,16 @@ nvim ~/.config/nvim/dein.toml
 :call dein#install()
 ```
 
+### Codex CLI
+
+```bash
+# Check the installed version
+codex --version
+
+# Edit synced agent instructions
+nvim ~/.codex/AGENTS.md
+```
+
 ### Updating Dotfiles
 
 ```bash
@@ -147,6 +158,7 @@ git config --global commit.gpgSign true
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
 - dein.vim installs plugins defined in `dein.toml`
+- Codex CLI uses `AGENTS.md`; rerun the installer or copy the file manually to refresh instructions
 - Git LFS is enabled for handling large files
 - Claude Code hooks provide security controls and workflow automation
 
@@ -178,9 +190,13 @@ git config --global commit.gpgSign true
 3. Check hook logs: `cat ~/.claude/hooks.log`
 4. Verify rules.json syntax: validate JSON structure
 
-## Claude Code Integration
+## AI Tool Integration
 
-This repository includes custom hooks for Claude Code that provide:
+This repository includes CLI tooling for Claude Code and Codex to streamline AI-assisted workflows.
+
+### Claude Code
+
+Custom hooks for Claude Code provide:
 
 ### Security Features
 - **Command filtering**: Prevents execution of dangerous commands (rm -rf, sudo operations, etc.)
@@ -205,6 +221,11 @@ chmod +x ~/.claude/hooks/*.sh
 ```
 
 See `.config/.claude/hooks/README.md` for detailed configuration and customization options.
+
+### Codex CLI
+- Installed via `bun install -g @openai/codex`
+- Configuration directory: `~/.codex/`
+- Agent instructions: copy or edit `~/.codex/AGENTS.md` (managed from this repository's `AGENTS.md`)
 
 ## License
 

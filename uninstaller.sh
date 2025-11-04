@@ -172,6 +172,14 @@ EOF
             cp "$HOME/.claude/command_stats.log" "$BACKUP_DIR/" 2>/dev/null || true
             rm -f "$HOME/.claude/command_stats.log"
         fi
+        
+        # Codex configuration
+        if [[ -d "$HOME/.codex" ]]; then
+            log_info "Backing up and removing Codex configuration..."
+            cp -r "$HOME/.codex" "$BACKUP_DIR/codex" 2>/dev/null || true
+            rm -rf "$HOME/.codex"
+            log_success "Removed: $HOME/.codex"
+        fi
     fi
     
     # =================================================================

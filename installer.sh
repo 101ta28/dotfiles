@@ -247,22 +247,20 @@ if [ ! -d "$HOME/.bun" ]; then
   install_via_curl "Bun" "https://bun.sh/install" "dummy" "" "bash"  # bashで実行
 fi
 
-# Claude Code CLI
+# Claude Code / Codex CLI
 if command_exists "bun"; then
-  # Check if Claude Code CLI is actually installed
+  # Claude Code CLI
   if ! command_exists "claude"; then
     log_info "Installing Claude Code CLI..."
     bun install -g @anthropic-ai/claude-code
     log_success "Claude Code CLI installed"
     
-    # Run migrate-installer for new installations
     log_info "Running Claude Code migrate installer..."
     bunx claude migrate-installer
     log_success "Claude Code migrate installer completed"
   else
     log_info "Claude Code CLI already installed"
     
-    # Check if migration is needed (if local claude binary doesn't exist)
     if [ ! -f "$HOME/.claude/local/claude" ]; then
       log_info "Claude Code migration needed - running migrate-installer..."
       bunx claude migrate-installer
@@ -270,16 +268,32 @@ if command_exists "bun"; then
     fi
   fi
   
+  # Codex CLI
+  if ! command_exists "codex"; then
+    log_info "Installing Codex CLI..."
+    bun install -g @openai/codex
+    log_success "Codex CLI installed"
+  else
+    log_info "Codex CLI already installed"
+  fi
+  
   # Claude Code設定のコピー
   if [ -d "$DFILE_PATH/.config/.claude" ]; then
     log_info "Copying Claude Code configuration..."
     mkdir -p "$HOME/.claude"
-    # 設定ファイルをコピー（既存のファイルは上書きしない）
     cp -rn "$DFILE_PATH/.config/.claude/"* "$HOME/.claude/" 2>/dev/null || true
     log_success "Claude Code configuration copied"
   fi
+  
+  # Codex設定のコピー
+  if [ -f "$DFILE_PATH/AGENTS.md" ]; then
+    log_info "Syncing Codex agent instructions..."
+    mkdir -p "$HOME/.codex"
+    cp "$DFILE_PATH/AGENTS.md" "$HOME/.codex/AGENTS.md"
+    log_success "Codex agent instructions updated"
+  fi
 else
-  log_warn "Bun not found, skipping Claude Code CLI installation"
+  log_warn "Bun not found, skipping Claude Code and Codex CLI installation"
 fi
 
 # uv
