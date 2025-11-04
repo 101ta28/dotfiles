@@ -85,7 +85,7 @@ This will prompt you to enter:
 
 ### Development Environment
 
-- **JavaScript/TypeScript**: NVM, Bun, Deno
+- **JavaScript/TypeScript**: NVM, Bun
 - **Python**: uv (fast package manager)
 - **Rust**: rustup, Cargo
 - **Others**: Go, CUDA (GPU computing), GitHub CLI
