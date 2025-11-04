@@ -60,8 +60,9 @@ This will prompt you to enter:
 - `.gitconfig.template` - Template for Git configuration with placeholders
 - `setup-user.sh` - Interactive script to configure personal settings
 - `installer.sh` - Main installation script
-- `init.vim` - Vim/Neovim configuration (using dpp.vim for plugin management)
-- `.config/nvim/dpp.ts` - TypeScript configuration file for dpp.vim
+- `init.vim` - Vim/Neovim configuration (using dein.vim for plugin management)
+- `.config/nvim/dein.toml` - dein.vim plugin definition (eager load)
+- `.config/nvim/dein_lazy.toml` - dein.vim plugin definition (lazy load)
 - `.zshrc` - Zsh shell configuration with Prezto
 - `.config/.claude/hooks/` - Claude Code custom hooks for security and workflow control
 - `CLAUDE.md` - AI instructions for this repository
@@ -72,15 +73,15 @@ This will prompt you to enter:
 
 - **Zsh**: Uses Prezto framework. Aliases and environment variables are defined in `.zshrc`
 - **Git**: `.gitconfig` sets up GPG signing, aliases, and Git LFS
-- **Editor**: `init.vim` manages plugins via dpp.vim (TypeScript config: `.config/nvim/dpp.ts`)
+- **Editor**: `init.vim` manages plugins via dein.vim (`dein.toml` / `dein_lazy.toml`)
 
 ### How installer.sh Works
 
 1. Clone dotfiles repository
 2. Install Prezto (Zsh framework)
 3. Create symbolic links for configuration files
-4. Install dpp.vim, denops.vim, and dpp-ext-installer
-5. Auto-install development tools (Node.js, Rust, Bun, uv, Deno, etc.)
+4. Install dein.vim plugin manager
+5. Auto-install development tools (Node.js, Rust, Bun, uv, etc.)
 
 ### Development Environment
 
@@ -105,12 +106,12 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/in
 # Edit init.vim with Neovim
 nvim ~/.config/nvim/init.vim
 
-# Edit dpp.vim TypeScript config
-nvim ~/.config/nvim/dpp.ts
+# Edit dein.vim plugin definition
+nvim ~/.config/nvim/dein.toml
 
 # Plugins are installed automatically
 # To manually install plugins (run inside Vim/Neovim)
-:call dpp#install()
+:call dein#install()
 ```
 
 ### Updating Dotfiles
@@ -145,16 +146,16 @@ git config --global commit.gpgSign true
 - Commits are automatically GPG signed (if configured)
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
-- dpp.vim requires Deno 1.45+ (auto-installed by installer.sh)
+- dein.vim installs plugins defined in `dein.toml`
 - Git LFS is enabled for handling large files
 - Claude Code hooks provide security controls and workflow automation
 
 ## Troubleshooting
 
-### dpp.vim not working
+### dein.vim not working
 
-1. Check if Deno is installed: `deno --version`
-2. Ensure Deno version is 1.45 or higher
+1. Update plugin metadata: `:call dein#update()`
+2. Ensure `~/.cache/dein` is writable
 3. Restart Vim/Neovim
 
 ### GPG signing errors

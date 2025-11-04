@@ -60,8 +60,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `.gitconfig.template` - プレースホルダー付きGit設定テンプレート
 - `setup-user.sh` - 個人設定用インタラクティブスクリプト
 - `installer.sh` - メインインストールスクリプト
-- `init.vim` - Vim/Neovim設定 (dpp.vimによるプラグイン管理)
-- `.config/nvim/dpp.ts` - dpp.vimのTypeScript設定ファイル
+- `init.vim` - Vim/Neovim設定 (dein.vimによるプラグイン管理)
+- `.config/nvim/dein.toml` - dein.vimのプラグイン定義（即時読み込み）
+- `.config/nvim/dein_lazy.toml` - dein.vimのプラグイン定義（遅延読み込み）
 - `.zshrc` - Prezto使用のZshシェル設定
 - `.config/.claude/hooks/` - Claude Codeのセキュリティ・ワークフロー制御用カスタムフック
 - `CLAUDE.md` - このリポジトリのAI向け指示書
@@ -72,19 +73,19 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 - **Zsh設定**: Preztoフレームワークを使用。`.zshrc`でエイリアスと環境変数を定義
 - **Git設定**: `.gitconfig`でGPG署名、エイリアス、Git LFSを設定
-- **エディタ設定**: `init.vim`でdpp.vimによるプラグイン管理（TypeScript設定: `.config/nvim/dpp.ts`）
+- **エディタ設定**: `init.vim`でdein.vimによるプラグイン管理（`dein.toml` / `dein_lazy.toml`）
 
 ### installer.shの動作
 
 1. dotfilesリポジトリをクローン
 2. Prezto（Zshフレームワーク）をインストール
 3. 各設定ファイルのシンボリックリンクを作成
-4. dpp.vim、denops.vim、dpp-ext-installerをインストール
-5. 開発ツール（Node.js、Rust、Bun、uv、Deno等）を自動インストール
+4. dein.vimプラグインマネージャをインストール
+5. 開発ツール（Node.js、Rust、Bun、uv等）を自動インストール
 
 ### 開発環境
 
-- **JavaScript/TypeScript**: NVM、Bun、Deno
+- **JavaScript/TypeScript**: NVM、Bun
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo
 - **その他**: Go、CUDA（GPU計算）、GitHub CLI
@@ -105,12 +106,12 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/in
 # Neovimでinit.vimを編集
 nvim ~/.config/nvim/init.vim
 
-# dpp.vimの設定ファイルを編集
-nvim ~/.config/nvim/dpp.ts
+# dein.vimの設定ファイルを編集
+nvim ~/.config/nvim/dein.toml
 
 # プラグインは自動的にインストールされます
 # 手動でプラグインをインストールする場合（Vim/Neovim内で実行）
-:call dpp#install()
+:call dein#install()
 ```
 
 ### dotfilesの更新
@@ -145,16 +146,16 @@ git config --global commit.gpgSign true
 - コミット時は自動的にGPG署名が付与されます（設定している場合）
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
-- dpp.vimはDeno 1.45+が必要です（installer.shで自動インストール）
+- dein.vimは`dein.toml`で定義したプラグインを自動で取得します
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 - Claude Codeフックによりセキュリティ制御とワークフロー自動化を提供
 
 ## トラブルシューティング
 
-### dpp.vimが動作しない場合
+### dein.vimが動作しない場合
 
-1. Denoがインストールされているか確認：`deno --version`
-2. Denoのバージョンが1.45以上であることを確認
+1. プラグイン情報を更新：`:call dein#update()`
+2. `~/.cache/dein`が書き込み可能か確認
 3. Vim/Neovimを再起動
 
 ### GPG署名でエラーが発生する場合

@@ -1,3 +1,8 @@
+# Add deno completions to search path
+ZSH_COMPLETIONS_DIR="${HOME}/.zsh/completions"
+if [[ ":${FPATH}:" != *":${ZSH_COMPLETIONS_DIR}:"* ]]; then
+  export FPATH="${ZSH_COMPLETIONS_DIR}:${FPATH}"
+fi
 # ============================================================================
 # Zsh Configuration
 # ============================================================================
@@ -103,9 +108,12 @@ claude-devcontainer() {
 }
 
 # bun completions
-[ -s "/home/tatsuya/.bun/_bun" ] && source "/home/tatsuya/.bun/_bun"
+[ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/home/tatsuya/.lmstudio/bin"
+export PATH="${PATH}:${HOME}/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+. "$HOME/.local/bin/env"
+. "${HOME}/.deno/env"

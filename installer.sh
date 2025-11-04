@@ -6,7 +6,7 @@ set -e
 # 設定
 # =============================================================================
 DFILE_PATH="$HOME/.dfiles"
-DPP_DIR="$HOME/.cache/dpp"
+DEIN_DIR="$HOME/.cache/dein"
 
 # バージョン情報
 NVM_VERSION="v0.40.2"
@@ -160,7 +160,8 @@ fi
 # Neovim 設定
 mkdir -p ~/.config/nvim
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.config/nvim/init.vim"
-create_symlink "$DFILE_PATH/.config/nvim/dpp.ts" "$HOME/.config/nvim/dpp.ts"
+create_symlink "$DFILE_PATH/.config/nvim/dein.toml" "$HOME/.config/nvim/dein.toml"
+create_symlink "$DFILE_PATH/.config/nvim/dein_lazy.toml" "$HOME/.config/nvim/dein_lazy.toml"
 
 
 # Vim 設定
@@ -172,26 +173,11 @@ mkdir -p ~/.local/share/nvim/undo
 log_success "Symbolic links created"
 
 # =============================================================================
-# dpp.vim とその依存関係をインストール
+# dein.vim をセットアップ
 # =============================================================================
-log_info "Setting up dpp.vim and dependencies..."
-
-mkdir -p "$DPP_DIR/repos/github.com/Shougo"
-mkdir -p "$DPP_DIR/repos/github.com/vim-denops"
-
-# dpp.vim関連のリポジトリ
-DPP_REPOS=(
-  "Shougo/dpp.vim|$DPP_DIR/repos/github.com/Shougo/dpp.vim|dpp.vim"
-  "vim-denops/denops.vim|$DPP_DIR/repos/github.com/vim-denops/denops.vim|denops.vim"
-  "Shougo/dpp-ext-installer|$DPP_DIR/repos/github.com/Shougo/dpp-ext-installer|dpp-ext-installer"
-)
-
-for repo_info in "${DPP_REPOS[@]}"; do
-  repo_url=$(echo "$repo_info" | cut -d'|' -f1)
-  target_dir=$(echo "$repo_info" | cut -d'|' -f2)
-  repo_name=$(echo "$repo_info" | cut -d'|' -f3)
-  clone_repo "https://github.com/$repo_url" "$target_dir" "$repo_name"
-done
+log_info "Setting up dein.vim..."
+mkdir -p "$DEIN_DIR/repos/github.com/Shougo"
+clone_repo "https://github.com/Shougo/dein.vim" "$DEIN_DIR/repos/github.com/Shougo/dein.vim" "dein.vim"
 
 # =============================================================================
 # パッケージインストール (Ubuntu専用)
@@ -299,8 +285,6 @@ fi
 # uv
 install_via_curl "uv" "https://astral.sh/uv/install.sh" "uv"
 
-# deno (dpp.vim requires Deno 1.45+)
-install_via_curl "Deno (required for dpp.vim)" "https://deno.land/install.sh" "deno"
 
 # =============================================================================
 # GPU/CUDA 開発ツールのインストール (オプション)
@@ -348,8 +332,7 @@ fi
 echo ""
 log_success "Setup complete!"
 echo ""
-echo "Launch Vim or Neovim. dpp.vim will set up automatically."
-echo "Note: Deno is required for dpp.vim to work properly."
+echo "Launch Vim or Neovim. dein.vim will ensure plugins defined in dein.toml are installed."
 echo ""
 echo "To configure your personal Git settings, run:"
 echo "  bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/setup-user.sh)\""

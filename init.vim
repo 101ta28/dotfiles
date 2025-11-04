@@ -7,73 +7,54 @@ if &compatible
 endif
 
 " =============================================================================
-" dpp.vim Configuration
+" dein.vim Configuration
 " =============================================================================
 
-" Disable denops version check if needed
-let g:denops_disable_version_check = 1
+let g:dein#auto_recache = 1
 
-" Base paths
-const s:dpp_base = expand('~/.cache/dpp')
-const s:config_home = expand('~/.dfiles/.config/nvim')
+const s:dein_base = expand('~/.cache/dein')
+const s:dein_repo = s:dein_base . '/repos/github.com/Shougo/dein.vim'
+const s:config_home = expand('~/.config/nvim')
+const s:dein_toml = s:config_home . '/dein.toml'
+const s:dein_lazy_toml = s:config_home . '/dein_lazy.toml'
 
-" Repository paths
-const s:repos = {
-\   'dpp': s:dpp_base . '/repos/github.com/Shougo/dpp.vim',
-\   'denops': s:dpp_base . '/repos/github.com/vim-denops/denops.vim',
-\   'installer': s:dpp_base . '/repos/github.com/Shougo/dpp-ext-installer'
-\ }
+if !isdirectory(s:dein_repo)
+  if executable('git')
+    echo 'Installing dein.vim...'
+    call system(['git', 'clone', 'https://github.com/Shougo/dein.vim', s:dein_repo])
+  else
+    echohl ErrorMsg
+    echom 'git が見つかりません。dein.vim を手動でインストールしてください。'
+    echohl None
+  endif
+endif
 
-" Function to check if all required repositories exist
-function! s:check_dpp_repos() abort
-  for [name, path] in items(s:repos)
-    if !isdirectory(path)
-      return 0
+if filereadable(s:dein_toml)
+  execute 'set runtimepath^=' . fnameescape(s:dein_repo)
+
+  if dein#load_state(s:dein_base)
+    call dein#begin(s:dein_base)
+    call dein#load_toml(s:dein_toml, {'lazy': 0})
+    if filereadable(s:dein_lazy_toml)
+      call dein#load_toml(s:dein_lazy_toml, {'lazy': 1})
     endif
-  endfor
-  return 1
-endfunction
+    call dein#end()
+    call dein#save_state()
+  endif
 
-" Function to show clone instructions
-function! s:show_clone_instructions() abort
-  echohl WarningMsg
-  echom 'dpp.vim is not fully installed. Please run:'
-  echom '  git clone https://github.com/Shougo/dpp.vim ' . s:repos.dpp
-  echom '  git clone https://github.com/vim-denops/denops.vim ' . s:repos.denops
-  echom '  git clone https://github.com/Shougo/dpp-ext-installer ' . s:repos.installer
-  echohl None
-endfunction
-
-" Setup dpp.vim if all repositories exist
-if s:check_dpp_repos()
-  " Add to runtimepath
-  execute 'set runtimepath^=' . s:repos.dpp
-  
-  " Load dpp state
-  if dpp#min#load_state(s:dpp_base)
-    " Add denops and installer to runtimepath
-    execute 'set runtimepath^=' . s:repos.denops
-    execute 'set runtimepath^=' . s:repos.installer
-    
-    " TypeScript config file path
-    let s:dpp_config = s:config_home . '/dpp.ts'
-    
-    " Create state when denops is ready
-    autocmd User DenopsReady
-    \ : echohl WarningMsg
-    \ | echom 'dpp load_state() is failed'
-    \ | echom 'running dpp#make_state()'
-    \ | echohl None
-    \ | call dpp#make_state(s:dpp_base, s:dpp_config)
+  if dein#check_install()
+    call dein#install()
   endif
 else
-  call s:show_clone_instructions()
+  echohl WarningMsg
+  echom 'dein.toml が見つかりません。プラグイン設定を確認してください。'
+  echohl None
 endif
 
 " =============================================================================
 " Plugin Notes
 " =============================================================================
-" Currently managed plugins (configured in dpp.ts):
+" Currently managed plugins (configured in dein.toml):
 " - itchyny/lightline.vim - statusline
 " - cohama/lexima.vim - auto close brackets
 
