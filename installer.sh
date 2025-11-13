@@ -286,10 +286,11 @@ if command_exists "bun"; then
   fi
   
   # Codex設定のコピー
-  if [ -f "$DFILE_PATH/AGENTS.md" ]; then
+  if [ -f "$DFILE_PATH/.config/.codex/AGENTS.md" ]; then
     log_info "Syncing Codex agent instructions..."
     mkdir -p "$HOME/.codex"
-    cp "$DFILE_PATH/AGENTS.md" "$HOME/.codex/AGENTS.md"
+    cp "$DFILE_PATH/.config/.codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
+    cp "$DFILE_PATH/.config/.codex/PLANS.md" "$HOME/.codex/PLANS.md"
     log_success "Codex agent instructions updated"
   fi
 else
