@@ -6,4 +6,4 @@ Think in English and respond to the user in Japanese.
 
 ## ExecPlans
 
-When writing complex features or significant refactors, use an ExecPlan (as described in ./PLANS.md) from design to implementation.
+When writing complex features or significant refactors, use an ExecPlan (as described in ~/.codex/PLANS.md) from design to implementation.
