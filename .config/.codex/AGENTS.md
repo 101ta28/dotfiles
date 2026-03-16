@@ -9,6 +9,7 @@ Think in English and respond to the user in Japanese.
 When writing complex features or significant refactors, use an ExecPlan (as described in ~/.codex/PLANS.md) from design to implementation.
 
 ## GitHub search tips
+
 - When you find a file on GitHub, replace `https://github.com/<owner>/<repo>/blob/<branch>/<path>` with `https://raw.githubusercontent.com/<owner>/<repo>/refs/heads/<branch>/<path>` to view the raw file directly.
 - Example: `https://github.com/101ta28/101ta28-Repo/blob/main/main.py` → `https://raw.githubusercontent.com/101ta28/101ta28-Repo/refs/heads/main/main.py`
 
@@ -29,6 +30,7 @@ or confirmation before proceeding.
 
 ## Markdown policy
 
-- In Markdown, use two trailing spaces at the end of a line for line breaks within a paragraph.
+- In Markdown, use two trailing spaces at the end of a line only for line breaks within a paragraph.
+- Do not add trailing spaces at the end of a paragraph before a blank line.
 - When editing or formatting Markdown, do not remove trailing spaces used for intended line breaks.
 - After modifying Markdown, verify that intended line breaks have not been collapsed into a single line.
