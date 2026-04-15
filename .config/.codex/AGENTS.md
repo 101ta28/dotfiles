@@ -8,6 +8,34 @@ Think in English and respond to the user in Japanese.
 
 When writing complex features or significant refactors, use an ExecPlan (as described in ~/.codex/PLANS.md) from design to implementation.
 
+## DESIGN.md Usage
+
+When generating or modifying UI / frontend code, always refer to `.codex/DESIGN.md`.
+
+### Purpose
+- Ensure consistency in Japanese UI
+- Enforce adherence to the design system
+
+### Scope
+- Component design
+- Styling adjustments
+- UI refactoring
+
+### Rules
+- Colors must follow the Color Palette defined in DESIGN.md
+- Fonts must use the font-family specified in Typography Rules
+- Spacing and layout must follow Layout Principles
+- Components must follow Component Stylings
+- Japanese text must respect the line-height guidelines in DESIGN.md
+
+### Prohibited
+- Introducing colors or fonts not defined in DESIGN.md
+- Using body text line-height below 1.5
+- Defining font-family without a fallback chain
+
+### Priority
+DESIGN.md takes precedence over general best practices
+
 ## GitHub search tips
 
 - When you find a file on GitHub, replace `https://github.com/<owner>/<repo>/blob/<branch>/<path>` with `https://raw.githubusercontent.com/<owner>/<repo>/refs/heads/<branch>/<path>` to view the raw file directly.
