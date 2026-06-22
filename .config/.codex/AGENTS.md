@@ -1,4 +1,5 @@
 # AGENTS.md
+# AGENTS.md
 
 ## Instruction
 
@@ -62,3 +63,13 @@ or confirmation before proceeding.
 - Do not add trailing spaces at the end of a paragraph before a blank line.
 - When editing or formatting Markdown, do not remove trailing spaces used for intended line breaks.
 - After modifying Markdown, verify that intended line breaks have not been collapsed into a single line.
+
+## WSL Operations
+
+- When operating on a WSL repository from Codex Desktop on Windows, do not use `\\wsl.localhost\...` as the Codex workspace or shell working directory. It can cause Windows sandbox helper failures such as `helper_unknown_error: setup refresh had errors`.
+- Prefer one of these two patterns:
+  - Run Codex CLI inside WSL when the task is mainly WSL/Linux repo work.
+  - Keep Codex Desktop's workspace on a Windows-local path, then run WSL commands explicitly with `wsl -d <Distro> --cd <LinuxPath> -- sh -lc '<command>'`.
+- For WSL commands from Windows, use a Windows-local `workdir` and pass the Linux repo path through `--cd`. Example: `wsl -d Ubuntu --cd /home/tatsuya/KIT-VRM-ChatAgent -- sh -lc 'pwd && rg --files | head'`.
+- Do not treat failures from `\\wsl.localhost\...` sandbox setup as repository failures. Retry from a Windows-local workspace with explicit `wsl -d ... --cd ...` before diagnosing the project itself.
+- Avoid GUI/browser/Computer Use checks from a WSL UNC workspace. Use a Windows-local Codex Desktop workspace for Browser and Computer Use, and use explicit WSL commands only for Linux-side file, test, Docker, and git operations.
