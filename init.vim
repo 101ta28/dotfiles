@@ -7,54 +7,59 @@ if &compatible
 endif
 
 " =============================================================================
-" dein.vim Configuration
+" dpp.vim Configuration
 " =============================================================================
 
-let g:dein#auto_recache = 1
-
-const s:dein_base = expand('~/.cache/dein')
-const s:dein_repo = s:dein_base . '/repos/github.com/Shougo/dein.vim'
+const s:dpp_base = expand('~/.cache/dpp')
+const s:dpp_repos = s:dpp_base . '/repos/github.com'
+const s:dpp_src = s:dpp_repos . '/Shougo/dpp.vim'
+const s:denops_src = s:dpp_repos . '/vim-denops/denops.vim'
+const s:dpp_installer_src = s:dpp_repos . '/Shougo/dpp-ext-installer'
+const s:dpp_git_src = s:dpp_repos . '/Shougo/dpp-protocol-git'
 const s:config_home = expand('~/.config/nvim')
-const s:dein_toml = s:config_home . '/dein.toml'
-const s:dein_lazy_toml = s:config_home . '/dein_lazy.toml'
+const s:dpp_config = s:config_home . '/dpp.ts'
 
-if !isdirectory(s:dein_repo)
-  if executable('git')
-    echo 'Installing dein.vim...'
-    call system(['git', 'clone', 'https://github.com/Shougo/dein.vim', s:dein_repo])
-  else
-    echohl ErrorMsg
-    echom 'git が見つかりません。dein.vim を手動でインストールしてください。'
-    echohl None
+function! s:make_dpp_state() abort
+  echohl WarningMsg
+  echom 'dppのstateを生成します。初回は完了までお待ちください。'
+  echohl None
+  call dpp#make_state(s:dpp_base, s:dpp_config)
+endfunction
+
+function! s:on_dpp_state_ready() abort
+  echom 'dppのstate生成が完了しました。プラグインをインストールします。'
+  call dpp#async_ext_action('installer', 'install')
+endfunction
+
+if isdirectory(s:dpp_src) && filereadable(s:dpp_config)
+  execute 'set runtimepath^=' . fnameescape(s:dpp_src)
+
+  if dpp#min#load_state(s:dpp_base)
+    for s:bootstrap_src in [s:denops_src, s:dpp_installer_src, s:dpp_git_src]
+      if isdirectory(s:bootstrap_src)
+        execute 'set runtimepath^=' . fnameescape(s:bootstrap_src)
+      endif
+    endfor
+
+    augroup dpp_bootstrap
+      autocmd!
+      autocmd User DenopsReady call <SID>make_dpp_state()
+      autocmd User Dpp:makeStatePost call <SID>on_dpp_state_ready()
+    augroup END
   endif
-endif
 
-if filereadable(s:dein_toml)
-  execute 'set runtimepath^=' . fnameescape(s:dein_repo)
-
-  if dein#load_state(s:dein_base)
-    call dein#begin(s:dein_base)
-    call dein#load_toml(s:dein_toml, {'lazy': 0})
-    if filereadable(s:dein_lazy_toml)
-      call dein#load_toml(s:dein_lazy_toml, {'lazy': 1})
-    endif
-    call dein#end()
-    call dein#save_state()
-  endif
-
-  if dein#check_install()
-    call dein#install()
-  endif
+  command! DppInstall call dpp#async_ext_action('installer', 'install')
+  command! DppUpdate call dpp#async_ext_action('installer', 'update')
 else
   echohl WarningMsg
-  echom 'dein.toml が見つかりません。プラグイン設定を確認してください。'
+  echom 'dpp.vimまたはdpp.tsが見つかりません。installer.shを実行してください。'
   echohl None
 endif
 
 " =============================================================================
 " Plugin Notes
 " =============================================================================
-" Currently managed plugins (configured in dein.toml):
+" Currently managed plugins (configured in dpp.ts):
 " - itchyny/lightline.vim - statusline
 " - cohama/lexima.vim - auto close brackets
 

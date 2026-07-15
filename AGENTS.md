@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository manages a personal Ubuntu/WSL development environment. Root-level dotfiles such as `.zshrc`, `.zpreztorc`, and `.gitconfig.template` configure the shell and Git. `init.vim` and `.config/nvim/dein*.toml` define Vim/Neovim behavior and plugins. Lifecycle scripts are `installer.sh`, `update.sh`, and `uninstaller.sh`; `setup-user.sh` collects per-user Git settings. Codex configuration is under `.config/.codex/`. Keep English and Japanese documentation aligned in `README.md` and `README.ja.md` when behavior changes.
+This repository manages a personal Ubuntu/WSL development environment. Root-level dotfiles such as `.zshrc`, `.zpreztorc`, and `.gitconfig.template` configure the shell and Git. `init.vim` defines editor behavior, while `.config/nvim/dpp.ts` defines plugins managed by dpp.vim and Denops. Lifecycle scripts are `installer.sh`, `update.sh`, and `uninstaller.sh`; `setup-user.sh` collects per-user Git settings. Codex configuration is under `.config/.codex/`. Keep English and Japanese documentation aligned in `README.md` and `README.ja.md` when behavior changes.
 
 ## Build, Test, and Development Commands
 

@@ -82,9 +82,8 @@ The script backs up configuration before optional removal steps and asks separat
 - `installer.sh` - Main installation script
 - `update.sh` - Safe fast-forward update and configuration resync
 - `uninstaller.sh` - Interactive removal with backups
-- `init.vim` - Vim/Neovim configuration (using dein.vim for plugin management)
-- `.config/nvim/dein.toml` - dein.vim plugin definition (eager load)
-- `.config/nvim/dein_lazy.toml` - dein.vim plugin definition (lazy load)
+- `init.vim` - Vim/Neovim configuration and dpp.vim startup
+- `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `AGENTS.md` - Contributor guidance for this repository
 - `.config/.codex/` - Codex instructions synced to `~/.codex/`
 - `.zshrc` - Zsh shell configuration with Prezto
@@ -95,19 +94,19 @@ The script backs up configuration before optional removal steps and asks separat
 
 - **Zsh**: Uses Prezto framework. Aliases and environment variables are defined in `.zshrc`
 - **Git**: `.gitconfig` sets up GPG signing, aliases, and Git LFS
-- **Editor**: `init.vim` manages plugins via dein.vim (`dein.toml` / `dein_lazy.toml`)
+- **Editor**: `init.vim` loads dpp.vim; `dpp.ts` defines plugins through Denops
 
 ### How installer.sh Works
 
 1. Clone dotfiles repository
 2. Install Prezto (Zsh framework)
 3. Create symbolic links for configuration files
-4. Install dein.vim plugin manager
-5. Auto-install development tools (Node.js, Rust, Bun, uv, etc.)
+4. Bootstrap dpp.vim, Denops, and the required installer/Git extensions
+5. Auto-install development tools (Deno, Node.js, Rust, Bun, uv, etc.)
 
 ### Development Environment
 
-- **JavaScript/TypeScript**: NVM, Bun
+- **JavaScript/TypeScript**: NVM, Bun, Deno (required by dpp.vim)
 - **Python**: uv (fast package manager)
 - **Rust**: rustup, Cargo
 - **Others**: Go, CUDA (GPU computing), GitHub CLI
@@ -128,13 +127,17 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/in
 # Edit init.vim with Neovim
 nvim ~/.config/nvim/init.vim
 
-# Edit dein.vim plugin definition
-nvim ~/.config/nvim/dein.toml
+# Edit dpp.vim plugin definitions
+nvim ~/.config/nvim/dpp.ts
 
-# Plugins are installed automatically
-# To manually install plugins (run inside Vim/Neovim)
-:call dein#install()
+# Run inside Vim/Neovim when manual installation or updates are needed
+:DppInstall
+:DppUpdate
 ```
+
+dpp.vim requires Deno 2.3.0+, denops.vim 8.0+, and a supported editor (Neovim 0.11.3+ or Vim 9.1.1646+). The installer installs Deno and warns when the APT-provided Neovim is too old.
+
+When upgrading an existing installation, `update.sh` removes only the obsolete symlinks created by this repository. After confirming dpp works, the unused `~/.cache/dein` directory can be removed manually.
 
 ### Codex CLI
 
@@ -179,17 +182,17 @@ git config --global commit.gpgSign true
 - Commits are automatically GPG signed (if configured)
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
-- dein.vim installs plugins defined in `dein.toml`
+- dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
 - Codex CLI uses `.config/.codex/AGENTS.md`; rerun the installer or copy that file manually to refresh instructions
 - Git LFS is enabled for handling large files
 
 ## Troubleshooting
 
-### dein.vim not working
+### dpp.vim not working
 
-1. Update plugin metadata: `:call dein#update()`
-2. Ensure `~/.cache/dein` is writable
-3. Restart Vim/Neovim
+1. Check versions with `deno --version` and `nvim --version` (or `vim --version`)
+2. Ensure `~/.cache/dpp` is writable and the bootstrap repositories exist below `~/.cache/dpp/repos/github.com`
+3. Restart the editor to regenerate state, then run `:DppInstall`; use `:DppUpdate` for later updates
 
 ### GPG signing errors
 

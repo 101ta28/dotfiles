@@ -82,9 +82,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `installer.sh` - メインインストールスクリプト
 - `update.sh` - fast-forwardによる安全な更新と設定の再同期
 - `uninstaller.sh` - バックアップ付きの対話式削除
-- `init.vim` - Vim/Neovim設定 (dein.vimによるプラグイン管理)
-- `.config/nvim/dein.toml` - dein.vimのプラグイン定義（即時読み込み）
-- `.config/nvim/dein_lazy.toml` - dein.vimのプラグイン定義（遅延読み込み）
+- `init.vim` - Vim/Neovim設定とdpp.vimの起動処理
+- `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
 - `.config/.codex/` - `~/.codex/` と同期されるCodex向け指示書
 - `.zshrc` - Prezto使用のZshシェル設定
@@ -95,19 +94,19 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 - **Zsh設定**: Preztoフレームワークを使用。`.zshrc`でエイリアスと環境変数を定義
 - **Git設定**: `.gitconfig`でGPG署名、エイリアス、Git LFSを設定
-- **エディタ設定**: `init.vim`でdein.vimによるプラグイン管理（`dein.toml` / `dein_lazy.toml`）
+- **エディタ設定**: `init.vim`でdpp.vimを起動し、`dpp.ts`からDenops経由でプラグインを定義
 
 ### installer.shの動作
 
 1. dotfilesリポジトリをクローン
 2. Prezto（Zshフレームワーク）をインストール
 3. 各設定ファイルのシンボリックリンクを作成
-4. dein.vimプラグインマネージャをインストール
-5. 開発ツール（Node.js、Rust、Bun、uv等）を自動インストール
+4. dpp.vim、Denops、インストーラー/Git拡張をbootstrap
+5. 開発ツール（Deno、Node.js、Rust、Bun、uv等）を自動インストール
 
 ### 開発環境
 
-- **JavaScript/TypeScript**: NVM、Bun
+- **JavaScript/TypeScript**: NVM、Bun、Deno（dpp.vimで必須）
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo
 - **その他**: Go、CUDA（GPU計算）、GitHub CLI
@@ -128,13 +127,17 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/in
 # Neovimでinit.vimを編集
 nvim ~/.config/nvim/init.vim
 
-# dein.vimの設定ファイルを編集
-nvim ~/.config/nvim/dein.toml
+# dpp.vimのプラグイン定義を編集
+nvim ~/.config/nvim/dpp.ts
 
-# プラグインは自動的にインストールされます
-# 手動でプラグインをインストールする場合（Vim/Neovim内で実行）
-:call dein#install()
+# 手動インストール・更新が必要な場合にVim/Neovim内で実行
+:DppInstall
+:DppUpdate
 ```
+
+dpp.vimにはDeno 2.3.0以上、denops.vim 8.0以上、および対応エディター（Neovim 0.11.3以上またはVim 9.1.1646以上）が必要です。インストーラーはDenoを導入し、APT版Neovimが古い場合は警告します。
+
+既存環境の更新時、`update.sh`はこのリポジトリが作成した旧symlinkだけを削除します。dppの動作確認後、不要になった`~/.cache/dein`は手動で削除できます。
 
 ### Codex CLI
 
@@ -179,17 +182,17 @@ git config --global commit.gpgSign true
 - コミット時は自動的にGPG署名が付与されます（設定している場合）
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
-- dein.vimは`dein.toml`で定義したプラグインを自動で取得します
+- dpp.vimは初回エディター起動時にstateを生成し、`dpp.ts`で定義したプラグインをインストールします
 - Codex CLIは `.config/.codex/AGENTS.md` を参照します。指示書を更新したい場合はインストーラーを再実行するか、同ファイルを `~/.codex/AGENTS.md` にコピーしてください
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 
 ## トラブルシューティング
 
-### dein.vimが動作しない場合
+### dpp.vimが動作しない場合
 
-1. プラグイン情報を更新：`:call dein#update()`
-2. `~/.cache/dein`が書き込み可能か確認
-3. Vim/Neovimを再起動
+1. `deno --version` と `nvim --version`（または `vim --version`）でバージョンを確認
+2. `~/.cache/dpp`が書き込み可能で、`~/.cache/dpp/repos/github.com`以下にbootstrap用リポジトリがあることを確認
+3. エディターを再起動してstateを再生成後、`:DppInstall`を実行。以後の更新は`:DppUpdate`を使用
 
 ### GPG署名でエラーが発生する場合
 

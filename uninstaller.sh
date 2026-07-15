@@ -142,8 +142,7 @@ EOF
     # エディタ設定
     remove_symlink "$HOME/.vimrc"
     remove_symlink "$HOME/.config/nvim/init.vim"
-    remove_symlink "$HOME/.config/nvim/dein.toml"
-    remove_symlink "$HOME/.config/nvim/dein_lazy.toml"
+    remove_symlink "$HOME/.config/nvim/dpp.ts"
     
     log_success "Symlinks removal completed"
     
@@ -168,12 +167,12 @@ EOF
             log_success "Removed: $HOME/.powerlevel10k"
         fi
         
-        # dein.vim cache
-        if [[ -d "$HOME/.cache/dein" ]]; then
-            log_info "Backing up and removing dein.vim cache..."
-            cp -r "$HOME/.cache/dein" "$BACKUP_DIR/dein-cache" 2>/dev/null || true
-            rm -rf "$HOME/.cache/dein"
-            log_success "Removed: $HOME/.cache/dein"
+        # dpp.vim cache
+        if [[ -d "$HOME/.cache/dpp" ]]; then
+            log_info "Backing up and removing dpp.vim cache..."
+            cp -r "$HOME/.cache/dpp" "$BACKUP_DIR/dpp-cache" 2>/dev/null || true
+            rm -rf "$HOME/.cache/dpp"
+            log_success "Removed: $HOME/.cache/dpp"
         fi
         
         # Neovim undo directory

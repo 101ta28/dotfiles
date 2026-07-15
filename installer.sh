@@ -6,10 +6,12 @@ set -e
 # 設定
 # =============================================================================
 DFILE_PATH="${DOTFILES_DIR:-$HOME/.dfiles}"
-DEIN_DIR="$HOME/.cache/dein"
+DPP_DIR="$HOME/.cache/dpp"
 
 # バージョン情報
 NVM_VERSION="v0.40.2"
+DENO_MIN_VERSION="2.3.0"
+NEOVIM_MIN_VERSION="0.11.3"
 
 # カラー出力用
 GREEN='\033[0;32m'
@@ -62,6 +64,17 @@ create_symlink() {
     log_warn "File exists and is not a symlink: $target"
   else
     ln -sf "$source" "$target"
+  fi
+}
+
+# このリポジトリが作成した古いシンボリックリンクだけを削除する
+remove_managed_symlink() {
+  local target="$1"
+  local managed_source="$2"
+
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$managed_source" ]; then
+    rm "$target"
+    log_info "Removed obsolete symlink: $target"
   fi
 }
 
@@ -176,8 +189,9 @@ fi
 # Neovim 設定
 mkdir -p ~/.config/nvim
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.config/nvim/init.vim"
-create_symlink "$DFILE_PATH/.config/nvim/dein.toml" "$HOME/.config/nvim/dein.toml"
-create_symlink "$DFILE_PATH/.config/nvim/dein_lazy.toml" "$HOME/.config/nvim/dein_lazy.toml"
+create_symlink "$DFILE_PATH/.config/nvim/dpp.ts" "$HOME/.config/nvim/dpp.ts"
+remove_managed_symlink "$HOME/.config/nvim/dein.toml" "$DFILE_PATH/.config/nvim/dein.toml"
+remove_managed_symlink "$HOME/.config/nvim/dein_lazy.toml" "$DFILE_PATH/.config/nvim/dein_lazy.toml"
 
 
 # Vim 設定
@@ -189,11 +203,14 @@ mkdir -p ~/.local/share/nvim/undo
 log_success "Symbolic links created"
 
 # =============================================================================
-# dein.vim をセットアップ
+# dpp.vim をセットアップ
 # =============================================================================
-log_info "Setting up dein.vim..."
-mkdir -p "$DEIN_DIR/repos/github.com/Shougo"
-clone_repo "https://github.com/Shougo/dein.vim" "$DEIN_DIR/repos/github.com/Shougo/dein.vim" "dein.vim"
+log_info "Setting up dpp.vim bootstrap repositories..."
+mkdir -p "$DPP_DIR/repos/github.com/Shougo" "$DPP_DIR/repos/github.com/vim-denops"
+clone_repo "https://github.com/Shougo/dpp.vim" "$DPP_DIR/repos/github.com/Shougo/dpp.vim" "dpp.vim"
+clone_repo "https://github.com/vim-denops/denops.vim" "$DPP_DIR/repos/github.com/vim-denops/denops.vim" "denops.vim"
+clone_repo "https://github.com/Shougo/dpp-ext-installer" "$DPP_DIR/repos/github.com/Shougo/dpp-ext-installer" "dpp-ext-installer"
+clone_repo "https://github.com/Shougo/dpp-protocol-git" "$DPP_DIR/repos/github.com/Shougo/dpp-protocol-git" "dpp-protocol-git"
 
 # =============================================================================
 # パッケージインストール (Ubuntu専用)
@@ -202,9 +219,28 @@ log_info "Installing system packages..."
 sudo apt update
 sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim kleopatra zsh
 
+if command_exists "nvim"; then
+  nvim_version="$(nvim --version | awk 'NR == 1 { sub(/^v/, "", $2); print $2 }')"
+  if ! dpkg --compare-versions "$nvim_version" ge "$NEOVIM_MIN_VERSION"; then
+    log_warn "dpp.vim requires Neovim ${NEOVIM_MIN_VERSION}+; installed version is ${nvim_version}"
+  fi
+fi
+
 # =============================================================================
 # 開発ツールのインストール
 # =============================================================================
+
+# Deno (dpp.vim / denops.vim)
+export DENO_INSTALL="$HOME/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+if ! command_exists "deno" ||
+   ! dpkg --compare-versions "$(deno --version | awk 'NR == 1 { print $2 }')" ge "$DENO_MIN_VERSION"; then
+  log_info "Installing Deno ${DENO_MIN_VERSION}+ for dpp.vim..."
+  curl -fsSL https://deno.land/install.sh | sh
+  log_success "Deno installed"
+else
+  log_info "Compatible Deno already installed"
+fi
 
 # nvm + node
 if [ ! -d "$HOME/.nvm" ]; then
@@ -335,7 +371,7 @@ fi
 echo ""
 log_success "Setup complete!"
 echo ""
-echo "Launch Vim or Neovim. dein.vim will ensure plugins defined in dein.toml are installed."
+echo "Launch Vim or Neovim. dpp.vim will generate state and install plugins defined in dpp.ts."
 echo ""
 echo "To configure your personal Git settings, run:"
 echo "  bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/setup-user.sh)\""
