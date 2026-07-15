@@ -1,278 +1,173 @@
 # DESIGN.md — [サービス名]
 
-> このファイルはAIエージェントが正確な日本語UIを生成するためのデザイン仕様書です。
-> セクションヘッダーは英語、値の説明は日本語で記述しています。
+日本語UIを実装・レビューするためのデザイン仕様テンプレートです。UIに関係する作業でのみ使用します。`TBD` は未確定値であり、実装上の制約ではありません。既存のコード、デザイントークン、computed style、提供された画像から確認できない値を推測で埋めないでください。
 
----
+## Usage & Evidence
 
-## 1. Visual Theme & Atmosphere
+仕様を埋めるときは、次の優先順で根拠を採用します。
 
-<!-- サービスの視覚的な印象、デザイン哲学を記述する -->
+1. ユーザーが明示した要件
+2. リポジトリ内のデザイントークンと共通コンポーネント
+3. 対象画面の実装とブラウザの computed style
+4. 提供されたデザインファイルやスクリーンショット
 
-- **デザイン方針**: （例: クリーン、プロフェッショナル、温かみのある）
-- **密度**: （例: 情報密度が高い業務UI / ゆったりとしたメディア型）
-- **キーワード**: （3〜5つの形容詞でデザインの雰囲気を表現）
+矛盾がある場合は勝手に統合せず、影響が小さく可逆なら既存実装を維持し、結果を報告してください。ブランドやアクセシビリティに関わる重要な矛盾は確認を求めてください。
 
----
+## 1. Product Intent
 
-## 2. Color Palette & Roles
+- **対象ユーザー**: TBD
+- **主要タスク**: TBD
+- **デザイン方針**: TBD
+- **情報密度**: TBD
+- **キーワード**: TBD（3〜5語）
+- **避ける印象**: TBD
 
-<!-- 色はすべて hex 値で記述。実サイトの computed style に基づくこと -->
+## 2. Reference Sources
 
-### Primary（ブランドカラー）
+- **デザイントークン**: TBD（リポジトリ相対パス）
+- **共通コンポーネント**: TBD（リポジトリ相対パス）
+- **基準画面・ルート**: TBD
+- **デザインファイル・画像**: TBD
+- **対象ブラウザ・端末**: TBD
+- **アクセシビリティ目標**: WCAG 2.2 AA / TBD
 
-- **Primary** (`#______`): メインのブランドカラー。CTAボタン、リンク等に使用
-- **Primary Dark** (`#______`): ホバー・プレス時のプライマリカラー
+## 3. Design Tokens
 
-### Semantic（意味的な色）
+### Colors
 
-- **Danger** (`#______`): エラー、削除、危険な操作
-- **Warning** (`#______`): 警告、注意喚起
-- **Success** (`#______`): 成功、完了
+実際に使用する値だけを記載します。色名ではなく役割で管理し、前景色と背景色の組み合わせも明示してください。
 
-### Neutral（ニュートラル）
+| Token | Value | Role | Required pairing |
+|---|---:|---|---|
+| `color-primary` | TBD | 主要CTA、選択状態 | TBD |
+| `color-primary-hover` | TBD | ホバー状態 | TBD |
+| `color-text` | TBD | 本文 | TBD |
+| `color-text-muted` | TBD | 補足 | TBD |
+| `color-border` | TBD | 境界線 | TBD |
+| `color-background` | TBD | ページ背景 | TBD |
+| `color-surface` | TBD | カード、モーダル | TBD |
+| `color-danger` | TBD | エラー、破壊的操作 | TBD |
+| `color-warning` | TBD | 警告 | TBD |
+| `color-success` | TBD | 成功 | TBD |
 
-- **Text Primary** (`#______`): 本文テキスト
-- **Text Secondary** (`#______`): 補足テキスト、ラベル
-- **Text Disabled** (`#______`): 無効状態のテキスト
-- **Border** (`#______`): 区切り線、入力欄の枠
-- **Background** (`#______`): ページ背景
-- **Surface** (`#______`): カード、モーダル等の面
+### Typography
 
----
+フォント名とフォールバック順は既存CSSから転記します。日本語と欧文の順序を慣例だけで変更しないでください。
 
-## 3. Typography Rules
+- **Sans family**: TBD
+- **Serif family**: TBD / 使用しない
+- **Monospace family**: TBD
 
-<!-- 日本語タイポグラフィの核心セクション。実サイトのCSSに基づいて正確に記述すること -->
+| Role | Family | Size | Weight | Line height | Letter spacing |
+|---|---|---:|---:|---:|---:|
+| Display | TBD | TBD | TBD | TBD | TBD |
+| Heading 1 | TBD | TBD | TBD | TBD | TBD |
+| Heading 2 | TBD | TBD | TBD | TBD | TBD |
+| Heading 3 | TBD | TBD | TBD | TBD | TBD |
+| Body | TBD | TBD | TBD | TBD | TBD |
+| Caption | TBD | TBD | TBD | TBD | TBD |
 
-### 3.1 和文フォント
+### Spacing, Radius & Elevation
 
-<!-- 使用している和文フォントを優先度順に列挙 -->
+| Token | Value | Typical use |
+|---|---:|---|
+| `space-xs` | TBD | TBD |
+| `space-sm` | TBD | TBD |
+| `space-md` | TBD | TBD |
+| `space-lg` | TBD | TBD |
+| `space-xl` | TBD | TBD |
+| `radius-sm` | TBD | TBD |
+| `radius-md` | TBD | TBD |
+| `radius-lg` | TBD | TBD |
+| `shadow-1` | TBD | TBD |
+| `shadow-2` | TBD | TBD |
 
-- **ゴシック体**: （例: Noto Sans JP, 游ゴシック, ヒラギノ角ゴ ProN）
-- **明朝体**（使用する場合）: （例: Noto Serif JP, 游明朝, ヒラギノ明朝 ProN）
+## 4. Layout & Responsive Behavior
 
-### 3.2 欧文フォント
+- **Container max width**: TBD
+- **Horizontal padding**: TBD
+- **Grid columns / gutter**: TBD
+- **Content alignment**: TBD
 
-<!-- 和文と組み合わせる欧文フォント -->
+| Breakpoint | Width or condition | Behavior change |
+|---|---:|---|
+| Compact | TBD | TBD |
+| Medium | TBD | TBD |
+| Wide | TBD | TBD |
 
-- **サンセリフ**: （例: Helvetica Neue, Arial）
-- **セリフ**（使用する場合）: （例: Georgia）
-- **等幅**: （例: SFMono-Regular, Consolas, Menlo）
+ブレークポイントは端末名だけで決めず、コンテンツが崩れる幅を基準にします。各幅で、ナビゲーション、表、フォーム、モーダル、長い日本語文言がどう変化するかを記載してください。
 
-### 3.3 font-family 指定
+## 5. Japanese Typography
 
-<!-- 実際のCSS宣言をそのまま記述。フォールバックチェーンの順序が重要 -->
+- 通常の本文では既存の `font-family`、`line-height`、`letter-spacing` を維持します。
+- CJKの禁則処理が必要な箇所では `line-break` を検討し、長いURLや識別子の折り返しは `overflow-wrap` で個別に扱います。
+- `word-break: break-all` を本文の既定値にしません。語中やURLの任意位置での分割が必要な限定箇所でのみ使用します。
+- `font-feature-settings` を使う場合は一つの宣言に必要な機能をまとめ、既存値を上書きしないことを確認します。
+- `palt`、縦書き、明朝体は、ブランド要件または既存実装がある場合だけ指定します。
 
-```css
-/* 本文 */
-font-family: "和文フォント", "欧文フォント", sans-serif;
-
-/* 等幅 */
-font-family: "等幅フォント", monospace;
-```
-
-**フォールバックの考え方**:
-- 和文フォントを先に指定（日本語の表示品質を優先）
-- 欧文フォントは和文フォント内の欧文グリフより優先したい場合のみ先に置く
-- 最後に generic family（sans-serif / serif）を指定
-
-### 3.4 文字サイズ・ウェイト階層
-
-<!-- 実際のデザイントークンまたは使用されているサイズを記述 -->
-
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Display | — | —px | — | — | — | ページタイトル等 |
-| Heading 1 | — | —px | — | — | — | セクション見出し |
-| Heading 2 | — | —px | — | — | — | サブ見出し |
-| Heading 3 | — | —px | — | — | — | 小見出し |
-| Body | — | —px | — | — | — | 本文 |
-| Caption | — | —px | — | — | — | 補足、注釈 |
-| Small | — | —px | — | — | — | 最小テキスト |
-
-### 3.5 行間・字間
-
-- **本文の行間 (line-height)**: （例: 1.7〜2.0。日本語は欧文より広めが標準）
-- **見出しの行間**: （例: 1.3〜1.5）
-- **本文の字間 (letter-spacing)**: （例: 0.04em〜0.1em）
-- **見出しの字間**: （例: 0〜0.05em）
-
-**ガイドライン**:
-- 日本語本文は `line-height: 1.5` 以上を推奨（1.7〜2.0が読みやすい）
-- `letter-spacing` は全角文字の場合 `0.04em` 程度で可読性が向上する
-- 欧文混じりの場合は `letter-spacing` が欧文に影響する点に注意
-
-### 3.6 禁則処理・改行ルール
-
-```css
-/* 推奨設定 */
-word-break: break-all;        /* または keep-all（ことばの途中で折り返さない） */
-overflow-wrap: break-word;     /* 長いURLや英単語の折り返し */
-line-break: strict;            /* 厳格な禁則処理 */
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
+必要な場合の実値を記載します。
 
 ```css
-font-feature-settings: "palt" 1;  /* プロポーショナル字詰め */
-font-feature-settings: "kern" 1;  /* カーニング */
+font-family: TBD;
+line-height: TBD;
+letter-spacing: TBD;
+line-break: TBD;
+overflow-wrap: TBD;
+font-feature-settings: TBD;
 ```
 
-- **palt**: 和文のプロポーショナル字詰め。見出しやナビゲーションに有効
-- **kern**: 欧文のカーニング。和欧混植時に有効
-- 本文には `palt` を適用しない方が可読性が高い場合がある
+## 6. Components & States
 
-### 3.8 縦書き
+各コンポーネントは外観だけでなく、状態と挙動を定義してください。既存の共通コンポーネントがあれば再利用します。
 
-<!-- 縦書きに対応する場合のみ記述 -->
+| Component | Variants | Required states | Source |
+|---|---|---|---|
+| Button | TBD | default, hover, focus-visible, active, disabled, loading | TBD |
+| Input | TBD | default, focus, invalid, disabled, read-only | TBD |
+| Select / Combobox | TBD | closed, open, focused, invalid, disabled | TBD |
+| Card | TBD | default, interactive, selected | TBD |
+| Dialog | TBD | open, initial focus, closing | TBD |
+| Table / List | TBD | loading, empty, error, selected | TBD |
 
-```css
-writing-mode: vertical-rl;
-text-orientation: mixed;
-```
+コンポーネント固有の寸法、色、余白、角丸、影、アイコン、アニメーションは、ここまたは参照先のトークンに一度だけ記載します。
 
-該当なし / 対応する場合は上記を設定
+## 7. Accessibility & Interaction
 
----
+- 通常テキストは背景に対して4.5:1以上、大きなテキストは3:1以上のコントラストを確保します。
+- UIコンポーネントや意味のあるグラフィックの境界・状態は、必要な隣接色に対して3:1以上を確保します。
+- 色だけで状態やエラーを伝えません。
+- キーボード操作、論理的なフォーカス順、視認可能な `:focus-visible` を実装します。
+- WCAG 2.2 AAのポインターターゲットは原則24×24 CSS px以上、または規定の間隔・例外を満たします。重要または頻繁な操作では44×44 CSS pxを目標にします。
+- テキストを200%に拡大しても情報や操作を失わないようにします。
+- 動きがある場合は `prefers-reduced-motion` に対応し、操作完了に不要な動きを減らします。
+- loading、empty、error、success、disabled の各状態を、対象コンポーネントに応じて確認します。
 
-## 4. Component Stylings
+## 8. Do / Avoid
 
-### Buttons
+### Do
 
-**Primary**
-- Background: `#______`
-- Text: `#______`
-- Padding: —px —px
-- Border Radius: —px
-- Font Size: —px
-- Font Weight: —
+- 既存トークンと共通コンポーネントを優先する。
+- 数値や禁止事項には、コード、デザイン資料、または検証結果の根拠を持たせる。
+- 日本語の長文、長い固有名詞、URL、数値、和欧混植でレイアウトを確認する。
+- 変更対象とその周辺を実際のブラウザで確認する。
 
-**Secondary**
-- Background: `transparent`
-- Text: `#______`
-- Border: 1px solid `#______`
-- Padding: —px —px
-- Border Radius: —px
+### Avoid
 
-### Inputs
+- `TBD` を推測値に置き換える。
+- 要求されていない全面的なリデザインや新しいデザイン言語を導入する。
+- 単一のスクリーンショットだけから見えない状態やレスポンシブ挙動を断定する。
+- 色、フォント、余白、角丸、影をコンポーネントごとに重複定義する。
+- ホバー状態だけを実装し、キーボード・タッチ・エラー状態を省略する。
 
-- Background: `#______`
-- Border: 1px solid `#______`
-- Border (focus): 1px solid `#______`
-- Border Radius: —px
-- Padding: —px —px
-- Font Size: —px
-- Height: —px
+## 9. Implementation Handoff
 
-### Cards
+UI実装を依頼するときは、次を一度ずつ明示します。
 
-- Background: `#______`
-- Border: 1px solid `#______`
-- Border Radius: —px
-- Padding: —px
-- Shadow: （Depth & Elevation セクション参照）
+- **Goal**: 実現するユーザー操作または画面
+- **Context**: 対象ファイル、ルート、既存コンポーネント
+- **Hard constraints**: 変更範囲、維持する挙動、禁止事項
+- **Evidence**: デザイン資料、スクリーンショット、computed style、トークン
+- **Success criteria**: 対象幅、状態、操作、アクセシビリティ、視覚差分
+- **Validation**: 実行するテスト、ブラウザ確認、スクリーンショット比較
 
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | —px |
-| S | —px |
-| M | —px |
-| L | —px |
-| XL | —px |
-| XXL | —px |
-
-### Container
-
-- Max Width: —px
-- Padding (horizontal): —px
-
-### Grid
-
-- Columns: —
-- Gutter: —px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 1px 2px rgba(0,0,0,0.1)` | カード、ドロップダウン |
-| 2 | `0 4px 8px rgba(0,0,0,0.1)` | モーダル、ポップオーバー |
-| 3 | `0 8px 24px rgba(0,0,0,0.15)` | ダイアログ、フローティング要素 |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- フォントは必ずフォールバックチェーンを指定する
-- 日本語本文の line-height は 1.5 以上にする
-- 色のコントラスト比は WCAG AA 以上を確保する
-- コンポーネントの余白は Spacing Scale に従う
-
-### Don't（禁止）
-
-- `font-family` に和文フォント1つだけを指定しない（環境依存になる）
-- 日本語本文に `line-height: 1.2` 以下を使わない（可読性が著しく低下する）
-- 全角・半角スペースを混在させない
-- テキストの色に純粋な `#000000` を使わない（コントラストが強すぎる）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ —px | モバイルレイアウト |
-| Tablet | ≤ —px | タブレットレイアウト |
-| Desktop | > —px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px × 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 14–16px、見出しはデスクトップの 70–80% 程度に縮小
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #______
-Text Color: #______
-Background: #______
-Font: "和文フォント", "欧文フォント", sans-serif
-Body Size: __px
-Line Height: __
-```
-
-### プロンプト例
-
-```
-このサービスのデザインシステムに従って、ユーザー一覧テーブルを作成してください。
-- プライマリカラー: #______
-- フォント: 上記 font-family を使用
-- 行間: 本文は line-height: __ を使用
-- テーブルヘッダーの背景: #______
-- ボーダー: #______
-```
+実装後は、対象のテストと静的チェックに加え、定義した各ビューポートと状態をブラウザで確認します。目視確認できなかった項目、推測を避けて維持した既存値、残る差異を結果に明記してください。
