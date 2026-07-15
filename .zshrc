@@ -101,3 +101,7 @@ export PATH="${PATH}:${HOME}/.lmstudio/bin"
 
 . "$HOME/.local/bin/env"
 . "${HOME}/.deno/env"
+
+# GnuPG signing from terminal
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
