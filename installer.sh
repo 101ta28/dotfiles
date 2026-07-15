@@ -5,7 +5,7 @@ set -e
 # =============================================================================
 # 設定
 # =============================================================================
-DFILE_PATH="$HOME/.dfiles"
+DFILE_PATH="${DOTFILES_DIR:-$HOME/.dfiles}"
 DEIN_DIR="$HOME/.cache/dein"
 
 # バージョン情報
@@ -103,10 +103,20 @@ while [[ $# -gt 0 ]]; do
       INSTALL_GPU=true
       shift
       ;;
+    --dotfiles-dir)
+      if [ "$#" -lt 2 ] || [ -z "$2" ]; then
+        log_error "--dotfiles-dir requires a path"
+        exit 1
+      fi
+      DFILE_PATH="$2"
+      shift 2
+      ;;
     --help|-h)
       echo "Usage: $0 [OPTIONS]"
       echo "Options:"
       echo "  --gpu     Install GPU/CUDA development tools"
+      echo "  --dotfiles-dir PATH"
+      echo "            Use an existing dotfiles checkout (used by update.sh)"
       echo "  --help    Show this help message"
       exit 0
       ;;
@@ -124,6 +134,12 @@ sudo apt install -y curl git build-essential
 
 # dotfiles リポジトリがなければ clone
 clone_repo "https://github.com/101ta28/dotfiles.git" "$DFILE_PATH" "dotfiles"
+
+if [ ! -f "$DFILE_PATH/.zshrc" ]; then
+  log_error "Invalid dotfiles directory: $DFILE_PATH"
+  exit 1
+fi
+DFILE_PATH="$(cd "$DFILE_PATH" && pwd)"
 
 # prezto インストール
 if [ ! -d "${ZDOTDIR:-$HOME}/.zprezto" ]; then
@@ -247,42 +263,14 @@ if [ ! -d "$HOME/.bun" ]; then
   install_via_curl "Bun" "https://bun.sh/install" "dummy" "" "bash"  # bashで実行
 fi
 
-# Claude Code / Codex CLI
+# Codex CLI
 if command_exists "bun"; then
-  # Claude Code CLI
-  if ! command_exists "claude"; then
-    log_info "Installing Claude Code CLI..."
-    bun install -g @anthropic-ai/claude-code
-    log_success "Claude Code CLI installed"
-    
-    log_info "Running Claude Code migrate installer..."
-    bunx claude migrate-installer
-    log_success "Claude Code migrate installer completed"
-  else
-    log_info "Claude Code CLI already installed"
-    
-    if [ ! -f "$HOME/.claude/local/claude" ]; then
-      log_info "Claude Code migration needed - running migrate-installer..."
-      bunx claude migrate-installer
-      log_success "Claude Code migrate installer completed"
-    fi
-  fi
-  
-  # Codex CLI
   if ! command_exists "codex"; then
     log_info "Installing Codex CLI..."
     bun install -g @openai/codex
     log_success "Codex CLI installed"
   else
     log_info "Codex CLI already installed"
-  fi
-  
-  # Claude Code設定のコピー
-  if [ -d "$DFILE_PATH/.config/.claude" ]; then
-    log_info "Copying Claude Code configuration..."
-    mkdir -p "$HOME/.claude"
-    cp -rn "$DFILE_PATH/.config/.claude/"* "$HOME/.claude/" 2>/dev/null || true
-    log_success "Claude Code configuration copied"
   fi
   
   # Codex設定のコピー
@@ -294,7 +282,7 @@ if command_exists "bun"; then
     log_success "Codex agent instructions updated"
   fi
 else
-  log_warn "Bun not found, skipping Claude Code and Codex CLI installation"
+  log_warn "Bun not found, skipping Codex CLI installation"
 fi
 
 # uv

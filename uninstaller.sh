@@ -1,10 +1,35 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # =============================================================================
 # Dotfiles Uninstaller Script
 # =============================================================================
 # このスクリプトは、dotfiles環境を安全にアンインストールします。
 
 set -e
+
+show_help() {
+    cat <<'EOF'
+Usage: uninstaller.sh [OPTIONS]
+
+Interactively remove dotfiles links and optionally remove installed tools.
+
+Options:
+  -h, --help  Show this help message
+EOF
+}
+
+case "${1:-}" in
+    -h|--help)
+        show_help
+        exit 0
+        ;;
+    "")
+        ;;
+    *)
+        printf "Unknown option: %s\n" "$1" >&2
+        show_help >&2
+        exit 1
+        ;;
+esac
 
 # カラー出力用
 GREEN='\033[0;32m'
@@ -120,9 +145,6 @@ EOF
     remove_symlink "$HOME/.config/nvim/dein.toml"
     remove_symlink "$HOME/.config/nvim/dein_lazy.toml"
     
-    # Claude Code設定
-    remove_symlink "$HOME/.config/.claude"
-    
     log_success "Symlinks removal completed"
     
     # =================================================================
@@ -159,18 +181,6 @@ EOF
             log_info "Removing Neovim undo directory..."
             rm -rf "$HOME/.local/share/nvim/undo"
             log_success "Removed: $HOME/.local/share/nvim/undo"
-        fi
-        
-        # Claude logs
-        if [[ -f "$HOME/.claude/hooks.log" ]]; then
-            log_info "Backing up Claude logs..."
-            cp "$HOME/.claude/hooks.log" "$BACKUP_DIR/" 2>/dev/null || true
-            rm -f "$HOME/.claude/hooks.log"
-        fi
-        
-        if [[ -f "$HOME/.claude/command_stats.log" ]]; then
-            cp "$HOME/.claude/command_stats.log" "$BACKUP_DIR/" 2>/dev/null || true
-            rm -f "$HOME/.claude/command_stats.log"
         fi
         
         # Codex configuration

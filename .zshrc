@@ -22,7 +22,6 @@ CUDA_PATH="/usr/local/cuda-${CUDA_VERSION}"
 # Aliases
 # ============================================================================
 alias ls="lsd"
-alias claude="~/.claude/local/claude"
 
 # ============================================================================
 # Environment Variables
@@ -91,21 +90,6 @@ _uv_run_mod() {
   fi
 }
 compdef _uv_run_mod uv
-
-# ============================================================================
-# Claude Code Development Container Helper
-# ============================================================================
-
-# Claude Code開発コンテナのセットアップ
-claude-devcontainer() {
-  if [[ -f "$HOME/.config/.claude/setup-devcontainer.sh" ]]; then
-    "$HOME/.config/.claude/setup-devcontainer.sh" "$@"
-  else
-    echo "❌ Claude Code設定が見つかりません"
-    echo "dotfilesが正しくインストールされているか確認してください"
-    return 1
-  fi
-}
 
 # bun completions
 [ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"

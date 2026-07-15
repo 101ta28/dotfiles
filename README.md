@@ -46,6 +46,26 @@ This will prompt you to enter:
 - Your email address  
 - Your GPG key ID (optional, for commit signing)
 
+## Update
+
+Update the installed checkout with a fast-forward pull, then recreate links and install any newly required tools:
+
+```shell
+~/.dfiles/update.sh
+```
+
+The updater stops before changing files when `~/.dfiles` contains uncommitted changes or cannot be fast-forwarded. Commit or stash intentional local changes first. Use `~/.dfiles/update.sh --gpu` to retain the optional GPU/CUDA provisioning path.
+
+## Uninstall
+
+Run the interactive uninstaller from the installed checkout:
+
+```shell
+~/.dfiles/uninstaller.sh
+```
+
+The script backs up configuration before optional removal steps and asks separately before removing tools, the repository, or shell settings.
+
 ## Security Notes
 
 ⚠️ **Important**: Before using these dotfiles:
@@ -60,13 +80,14 @@ This will prompt you to enter:
 - `.gitconfig.template` - Template for Git configuration with placeholders
 - `setup-user.sh` - Interactive script to configure personal settings
 - `installer.sh` - Main installation script
+- `update.sh` - Safe fast-forward update and configuration resync
+- `uninstaller.sh` - Interactive removal with backups
 - `init.vim` - Vim/Neovim configuration (using dein.vim for plugin management)
 - `.config/nvim/dein.toml` - dein.vim plugin definition (eager load)
 - `.config/nvim/dein_lazy.toml` - dein.vim plugin definition (lazy load)
-- `AGENTS.md` - Shared agent instructions synced to `~/.codex/AGENTS.md`
+- `AGENTS.md` - Contributor guidance for this repository
+- `.config/.codex/` - Codex instructions synced to `~/.codex/`
 - `.zshrc` - Zsh shell configuration with Prezto
-- `.config/.claude/hooks/` - Claude Code custom hooks for security and workflow control
-- `CLAUDE.md` - AI instructions for this repository
 
 ## Architecture Overview
 
@@ -128,12 +149,13 @@ nvim ~/.codex/AGENTS.md
 ### Updating Dotfiles
 
 ```bash
-# Commit changes (with GPG signature if configured)
-git add .
-git cm -m "message"  # cm is alias for commit
+~/.dfiles/update.sh
+```
 
-# Push to remote
-git push origin main
+### Uninstalling Dotfiles
+
+```bash
+~/.dfiles/uninstaller.sh
 ```
 
 ## GPG Setup (Optional)
@@ -158,9 +180,8 @@ git config --global commit.gpgSign true
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
 - dein.vim installs plugins defined in `dein.toml`
-- Codex CLI uses `AGENTS.md`; rerun the installer or copy the file manually to refresh instructions
+- Codex CLI uses `.config/.codex/AGENTS.md`; rerun the installer or copy that file manually to refresh instructions
 - Git LFS is enabled for handling large files
-- Claude Code hooks provide security controls and workflow automation
 
 ## Troubleshooting
 
@@ -183,44 +204,7 @@ git config --global commit.gpgSign true
 3. System restart may be required
 4. For Ubuntu versions other than 22.04, CUDA installation script may need adjustments
 
-### Claude Code hooks not working
-
-1. Check hook file permissions: `ls -la ~/.claude/hooks/`
-2. Ensure hooks have execute permissions: `chmod +x ~/.claude/hooks/*.sh`
-3. Check hook logs: `cat ~/.claude/hooks.log`
-4. Verify rules.json syntax: validate JSON structure
-
 ## AI Tool Integration
-
-This repository includes CLI tooling for Claude Code and Codex to streamline AI-assisted workflows.
-
-### Claude Code
-
-Custom hooks for Claude Code provide:
-
-### Security Features
-- **Command filtering**: Prevents execution of dangerous commands (rm -rf, sudo operations, etc.)
-- **Word filtering**: Detects uncertain or speculative language in AI responses
-- **Preferred tooling**: Enforces use of modern tools (bun over npm, uv over pip)
-
-### Hook Files
-- `.config/.claude/hooks/rules.json` - Configuration for security rules and preferred tools
-- `.config/.claude/hooks/stop_words.sh` - Filters AI responses for problematic language
-- `.config/.claude/hooks/pre_commands.sh` - Validates commands before execution  
-- `.config/.claude/hooks/post_commands.sh` - Analyzes command results and logs statistics
-
-### Setup Claude Code Hooks
-
-```bash
-# Make hooks executable
-chmod +x ~/.claude/hooks/*.sh
-
-# Test hook functionality
-~/.claude/hooks/stop_words.sh "This might be a suggestion"
-~/.claude/hooks/pre_commands.sh "npm install"
-```
-
-See `.config/.claude/hooks/README.md` for detailed configuration and customization options.
 
 ### Codex CLI
 - Installed via `bun install -g @openai/codex`

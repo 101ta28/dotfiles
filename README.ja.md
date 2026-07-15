@@ -46,6 +46,26 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - メールアドレス
 - GPGキーID（オプション、コミット署名用）
 
+## 更新
+
+インストール済みcheckoutをfast-forwardで更新し、シンボリックリンクと新たに必要になったツールを再同期します：
+
+```shell
+~/.dfiles/update.sh
+```
+
+`~/.dfiles` に未コミットの変更がある場合やfast-forwardできない場合、更新前に停止します。意図的なローカル変更は先にコミットまたはstashしてください。GPU/CUDA構成も適用する場合は `~/.dfiles/update.sh --gpu` を使用します。
+
+## アンインストール
+
+インストール済みcheckoutから対話式アンインストーラーを実行します：
+
+```shell
+~/.dfiles/uninstaller.sh
+```
+
+設定をバックアップした後、ツール、リポジトリ、シェル設定を削除するか個別に確認します。
+
 ## セキュリティに関する注意事項
 
 ⚠️ **重要**: このdotfilesを使用する前に：
@@ -60,13 +80,14 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `.gitconfig.template` - プレースホルダー付きGit設定テンプレート
 - `setup-user.sh` - 個人設定用インタラクティブスクリプト
 - `installer.sh` - メインインストールスクリプト
+- `update.sh` - fast-forwardによる安全な更新と設定の再同期
+- `uninstaller.sh` - バックアップ付きの対話式削除
 - `init.vim` - Vim/Neovim設定 (dein.vimによるプラグイン管理)
 - `.config/nvim/dein.toml` - dein.vimのプラグイン定義（即時読み込み）
 - `.config/nvim/dein_lazy.toml` - dein.vimのプラグイン定義（遅延読み込み）
-- `AGENTS.md` - `~/.codex/AGENTS.md` と同期されるエージェント指示書
+- `AGENTS.md` - このリポジトリのコントリビューターガイド
+- `.config/.codex/` - `~/.codex/` と同期されるCodex向け指示書
 - `.zshrc` - Prezto使用のZshシェル設定
-- `.config/.claude/hooks/` - Claude Codeのセキュリティ・ワークフロー制御用カスタムフック
-- `CLAUDE.md` - このリポジトリのAI向け指示書
 
 ## アーキテクチャ概要
 
@@ -128,12 +149,13 @@ nvim ~/.codex/AGENTS.md
 ### dotfilesの更新
 
 ```bash
-# 変更をコミット（GPG署名付き）
-git add .
-git cm -m "メッセージ"  # cmはcommitのエイリアス
+~/.dfiles/update.sh
+```
 
-# リモートにプッシュ
-git push origin main
+### dotfilesのアンインストール
+
+```bash
+~/.dfiles/uninstaller.sh
 ```
 
 ## GPG設定（オプション）
@@ -158,9 +180,8 @@ git config --global commit.gpgSign true
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
 - dein.vimは`dein.toml`で定義したプラグインを自動で取得します
-- Codex CLIは `AGENTS.md` を参照します。指示書を更新したい場合はインストーラーを再実行するか、同ファイルを `~/.codex/AGENTS.md` にコピーしてください
+- Codex CLIは `.config/.codex/AGENTS.md` を参照します。指示書を更新したい場合はインストーラーを再実行するか、同ファイルを `~/.codex/AGENTS.md` にコピーしてください
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
-- Claude Codeフックによりセキュリティ制御とワークフロー自動化を提供
 
 ## トラブルシューティング
 
@@ -183,42 +204,7 @@ git config --global commit.gpgSign true
 3. システムの再起動が必要な場合があります
 4. Ubuntu 22.04以外のバージョンでは、CUDAインストールスクリプトの調整が必要な場合があります
 
-### Claude Codeフックが動作しない場合
-
-1. フックファイルの権限を確認：`ls -la ~/.claude/hooks/`
-2. フックに実行権限があることを確認：`chmod +x ~/.claude/hooks/*.sh`
-3. フックログを確認：`cat ~/.claude/hooks.log`
-4. rules.jsonの構文を確認：JSON構造を検証
-
 ## AIツール連携
-
-このリポジトリでは Claude Code と Codex のCLIを活用した開発フローを提供します。
-
-### Claude Code
-
-#### セキュリティ機能
-- **コマンドフィルタリング**: 危険なコマンド（rm -rf、sudo操作等）の実行を防止
-- **単語フィルタリング**: AI応答内の不確定・推測的な言葉を検出
-- **推奨ツール強制**: モダンツールの使用を強制（npmよりbun、pipよりuv）
-
-#### フックファイル
-- `.config/.claude/hooks/rules.json` - セキュリティルールと推奨ツールの設定
-- `.config/.claude/hooks/stop_words.sh` - AI応答の問題言語フィルタ
-- `.config/.claude/hooks/pre_commands.sh` - コマンド実行前の検証
-- `.config/.claude/hooks/post_commands.sh` - コマンド結果の分析と統計ログ
-
-#### Claude Codeフックのセットアップ
-
-```bash
-# フックを実行可能にする
-chmod +x ~/.claude/hooks/*.sh
-
-# フック機能をテスト
-~/.claude/hooks/stop_words.sh "これは提案かもしれません"
-~/.claude/hooks/pre_commands.sh "npm install"
-```
-
-詳細な設定とカスタマイズオプションについては`.config/.claude/hooks/README.md`を参照してください。
 
 ### Codex CLI
 - `bun install -g @openai/codex` でインストールされます
