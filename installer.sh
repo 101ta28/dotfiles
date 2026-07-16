@@ -59,9 +59,15 @@ create_symlink() {
   local source="$1"
   local target="$2"
   
-  # 既存のファイルがシンボリックリンクでない場合は警告
+  # 同じ内容の既存ファイルは管理対象のシンボリックリンクへ安全に移行する
   if [ -e "$target" ] && [ ! -L "$target" ]; then
-    log_warn "File exists and is not a symlink: $target"
+    if cmp -s "$source" "$target"; then
+      rm "$target"
+      ln -s "$source" "$target"
+      log_info "Replaced matching file with symlink: $target"
+    else
+      log_warn "File exists and is not a symlink: $target"
+    fi
   else
     ln -sf "$source" "$target"
   fi
@@ -193,6 +199,10 @@ create_symlink "$DFILE_PATH/.config/nvim/dpp.ts" "$HOME/.config/nvim/dpp.ts"
 remove_managed_symlink "$HOME/.config/nvim/dein.toml" "$DFILE_PATH/.config/nvim/dein.toml"
 remove_managed_symlink "$HOME/.config/nvim/dein_lazy.toml" "$DFILE_PATH/.config/nvim/dein_lazy.toml"
 
+# Herdr 設定
+mkdir -p "$HOME/.config/herdr"
+create_symlink "$DFILE_PATH/.config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+
 
 # Vim 設定
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.vimrc"
@@ -323,6 +333,9 @@ fi
 
 # uv
 install_via_curl "uv" "https://astral.sh/uv/install.sh" "uv"
+
+# Herdr
+install_via_curl "Herdr" "https://herdr.dev/install.sh" "herdr"
 
 
 # =============================================================================

@@ -84,6 +84,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `uninstaller.sh` - バックアップ付きの対話式削除
 - `init.vim` - Vim/Neovim設定とdpp.vimの起動処理
 - `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
+- `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
 - `.config/.codex/` - `~/.codex/` と同期されるCodex向け指示書
 - `.zshrc` - Prezto使用のZshシェル設定
@@ -109,7 +110,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - **JavaScript/TypeScript**: NVM、Bun、Deno（dpp.vimで必須）
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo
-- **その他**: Go、CUDA（GPU計算）、GitHub CLI
+- **その他**: Go、Herdr、CUDA（GPU計算）、GitHub CLI
 - **GPU/CUDA** (オプション): NVIDIA Container Toolkit、CUDA Toolkit 12.6
 
 ## よく使うコマンド
@@ -148,6 +149,21 @@ codex --version
 # 同期されたエージェント指示書を編集
 nvim ~/.codex/AGENTS.md
 ```
+
+### Herdr
+
+```bash
+# ターミナルマルチプレクサーを起動
+herdr
+
+# 公式インストーラーで導入したHerdrを更新
+herdr update
+
+# 同期した設定を再読み込み
+herdr server reload-config
+```
+
+インストーラーはHerdr公式スクリプトを使用して `~/.local/bin/herdr` へ導入し、`.config/herdr/config.toml` を `~/.config/herdr/config.toml` へリンクします。既存の通常ファイルは、リポジトリ内の設定と内容が一致する場合に限りシンボリックリンクへ移行します。
 
 ### dotfilesの更新
 

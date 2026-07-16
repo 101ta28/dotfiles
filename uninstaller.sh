@@ -143,6 +143,7 @@ EOF
     remove_symlink "$HOME/.vimrc"
     remove_symlink "$HOME/.config/nvim/init.vim"
     remove_symlink "$HOME/.config/nvim/dpp.ts"
+    remove_symlink "$HOME/.config/herdr/config.toml"
     
     log_success "Symlinks removal completed"
     
@@ -194,7 +195,7 @@ EOF
     # =================================================================
     # 3. インストールされたツールの削除（オプション）
     # =================================================================
-    if confirm_action "Remove installed modern tools (bun, uv, deno, lsd, etc.)"; then
+    if confirm_action "Remove installed modern tools (bun, uv, deno, herdr, lsd, etc.)"; then
         log_info "Removing installed tools..."
         
         # Bun
@@ -217,6 +218,13 @@ EOF
             rm -f "$HOME/.local/bin/uv"
             rm -f "$HOME/.local/bin/uvx"
             log_success "Removed: uv"
+        fi
+
+        # Herdr
+        if [[ -f "$HOME/.local/bin/herdr" ]]; then
+            log_info "Removing Herdr..."
+            rm -f "$HOME/.local/bin/herdr"
+            log_success "Removed: Herdr"
         fi
         
         # Cargo/Rust ツール（慎重に削除）

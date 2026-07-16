@@ -84,6 +84,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `uninstaller.sh` - Interactive removal with backups
 - `init.vim` - Vim/Neovim configuration and dpp.vim startup
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
+- `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
 - `AGENTS.md` - Contributor guidance for this repository
 - `.config/.codex/` - Codex instructions synced to `~/.codex/`
 - `.zshrc` - Zsh shell configuration with Prezto
@@ -109,7 +110,7 @@ The script backs up configuration before optional removal steps and asks separat
 - **JavaScript/TypeScript**: NVM, Bun, Deno (required by dpp.vim)
 - **Python**: uv (fast package manager)
 - **Rust**: rustup, Cargo
-- **Others**: Go, CUDA (GPU computing), GitHub CLI
+- **Others**: Go, Herdr, CUDA (GPU computing), GitHub CLI
 - **GPU/CUDA** (optional): NVIDIA Container Toolkit, CUDA Toolkit 12.6
 
 ## Common Commands
@@ -148,6 +149,21 @@ codex --version
 # Edit synced agent instructions
 nvim ~/.codex/AGENTS.md
 ```
+
+### Herdr
+
+```bash
+# Start the terminal multiplexer
+herdr
+
+# Update a direct installation
+herdr update
+
+# Reload the synced configuration
+herdr server reload-config
+```
+
+The installer installs Herdr to `~/.local/bin/herdr` using its official installer and links `.config/herdr/config.toml` to `~/.config/herdr/config.toml`. An existing non-symlink file is preserved unless its contents already match the repository copy.
 
 ### Updating Dotfiles
 
