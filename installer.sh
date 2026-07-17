@@ -118,7 +118,8 @@ sync_agent_skills() {
     fi
 
     log_info "Installing Agent Skill: $source ($skill)"
-    npx --yes skills add "$source" --skill "$skill" -g -y
+    # An explicit target avoids selecting project-only PromptScript.
+    npx --yes skills add "$source" --skill "$skill" --agent codex -g -y
   done < "$manifest"
   log_success "Agent Skills synced"
 }
