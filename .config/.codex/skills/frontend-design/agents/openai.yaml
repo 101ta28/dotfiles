@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design"
+  short_description: "Build intentional accessible interfaces"
+  default_prompt: "Use $frontend-design to build this interface in the repository's existing design language."
