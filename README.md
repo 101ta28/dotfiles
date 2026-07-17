@@ -87,7 +87,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
 - `.config/agents/skills.txt` - Agent Skills restored into `~/.agents/skills/`
 - `AGENTS.md` - Contributor guidance for this repository
-- `.config/.codex/` - Codex instructions and local skills synced to `~/.codex/` and `~/.agents/skills/`
+- `.config/.codex/` - Codex instructions and local skills synced to `~/.codex/` and `~/.agents/skills/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
 - `.zshrc` - Zsh shell configuration with Prezto
 
 ## Architecture Overview
@@ -207,7 +207,7 @@ git config --global commit.gpgSign true
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
 - dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
-- Codex instructions and local skills are managed under `.config/.codex/`; rerun the installer to sync them
+- Codex instructions and local skills are managed under `.config/.codex/`; rerun the installer to sync them and remove paths listed in `obsolete-paths.txt`
 - Agent Skills listed in `.config/agents/skills.txt` are restored additively; `~/.agents` itself is not tracked by Git
 - Git LFS is enabled for handling large files
 

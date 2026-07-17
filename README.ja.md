@@ -87,7 +87,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
 - `.config/agents/skills.txt` - `~/.agents/skills/` へ復元するAgent Skills一覧
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
-- `.config/.codex/` - `~/.codex/` と `~/.agents/skills/` へ同期されるCodex向け指示書とローカルSkills
+- `.config/.codex/` - `~/.codex/` と `~/.agents/skills/` へ同期されるCodex向け指示書とローカルSkills。削除済みの管理対象は `obsolete-paths.txt` に従って除去されます
 - `.zshrc` - Prezto使用のZshシェル設定
 
 ## アーキテクチャ概要
@@ -207,7 +207,7 @@ git config --global commit.gpgSign true
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
 - dpp.vimは初回エディター起動時にstateを生成し、`dpp.ts`で定義したプラグインをインストールします
-- Codex向け指示書とローカルSkillsは `.config/.codex/` で管理します。更新後はインストーラーを再実行して同期してください
+- Codex向け指示書とローカルSkillsは `.config/.codex/` で管理します。更新後はインストーラーを再実行すると、同期と `obsolete-paths.txt` に記載したパスの除去が行われます
 - `.config/agents/skills.txt` のAgent Skillsは加算型で復元され、`~/.agents` 自体はGit管理しません
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 

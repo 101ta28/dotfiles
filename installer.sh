@@ -127,6 +127,10 @@ sync_agent_skills() {
 # このリポジトリで管理するCodex指示書とSkillsをユーザー領域へ同期する
 sync_codex_config() {
   local codex_source="$DFILE_PATH/.config/.codex"
+  local obsolete_manifest="$codex_source/obsolete-paths.txt"
+  local obsolete_path
+  local obsolete_target
+  local extra
   local skill_dir
   local skill_name
 
@@ -137,6 +141,40 @@ sync_codex_config() {
 
   log_info "Syncing Codex instructions and skills..."
   mkdir -p "$HOME/.codex" "$HOME/.agents/skills"
+
+  if [ -f "$obsolete_manifest" ]; then
+    while read -r obsolete_path extra || [ -n "${obsolete_path:-}" ]; do
+      case "$obsolete_path" in
+        ""|\#*) continue ;;
+      esac
+
+      if [ -n "$extra" ]; then
+        log_error "Invalid obsolete Codex path: $obsolete_path $extra"
+        return 1
+      fi
+
+      case "$obsolete_path" in
+        .codex/*|.agents/skills/*) ;;
+        *)
+          log_error "Obsolete Codex path must stay inside .codex or .agents/skills: $obsolete_path"
+          return 1
+          ;;
+      esac
+
+      case "/$obsolete_path/" in
+        */../*)
+          log_error "Obsolete Codex path must not contain '..': $obsolete_path"
+          return 1
+          ;;
+      esac
+
+      obsolete_target="$HOME/$obsolete_path"
+      if [ -e "$obsolete_target" ] || [ -L "$obsolete_target" ]; then
+        rm -rf -- "$obsolete_target"
+        log_info "Removed obsolete Codex path: $obsolete_target"
+      fi
+    done < "$obsolete_manifest"
+  fi
 
   if [ -f "$codex_source/AGENTS.md" ]; then
     cp "$codex_source/AGENTS.md" "$HOME/.codex/AGENTS.md"

@@ -1,0 +1,8 @@
+# Paths previously managed by this repository and safe to remove during sync.
+.codex/DESIGN.md
+.codex/PLANS.md
+.codex/frontend-design
+.codex/prompts/code-review.md
+.codex/prompts/feature-dev.md
+.codex/prompts/frontend-design.md
+.codex/prompts/security-guidance.md
