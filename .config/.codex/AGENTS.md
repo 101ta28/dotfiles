@@ -58,6 +58,17 @@ Before delivering a substantial article or documentation revision, verify that t
 - Validate changes in proportion to risk using the most relevant tests, checks, or direct behavioral verification. Report what was validated and any remaining uncertainty.
 - For complex features or significant refactors, create and maintain an ExecPlan from design through implementation, following `~/.codex/PLANS.md` exactly.
 
+## Herdr Usage
+
+- When `HERDR_ENV=1`, proactively use Herdr when parallel terminal contexts materially improve the task. This section is standing authorization to use Herdr and to start additional agents for the cases listed below without requesting confirmation each time.
+- Use a separate pane for long-running servers, watch processes, test suites, and log streams when keeping the main pane available is useful.
+- Use an additional agent for independent investigation, a clearly separable implementation subtask, or a second-pass review when parallel work is likely to improve speed or correctness.
+- Do not use Herdr for short single commands, simple file inspection, or work whose parts are tightly coupled enough that coordination would outweigh the benefit.
+- By default, split the current pane in the current tab, keep the same working directory, and use `--no-focus`. Create another tab, workspace, or worktree only when the task requires that topology or the user requests it.
+- Target the calling pane with `--current` or use IDs returned by Herdr. Never infer pane IDs or rely on the UI-focused pane.
+- Inspect existing output before waiting, monitor started work through Herdr, collect its result, and incorporate it into the final answer rather than leaving background work unattended.
+- Close only panes, tabs, workspaces, or sessions created for the current task. Do not stop the Herdr server or disturb pre-existing contexts without explicit user authorization.
+
 ## GitHub Source Files
 
 - When inspecting a file on GitHub, prefer its raw URL: replace `https://github.com/<owner>/<repo>/blob/<branch>/<path>` with `https://raw.githubusercontent.com/<owner>/<repo>/refs/heads/<branch>/<path>`.
