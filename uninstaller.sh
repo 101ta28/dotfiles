@@ -190,6 +190,14 @@ EOF
             rm -rf "$HOME/.codex"
             log_success "Removed: $HOME/.codex"
         fi
+
+        # Agent Skillsは他のエージェントも共有するため、別途確認する
+        if [[ -d "$HOME/.agents" ]] && confirm_action "Back up and remove shared Agent Skills directory ($HOME/.agents)"; then
+            log_info "Backing up and removing Agent Skills..."
+            cp -r "$HOME/.agents" "$BACKUP_DIR/agents" 2>/dev/null || true
+            rm -rf "$HOME/.agents"
+            log_success "Removed: $HOME/.agents"
+        fi
     fi
     
     # =================================================================

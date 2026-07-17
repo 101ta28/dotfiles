@@ -89,6 +89,40 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+# 宣言ファイルにあるAgent Skillsをユーザー領域へ復元する
+sync_agent_skills() {
+  local manifest="$DFILE_PATH/.config/agents/skills.txt"
+  local source
+  local skill
+  local extra
+
+  if [ ! -f "$manifest" ]; then
+    log_info "Agent Skills manifest not found, skipping"
+    return
+  fi
+
+  if ! command_exists "npx"; then
+    log_warn "npx not found, skipping Agent Skills sync"
+    return
+  fi
+
+  log_info "Syncing Agent Skills..."
+  while read -r source skill extra || [ -n "${source:-}" ]; do
+    case "$source" in
+      ""|\#*) continue ;;
+    esac
+
+    if [ -z "$skill" ] || [ -n "$extra" ]; then
+      log_error "Invalid Agent Skills entry: $source ${skill:-} ${extra:-}"
+      return 1
+    fi
+
+    log_info "Installing Agent Skill: $source ($skill)"
+    npx --yes skills add "$source" --skill "$skill" -g -y
+  done < "$manifest"
+  log_success "Agent Skills synced"
+}
+
 # curlでインストールする汎用関数（第5引数でシェルを指定可）
 install_via_curl() {
   local tool_name="$1"
@@ -267,6 +301,9 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
   nvm install --lts
   log_success "Node.js installed"
 fi
+
+# Agent Skills
+sync_agent_skills
 
 # Rust
 install_via_curl "Rust" "https://sh.rustup.rs" "rustc" "-y"

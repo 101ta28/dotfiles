@@ -85,6 +85,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `init.vim` - Vim/Neovim configuration and dpp.vim startup
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
+- `.config/agents/skills.txt` - Agent Skills restored into `~/.agents/skills/`
 - `AGENTS.md` - Contributor guidance for this repository
 - `.config/.codex/` - Codex instructions synced to `~/.codex/`
 - `.zshrc` - Zsh shell configuration with Prezto
@@ -103,7 +104,8 @@ The script backs up configuration before optional removal steps and asks separat
 2. Install Prezto (Zsh framework)
 3. Create symbolic links for configuration files
 4. Bootstrap dpp.vim, Denops, and the required installer/Git extensions
-5. Auto-install development tools (Deno, Node.js, Rust, Bun, uv, etc.)
+5. Restore the declared Agent Skills into the user-level shared skills directory
+6. Auto-install development tools (Deno, Node.js, Rust, Bun, uv, etc.)
 
 ### Development Environment
 
@@ -165,6 +167,12 @@ herdr server reload-config
 
 The installer installs Herdr to `~/.local/bin/herdr` using its official installer and links `.config/herdr/config.toml` to `~/.config/herdr/config.toml`. An existing non-symlink file is preserved unless its contents already match the repository copy.
 
+### Agent Skills
+
+The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.
+
+To add a synchronized skill, add its source repository and skill name to the manifest, separated by whitespace, one entry per line. Empty lines and lines beginning with `#` are ignored.
+
 ### Updating Dotfiles
 
 ```bash
@@ -200,6 +208,7 @@ git config --global commit.gpgSign true
 - Japanese input is configured with fcitx
 - dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
 - Codex CLI uses `.config/.codex/AGENTS.md`; rerun the installer or copy that file manually to refresh instructions
+- Agent Skills listed in `.config/agents/skills.txt` are restored additively; `~/.agents` itself is not tracked by Git
 - Git LFS is enabled for handling large files
 
 ## Troubleshooting
@@ -229,6 +238,11 @@ git config --global commit.gpgSign true
 - Installed via `bun install -g @openai/codex`
 - Configuration directory: `~/.codex/`
 - Agent instructions: copy or edit `~/.codex/AGENTS.md` (managed from this repository's `AGENTS.md`)
+
+### Agent Skills
+
+- Installed globally with `npx skills add` from `.config/agents/skills.txt`
+- Shared skills directory: `~/.agents/skills/`
 
 ## License
 

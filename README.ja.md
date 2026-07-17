@@ -85,6 +85,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `init.vim` - Vim/Neovim設定とdpp.vimの起動処理
 - `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
 - `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
+- `.config/agents/skills.txt` - `~/.agents/skills/` へ復元するAgent Skills一覧
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
 - `.config/.codex/` - `~/.codex/` と同期されるCodex向け指示書
 - `.zshrc` - Prezto使用のZshシェル設定
@@ -103,7 +104,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 2. Prezto（Zshフレームワーク）をインストール
 3. 各設定ファイルのシンボリックリンクを作成
 4. dpp.vim、Denops、インストーラー/Git拡張をbootstrap
-5. 開発ツール（Deno、Node.js、Rust、Bun、uv等）を自動インストール
+5. 宣言されたAgent Skillsをユーザー共通のスキルディレクトリへ復元
+6. 開発ツール（Deno、Node.js、Rust、Bun、uv等）を自動インストール
 
 ### 開発環境
 
@@ -165,6 +167,12 @@ herdr server reload-config
 
 インストーラーはHerdr公式スクリプトを使用して `~/.local/bin/herdr` へ導入し、`.config/herdr/config.toml` を `~/.config/herdr/config.toml` へリンクします。既存の通常ファイルは、リポジトリ内の設定と内容が一致する場合に限りシンボリックリンクへ移行します。
 
+### Agent Skills
+
+インストーラーは `.config/agents/skills.txt` を読み、各項目をSkills CLIでグローバルにインストールします。これにより、新しい端末や `update.sh` による設定の再適用時に、宣言したスキルが `~/.agents/skills/` へ復元されます。同期は加算型で、一覧にないスキルは削除しません。
+
+同期対象を追加する場合は、マニフェストへ導入元リポジトリとスキル名を空白区切りで1行に1件記載します。空行と `#` で始まる行は無視されます。
+
 ### dotfilesの更新
 
 ```bash
@@ -200,6 +208,7 @@ git config --global commit.gpgSign true
 - 日本語入力にはfcitxが設定されています
 - dpp.vimは初回エディター起動時にstateを生成し、`dpp.ts`で定義したプラグインをインストールします
 - Codex CLIは `.config/.codex/AGENTS.md` を参照します。指示書を更新したい場合はインストーラーを再実行するか、同ファイルを `~/.codex/AGENTS.md` にコピーしてください
+- `.config/agents/skills.txt` のAgent Skillsは加算型で復元され、`~/.agents` 自体はGit管理しません
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 
 ## トラブルシューティング
@@ -229,6 +238,11 @@ git config --global commit.gpgSign true
 - `bun install -g @openai/codex` でインストールされます
 - 設定ディレクトリ: `~/.codex/`
 - エージェント指示書: `~/.codex/AGENTS.md`（本リポジトリの `AGENTS.md` から同期）
+
+### Agent Skills
+
+- `.config/agents/skills.txt` の一覧から `npx skills add` でグローバルインストールされます
+- 共通スキルディレクトリ: `~/.agents/skills/`
 
 ## ライセンス
 

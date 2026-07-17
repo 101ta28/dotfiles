@@ -1,0 +1,3 @@
+# Source repository and skill name restored by installer.sh.
+ogulcancelik/herdr herdr
+vercel-labs/skills find-skills
