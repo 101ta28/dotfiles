@@ -87,7 +87,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
 - `.config/agents/skills.txt` - Agent Skills restored into `~/.agents/skills/`
 - `AGENTS.md` - Contributor guidance for this repository
-- `.config/.codex/` - Codex instructions synced to `~/.codex/`
+- `.config/.codex/` - Codex instructions and local skills synced to `~/.codex/` and `~/.agents/skills/`
 - `.zshrc` - Zsh shell configuration with Prezto
 
 ## Architecture Overview
@@ -207,7 +207,7 @@ git config --global commit.gpgSign true
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
 - dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
-- Codex CLI uses `.config/.codex/AGENTS.md`; rerun the installer or copy that file manually to refresh instructions
+- Codex instructions and local skills are managed under `.config/.codex/`; rerun the installer to sync them
 - Agent Skills listed in `.config/agents/skills.txt` are restored additively; `~/.agents` itself is not tracked by Git
 - Git LFS is enabled for handling large files
 
@@ -237,7 +237,8 @@ git config --global commit.gpgSign true
 ### Codex CLI
 - Installed via `bun install -g @openai/codex`
 - Configuration directory: `~/.codex/`
-- Agent instructions: copy or edit `~/.codex/AGENTS.md` (managed from this repository's `AGENTS.md`)
+- Agent instructions: synced from `.config/.codex/AGENTS.md` to `~/.codex/AGENTS.md`
+- Local reusable workflows: synced from `.config/.codex/skills/` to `~/.agents/skills/`
 
 ### Agent Skills
 

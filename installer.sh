@@ -123,6 +123,37 @@ sync_agent_skills() {
   log_success "Agent Skills synced"
 }
 
+# このリポジトリで管理するCodex指示書とSkillsをユーザー領域へ同期する
+sync_codex_config() {
+  local codex_source="$DFILE_PATH/.config/.codex"
+  local skill_dir
+  local skill_name
+
+  if [ ! -d "$codex_source" ]; then
+    log_info "Codex configuration not found, skipping"
+    return
+  fi
+
+  log_info "Syncing Codex instructions and skills..."
+  mkdir -p "$HOME/.codex" "$HOME/.agents/skills"
+
+  if [ -f "$codex_source/AGENTS.md" ]; then
+    cp "$codex_source/AGENTS.md" "$HOME/.codex/AGENTS.md"
+  fi
+
+  for skill_dir in "$codex_source"/skills/*; do
+    if [ ! -f "$skill_dir/SKILL.md" ]; then
+      continue
+    fi
+
+    skill_name="$(basename "$skill_dir")"
+    mkdir -p "$HOME/.agents/skills/$skill_name"
+    cp -R "$skill_dir/." "$HOME/.agents/skills/$skill_name/"
+  done
+
+  log_success "Codex instructions and skills updated"
+}
+
 # curlでインストールする汎用関数（第5引数でシェルを指定可）
 install_via_curl() {
   local tool_name="$1"
@@ -304,6 +335,7 @@ fi
 
 # Agent Skills
 sync_agent_skills
+sync_codex_config
 
 # Rust
 install_via_curl "Rust" "https://sh.rustup.rs" "rustc" "-y"
@@ -356,14 +388,6 @@ if command_exists "bun"; then
     log_info "Codex CLI already installed"
   fi
   
-  # Codex設定のコピー
-  if [ -f "$DFILE_PATH/.config/.codex/AGENTS.md" ]; then
-    log_info "Syncing Codex agent instructions..."
-    mkdir -p "$HOME/.codex"
-    cp "$DFILE_PATH/.config/.codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
-    cp "$DFILE_PATH/.config/.codex/PLANS.md" "$HOME/.codex/PLANS.md"
-    log_success "Codex agent instructions updated"
-  fi
 else
   log_warn "Bun not found, skipping Codex CLI installation"
 fi
