@@ -105,11 +105,11 @@ The script backs up configuration before optional removal steps and asks separat
 3. Create symbolic links for configuration files
 4. Bootstrap dpp.vim, Denops, and the required installer/Git extensions
 5. Restore the declared Agent Skills into the user-level shared skills directory
-6. Auto-install development tools (Deno, Node.js, Rust, Bun, uv, etc.)
+6. Auto-install development tools (Deno, Node.js, pnpm, Rust, Bun, uv, etc.)
 
 ### Development Environment
 
-- **JavaScript/TypeScript**: NVM, Bun, Deno (required by dpp.vim)
+- **JavaScript/TypeScript**: NVM, Node.js, pnpm, Bun, Deno (required by dpp.vim)
 - **Python**: uv (fast package manager)
 - **Rust**: rustup, Cargo
 - **Others**: Go, Herdr, CUDA (GPU computing), GitHub CLI
@@ -150,6 +150,14 @@ codex --version
 
 # Edit synced agent instructions
 nvim ~/.codex/AGENTS.md
+```
+
+### pnpm
+
+pnpm 11 is installed globally through npm after the NVM-managed Node.js LTS installation. Verify it with:
+
+```bash
+pnpm --version
 ```
 
 ### Herdr

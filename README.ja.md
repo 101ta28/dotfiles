@@ -105,11 +105,11 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 3. 各設定ファイルのシンボリックリンクを作成
 4. dpp.vim、Denops、インストーラー/Git拡張をbootstrap
 5. 宣言されたAgent Skillsをユーザー共通のスキルディレクトリへ復元
-6. 開発ツール（Deno、Node.js、Rust、Bun、uv等）を自動インストール
+6. 開発ツール（Deno、Node.js、pnpm、Rust、Bun、uv等）を自動インストール
 
 ### 開発環境
 
-- **JavaScript/TypeScript**: NVM、Bun、Deno（dpp.vimで必須）
+- **JavaScript/TypeScript**: NVM、Node.js、pnpm、Bun、Deno（dpp.vimで必須）
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo
 - **その他**: Go、Herdr、CUDA（GPU計算）、GitHub CLI
@@ -150,6 +150,14 @@ codex --version
 
 # 同期されたエージェント指示書を編集
 nvim ~/.codex/AGENTS.md
+```
+
+### pnpm
+
+nvmで管理するNode.js LTSの導入後、npmを使ってpnpm 11をグローバルインストールします。次のコマンドで確認できます：
+
+```bash
+pnpm --version
 ```
 
 ### Herdr

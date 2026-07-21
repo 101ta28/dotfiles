@@ -10,6 +10,7 @@ DPP_DIR="$HOME/.cache/dpp"
 
 # バージョン情報
 NVM_VERSION="v0.40.2"
+PNPM_VERSION="latest-11"
 DENO_MIN_VERSION="2.3.0"
 NEOVIM_MIN_VERSION="0.11.3"
 
@@ -370,6 +371,19 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
   log_info "Installing Node.js (LTS)..."
   nvm install --lts
   log_success "Node.js installed"
+fi
+
+# pnpm
+if command_exists "npm"; then
+  if ! command_exists "pnpm"; then
+    log_info "Installing pnpm (${PNPM_VERSION})..."
+    npm install --global "pnpm@${PNPM_VERSION}"
+    log_success "pnpm installed"
+  else
+    log_info "pnpm already installed"
+  fi
+else
+  log_warn "npm not found, skipping pnpm installation"
 fi
 
 # Agent Skills
