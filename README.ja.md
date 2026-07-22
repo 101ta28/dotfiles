@@ -154,7 +154,7 @@ nvim ~/.codex/AGENTS.md
 
 ### pnpm
 
-nvmで管理するNode.js LTSの導入後、npmを使ってpnpm 11をグローバルインストールします。次のコマンドで確認できます：
+nvmで管理するNode.js LTSの導入後、npmを使ってpnpm 11をグローバルインストールします。WSLではWindowsのPATHから継承されたpnpmを無視し、Linux版を導入します。次のコマンドで確認できます：
 
 ```bash
 pnpm --version

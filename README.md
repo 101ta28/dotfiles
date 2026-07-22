@@ -154,7 +154,7 @@ nvim ~/.codex/AGENTS.md
 
 ### pnpm
 
-pnpm 11 is installed globally through npm after the NVM-managed Node.js LTS installation. Verify it with:
+pnpm 11 is installed globally through npm after the NVM-managed Node.js LTS installation. On WSL, a pnpm executable inherited from the Windows PATH is ignored so that a native Linux installation is used. Verify it with:
 
 ```bash
 pnpm --version

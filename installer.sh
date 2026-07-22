@@ -90,6 +90,17 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+# WSLでWindows側のコマンドをLinux版として誤検出しないようにする
+linux_command_exists() {
+  local command_path
+
+  command_path="$(command -v "$1" 2>/dev/null)" || return 1
+  case "$command_path" in
+    /mnt/[a-zA-Z]/*) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
 # 宣言ファイルにあるAgent Skillsをユーザー領域へ復元する
 sync_agent_skills() {
   local manifest="$DFILE_PATH/.config/agents/skills.txt"
@@ -375,7 +386,7 @@ fi
 
 # pnpm
 if command_exists "npm"; then
-  if ! command_exists "pnpm"; then
+  if ! linux_command_exists "pnpm"; then
     log_info "Installing pnpm (${PNPM_VERSION})..."
     npm install --global "pnpm@${PNPM_VERSION}"
     log_success "pnpm installed"
