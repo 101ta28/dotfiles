@@ -43,11 +43,11 @@ Before delivering substantial prose, verify that the opening identifies the read
 
 When `HERDR_ENV=1`, use Herdr only when a separate terminal context materially improves the task:
 
-- Put long-running servers, watch processes, test suites, and log streams in a separate pane when the main pane should remain available.
-- Use another agent for an independent investigation, separable implementation subtask, or second-pass review when parallel work is likely to improve speed or correctness.
+- Put long-running servers, watch processes, test suites, and log streams in a separate tab when the main tab should remain available.
+- Use another agent in a separate tab for an independent investigation, separable implementation subtask, or second-pass review when parallel work is likely to improve speed or correctness.
 - Do not use Herdr for short commands, simple inspection, or tightly coupled work.
-- Split the current pane in the current tab with the same working directory and `--no-focus` by default. Target the calling pane with `--current` or returned IDs; never infer pane IDs from UI focus.
-- Inspect existing output before waiting, collect every result, and close only contexts created for the current task.
+- Create a new tab in the current workspace with the same working directory and `--no-focus` by default. Target the calling workspace with `$HERDR_WORKSPACE_ID`, then use the returned tab and root pane IDs; never infer IDs from UI focus.
+- Inspect existing output before waiting, collect every result, and close only tabs created for the current task.
 
 ## GitHub Source Files
 
