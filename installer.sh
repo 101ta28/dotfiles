@@ -101,6 +101,27 @@ linux_command_exists() {
   esac
 }
 
+# ログインシェルを、このリポジトリの設定を読み込むZshへ切り替える
+configure_default_shell() {
+  local current_user
+  local current_shell
+  local zsh_path
+
+  current_user="$(id -un)"
+  zsh_path="$(command -v zsh)"
+  current_shell="$(getent passwd "$current_user" | cut -d: -f7)"
+
+  if [ -n "$current_shell" ] &&
+     [ "$(readlink -f "$current_shell")" = "$(readlink -f "$zsh_path")" ]; then
+    log_info "Zsh is already the default shell"
+    return
+  fi
+
+  log_info "Setting Zsh as the default shell for $current_user..."
+  sudo chsh -s "$zsh_path" "$current_user"
+  log_success "Default shell changed to Zsh"
+}
+
 # 宣言ファイルにあるAgent Skillsをユーザー領域へ復元する
 sync_agent_skills() {
   local manifest="$DFILE_PATH/.config/agents/skills.txt"
@@ -265,7 +286,10 @@ done
 # =============================================================================
 # メイン処理
 # =============================================================================
-sudo apt install -y curl git build-essential
+sudo apt update
+sudo apt install -y curl git build-essential zsh
+
+configure_default_shell
 
 # dotfiles リポジトリがなければ clone
 clone_repo "https://github.com/101ta28/dotfiles.git" "$DFILE_PATH" "dotfiles"
@@ -342,8 +366,7 @@ clone_repo "https://github.com/Shougo/dpp-protocol-git" "$DPP_DIR/repos/github.c
 # パッケージインストール (Ubuntu専用)
 # =============================================================================
 log_info "Installing system packages..."
-sudo apt update
-sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim kleopatra zsh
+sudo apt install -y unzip ca-certificates jq ripgrep fzf neovim kleopatra
 
 if command_exists "nvim"; then
   nvim_version="$(nvim --version | awk 'NR == 1 { sub(/^v/, "", $2); print $2 }')"

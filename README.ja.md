@@ -100,12 +100,15 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 ### installer.shの動作
 
-1. dotfilesリポジトリをクローン
-2. Prezto（Zshフレームワーク）をインストール
-3. 各設定ファイルのシンボリックリンクを作成
-4. dpp.vim、Denops、インストーラー/Git拡張をbootstrap
-5. 宣言されたAgent Skillsをユーザー共通のスキルディレクトリへ復元
-6. 開発ツール（Deno、Node.js、pnpm、Rust、Bun、uv等）を自動インストール
+1. Zshをインストールして、実行ユーザーの既定のログインシェルに設定
+2. dotfilesリポジトリをクローン
+3. Prezto（Zshフレームワーク）をインストール
+4. 各設定ファイルのシンボリックリンクを作成
+5. dpp.vim、Denops、インストーラー/Git拡張をbootstrap
+6. 宣言されたAgent Skillsをユーザー共通のスキルディレクトリへ復元
+7. 開発ツール（Deno、Node.js、pnpm、Rust、Bun、uv等）を自動インストール
+
+既定シェルの変更は次回のログインまたは新しいターミナルから有効になります。現在のセッションですぐに使う場合は `exec zsh` を実行してください。
 
 ### 開発環境
 

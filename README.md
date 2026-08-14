@@ -100,12 +100,15 @@ The script backs up configuration before optional removal steps and asks separat
 
 ### How installer.sh Works
 
-1. Clone dotfiles repository
-2. Install Prezto (Zsh framework)
-3. Create symbolic links for configuration files
-4. Bootstrap dpp.vim, Denops, and the required installer/Git extensions
-5. Restore the declared Agent Skills into the user-level shared skills directory
-6. Auto-install development tools (Deno, Node.js, pnpm, Rust, Bun, uv, etc.)
+1. Install Zsh and set it as the invoking user's default login shell
+2. Clone the dotfiles repository
+3. Install Prezto (Zsh framework)
+4. Create symbolic links for configuration files
+5. Bootstrap dpp.vim, Denops, and the required installer/Git extensions
+6. Restore the declared Agent Skills into the user-level shared skills directory
+7. Auto-install development tools (Deno, Node.js, pnpm, Rust, Bun, uv, etc.)
+
+The default-shell change takes effect at the next login or in a new terminal. Run `exec zsh` to use it immediately in the current session.
 
 ### Development Environment
 
