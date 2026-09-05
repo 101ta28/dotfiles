@@ -2,7 +2,6 @@
 
 This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`,
 `Decision Log`, and `Outcomes & Retrospective` current as work proceeds.
-Maintain this document in accordance with `~/.codex/PLANS.md`.
 
 ## Purpose / Big Picture
 
