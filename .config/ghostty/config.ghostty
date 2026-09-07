@@ -24,3 +24,8 @@ wait-after-command = false
 
 # GNOME's 10,000-line scrollback has no exact byte-limit equivalent in Ghostty.
 # Its always-visible scrollbar also has no matching option; retain defaults.
+
+# Let Herdr handle its direct tab-switching shortcuts.
+keybind = ctrl+tab=unbind
+keybind = ctrl+shift+tab=unbind
+keybind = ctrl+shift+c=copy_to_clipboard:plain
