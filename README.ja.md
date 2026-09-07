@@ -85,6 +85,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 - `init.vim` - Vim/Neovim設定とdpp.vimの起動処理
 - `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
 - `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
+- `.config/ghostty/config.ghostty` - `~/.config/ghostty/config.ghostty` と同期するGhostty設定
 - `.config/agents/skills.txt` - `~/.agents/skills/` へ復元するAgent Skills一覧
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
 - `.config/.codex/` - `~/.codex/` と `~/.agents/skills/` へ同期されるCodex向け指示書とローカルSkills。削除済みの管理対象は `obsolete-paths.txt` に従って除去されます
@@ -179,6 +180,10 @@ herdr server reload-config
 インストーラーはHerdr公式スクリプトを使用して `~/.local/bin/herdr` へ導入し、`.config/herdr/config.toml` を `~/.config/herdr/config.toml` へリンクします。既存の通常ファイルは、リポジトリ内の設定と内容が一致する場合に限りシンボリックリンクへ移行します。
 
 `Ctrl+Tab` で次のタブ、`Ctrl+Shift+Tab` で前のタブへ切り替えます。
+
+### Ghostty
+
+インストーラーは `.config/ghostty/config.ghostty` も `~/.config/ghostty/config.ghostty` へリンクし、既存ファイルを同じ方針で保護します。Ghostty本体はインストールしません。GNOME Terminalのプロファイル `b1dcc9dd-5262-4d8d-a863-c897e6d979b9` から、点滅するブロックカーソル、スクロール動作、システムベル、コマンド終了後に閉じる動作をコピーしています。フォントはHackGen Console NF（13 pt）、初期サイズは表示領域120列 × 30行を目標にしています。このGTK環境では30行指定で27行になったため、`window-height = 33` で3行分を補正しています。配色はGhostty標準のままです。履歴10,000行やスクロールバーの常時表示など、正確に対応する設定がないものはGhostty標準のままにしています。コピー時点の固定値のため、変更するときはリポジトリ内のファイルを編集してください。GTKのウィンドウ装飾により、実際の行・列数が指定した初期サイズとずれる場合があります。
 
 ### Agent Skills
 

@@ -85,6 +85,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `init.vim` - Vim/Neovim configuration and dpp.vim startup
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
+- `.config/ghostty/config.ghostty` - Ghostty configuration synced to `~/.config/ghostty/config.ghostty`
 - `.config/agents/skills.txt` - Agent Skills restored into `~/.agents/skills/`
 - `AGENTS.md` - Contributor guidance for this repository
 - `.config/.codex/` - Codex instructions and local skills synced to `~/.codex/` and `~/.agents/skills/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
@@ -179,6 +180,10 @@ herdr server reload-config
 The installer installs Herdr to `~/.local/bin/herdr` using its official installer and links `.config/herdr/config.toml` to `~/.config/herdr/config.toml`. An existing non-symlink file is preserved unless its contents already match the repository copy.
 
 Switch to the next tab with `Ctrl+Tab` and to the previous tab with `Ctrl+Shift+Tab`.
+
+### Ghostty
+
+The installer also links `.config/ghostty/config.ghostty` to `~/.config/ghostty/config.ghostty` with the same existing-file policy. Ghostty itself is not installed. Non-color settings are based on GNOME Terminal profile `b1dcc9dd-5262-4d8d-a863-c897e6d979b9`: blinking block cursor, scrolling behavior, system bell, and closing after command exit. The font is customized to HackGen Console NF (13 pt), and the target initial size is 120 columns × 30 visible rows. On this GTK desktop, requesting 30 rows produced 27, so `window-height = 33` compensates for the three-row difference. Colors remain Ghostty defaults. Settings without an exact equivalent, such as the 10,000-line scrollback and always-visible scrollbar, retain Ghostty defaults. This is a snapshot; edit the repository file to change the settings. GTK window decorations can cause the actual grid size to differ from the requested initial size.
 
 ### Agent Skills
 

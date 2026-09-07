@@ -343,6 +343,10 @@ remove_managed_symlink "$HOME/.config/nvim/dein_lazy.toml" "$DFILE_PATH/.config/
 mkdir -p "$HOME/.config/herdr"
 create_symlink "$DFILE_PATH/.config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
 
+# Ghostty 設定
+mkdir -p "$HOME/.config/ghostty"
+create_symlink "$DFILE_PATH/.config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
+
 
 # Vim 設定
 create_symlink "$DFILE_PATH/init.vim" "$HOME/.vimrc"

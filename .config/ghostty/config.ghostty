@@ -1,0 +1,25 @@
+# Non-color settings based on GNOME Terminal profile
+# b1dcc9dd-5262-4d8d-a863-c897e6d979b9. Keep Ghostty's default colors.
+# Snapshot of effective settings; GNOME changes are not imported automatically.
+
+# Personal font and initial window size preferences.
+font-family = HackGen Console NF
+font-size = 13
+
+window-width = 120
+# GTK decorations consume 3 rows here: 30 requested produced 27 visible.
+# Request 33 to target 30 visible rows on this desktop.
+window-height = 33
+
+cursor-style = block
+# GNOME cursor-blink-mode=system currently resolves to true.
+cursor-style-blink = true
+# Keep the block cursor at the shell prompt as well.
+shell-integration-features = no-cursor
+
+scroll-to-bottom = keystroke,no-output
+bell-features = system
+wait-after-command = false
+
+# GNOME's 10,000-line scrollback has no exact byte-limit equivalent in Ghostty.
+# Its always-visible scrollbar also has no matching option; retain defaults.

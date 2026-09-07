@@ -144,6 +144,7 @@ EOF
     remove_symlink "$HOME/.config/nvim/init.vim"
     remove_symlink "$HOME/.config/nvim/dpp.ts"
     remove_symlink "$HOME/.config/herdr/config.toml"
+    remove_symlink "$HOME/.config/ghostty/config.ghostty"
     
     log_success "Symlinks removal completed"
     
