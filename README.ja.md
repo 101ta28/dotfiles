@@ -183,7 +183,7 @@ herdr server reload-config
 
 ### Ghostty
 
-インストーラーは `.config/ghostty/config.ghostty` も `~/.config/ghostty/config.ghostty` へリンクし、既存ファイルを同じ方針で保護します。Ghostty本体はインストールしません。GNOME Terminalのプロファイル `b1dcc9dd-5262-4d8d-a863-c897e6d979b9` から、点滅するブロックカーソル、スクロール動作、システムベル、コマンド終了後に閉じる動作をコピーしています。フォントはHackGen Console NF（13 pt）、初期サイズはこの環境のGNOME Terminalと同程度のウィンドウサイズになるよう、134列 × 34行を指定しています。配色はGhostty標準のままです。履歴10,000行やスクロールバーの常時表示など、正確に対応する設定がないものはGhostty標準のままにしています。コピー時点の固定値のため、変更するときはリポジトリ内のファイルを編集してください。GTKのウィンドウ装飾により、実際の行・列数が指定した初期サイズとずれる場合があります。
+インストーラーは `.config/ghostty/config.ghostty` も `~/.config/ghostty/config.ghostty` へリンクし、既存ファイルを同じ方針で保護します。Ghostty本体はインストールしません。GNOME Terminalのプロファイル `b1dcc9dd-5262-4d8d-a863-c897e6d979b9` から、点滅するブロックカーソル、スクロール動作、システムベル、コマンド終了後に閉じる動作をコピーしています。フォントはHackGen Console NF（13 pt）、初期表示領域はこの環境のGNOME Terminalと同程度の134列 × 34行を目標にしています。`window-height = 34` で実表示が31行になったため、設定値は `window-width = 134`、`window-height = 37` としています。補正後の実表示はGhosttyの再起動後に確認が必要です。別の環境では補正量が異なる場合があります。配色はGhostty標準のままです。履歴10,000行やスクロールバーの常時表示など、正確に対応する設定がないものはGhostty標準のままにしています。コピー時点の固定値のため、変更するときはリポジトリ内のファイルを編集してください。GTKのウィンドウ装飾により、実際の行・列数が指定した初期サイズとずれる場合があります。
 
 ### Agent Skills
 

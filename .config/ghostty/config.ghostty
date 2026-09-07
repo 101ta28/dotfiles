@@ -8,7 +8,9 @@ font-size = 13
 
 # Chosen to approximate the GNOME Terminal window size on this desktop.
 window-width = 134
-window-height = 34
+# On this desktop, height 34 produced 31 visible rows.
+# Add 3 to target 34 visible rows; other desktops may need a different value.
+window-height = 37
 
 cursor-style = block
 # GNOME cursor-blink-mode=system currently resolves to true.
