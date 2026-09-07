@@ -6,10 +6,9 @@
 font-family = HackGen Console NF
 font-size = 13
 
-window-width = 120
-# GTK decorations consume 3 rows here: 30 requested produced 27 visible.
-# Request 33 to target 30 visible rows on this desktop.
-window-height = 33
+# Chosen to approximate the GNOME Terminal window size on this desktop.
+window-width = 134
+window-height = 34
 
 cursor-style = block
 # GNOME cursor-blink-mode=system currently resolves to true.
