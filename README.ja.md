@@ -178,6 +178,8 @@ herdr server reload-config
 
 インストーラーはHerdr公式スクリプトを使用して `~/.local/bin/herdr` へ導入し、`.config/herdr/config.toml` を `~/.config/herdr/config.toml` へリンクします。既存の通常ファイルは、リポジトリ内の設定と内容が一致する場合に限りシンボリックリンクへ移行します。
 
+`Ctrl+Tab` で次のタブ、`Ctrl+Shift+Tab` で前のタブへ切り替えます。
+
 ### Agent Skills
 
 インストーラーは `.config/agents/skills.txt` を読み、各項目をSkills CLIでグローバルにインストールします。これにより、新しい端末や `update.sh` による設定の再適用時に、宣言したスキルが `~/.agents/skills/` へ復元されます。同期は加算型で、一覧にないスキルは削除しません。

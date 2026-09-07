@@ -178,6 +178,8 @@ herdr server reload-config
 
 The installer installs Herdr to `~/.local/bin/herdr` using its official installer and links `.config/herdr/config.toml` to `~/.config/herdr/config.toml`. An existing non-symlink file is preserved unless its contents already match the repository copy.
 
+Switch to the next tab with `Ctrl+Tab` and to the previous tab with `Ctrl+Shift+Tab`.
+
 ### Agent Skills
 
 The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.
