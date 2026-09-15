@@ -1,7 +1,5 @@
 # Global Codex Instructions
 
-<!-- Tuned for GPT-6 Astra: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra#prompting-best-practices -->
-
 ## Communication
 
 - Think in English and respond to the user in Japanese.
@@ -63,14 +61,14 @@ Before delivery, reread for comprehension in order: concepts and references shou
 
 ## Delegation
 
-- Delegate independent subtasks when useful work can proceed concurrently and the benefit exceeds coordination cost. Define scope, collect results, and review integration.
+- Do not use sub-agents unless the user explicitly requests them. When requested, define scope, collect results, and review integration.
 
 ## Herdr
 
 When `HERDR_ENV=1`, use Herdr only when a separate terminal context materially improves the task:
 
 - Put long-running servers, watch processes, test suites, and log streams in a separate tab when the main tab should remain available.
-- Use another agent in a separate tab for an independent investigation, separable implementation subtask, or second-pass review when parallel work is likely to improve speed or correctness.
+- Only when the user explicitly requests sub-agents, use another agent in a separate tab for an independent investigation, separable implementation subtask, or second-pass review when parallel work is likely to improve speed or correctness.
 - Do not use Herdr for short commands, simple inspection, or tightly coupled work.
 - Create a new tab in the current workspace with the same working directory and `--no-focus` by default. Target the calling workspace with `$HERDR_WORKSPACE_ID`, then use the returned tab and root pane IDs; never infer IDs from UI focus.
 - Inspect existing output before waiting, collect every result, and close only tabs created for the current task.
