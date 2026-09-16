@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Build or revise production frontend components, pages, and applications with an intentional visual direction, responsive behavior, and accessibility. Use for UI implementation; preserve an existing design system unless the user asks for a redesign.
+description: Design and implement frontend interfaces. Use when building or changing visible UI, including responsive behavior and accessibility.
 ---
 
 # Frontend Design

@@ -185,6 +185,8 @@ herdr server reload-config
 
 インストーラーは `.config/ghostty/config.ghostty` も `~/.config/ghostty/config.ghostty` へリンクし、既存ファイルを同じ方針で保護します。Ghostty本体はインストールしません。GNOME Terminalのプロファイル `b1dcc9dd-5262-4d8d-a863-c897e6d979b9` から、点滅するブロックカーソル、スクロール動作、システムベル、コマンド終了後に閉じる動作をコピーしています。フォントはHackGen Console NF（13 pt）、初期表示領域はこの環境のGNOME Terminalと同程度の134列 × 34行を目標にしています。`window-height = 34` で実表示が31行になったため、設定値は `window-width = 134`、`window-height = 37` としています。この環境では補正後の実表示が134列 × 34行になることをユーザーが確認済みです。別の環境では補正量が異なる場合があります。配色はGhostty標準のままです。履歴10,000行やスクロールバーの常時表示など、正確に対応する設定がないものはGhostty標準のままにしています。コピー時点の固定値のため、変更するときはリポジトリ内のファイルを編集してください。GTKのウィンドウ装飾により、実際の行・列数が指定した初期サイズとずれる場合があります。
 
+共通指示には会話と作業範囲の方針を置き、日本語の文書執筆に関する詳細は `japanese-tech-writing` に集約しています。`cognitive-rhythm-writing` は必要に応じた文章の緩急の調整、`frontend-design` は画面の設計・実装、`grilling` は依頼された計画の検討インタビューを扱います。スキルの説明は適用する作業を具体的に示し、追加の規範は必要なときに読み込みます。
+
 ### Agent Skills
 
 インストーラーは `.config/agents/skills.txt` を読み、各項目をSkills CLIでグローバルにインストールします。これにより、新しい端末や `update.sh` による設定の再適用時に、宣言したスキルが `~/.agents/skills/` へ復元されます。同期は加算型で、一覧にないスキルは削除しません。
