@@ -187,6 +187,8 @@ The installer also links `.config/ghostty/config.ghostty` to `~/.config/ghostty/
 
 Global instructions hold shared communication and work boundaries. Detailed Japanese prose guidance lives in `japanese-tech-writing`; `cognitive-rhythm-writing` handles reading rhythm when needed. `frontend-design` covers visible UI work, and `grilling` covers requested interviews to challenge a plan. Keep skill descriptions specific to these tasks, and load additional guidance only when relevant.
 
+The two writing skills clarify subjects and operations and improve sentence flow while preserving facts and conditions. They include editing examples and choose wording and structure for the context, without fixed sentence-length or list-ratio targets.
+
 ### Agent Skills
 
 The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.
