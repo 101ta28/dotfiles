@@ -61,6 +61,15 @@ export NVM_DIR="${HOME}/.nvm"
 
 # Function to load tool-specific completions
 load_tool_completions() {
+  # Jujutsu standard completions (Prezto normally initializes compinit)
+  if command -v jj >/dev/null 2>&1; then
+    if (( ! $+functions[compdef] )); then
+      autoload -Uz compinit
+      compinit
+    fi
+    source <(jj util completion zsh)
+  fi
+
   # Bun completions
   [[ -s "${BUN_INSTALL}/_bun" ]] && source "${BUN_INSTALL}/_bun"
   

@@ -1,0 +1,11 @@
+# Jujutsu user configuration template.
+# The installer copies this file; run ./setup-user.sh to set your identity.
+
+[user]
+name = "YOUR_NAME"
+email = "YOUR_EMAIL"
+
+[signing]
+backend = "gpg"
+# setup-user.sh enables signing of your own commits when a GPG key is supplied.
+behavior = "drop"

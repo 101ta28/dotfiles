@@ -1,5 +1,7 @@
 # Personal configuration files
 .gitconfig
+.jjconfig.toml
+.config/jj/config.toml
 
 # OS generated files
 .DS_Store

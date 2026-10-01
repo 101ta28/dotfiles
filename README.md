@@ -27,7 +27,7 @@ This will install:
 
 ## Post-Installation Setup
 
-After installation, you need to configure your personal Git settings:
+After installation, configure your personal Git and Jujutsu settings:
 
 ```shell
 # Run the user setup script
@@ -42,9 +42,11 @@ Or if you have already cloned the repository:
 
 This will prompt you to enter:
 
-- Your full name for Git commits
+- Your full name for Git and Jujutsu commits
 - Your email address  
 - Your GPG key ID (optional, for commit signing)
+
+The same identity is saved to both tools. Providing a GPG key enables signing in Git and signing of your own commits in Jujutsu; leaving it empty disables automatic signing in both. If `jj` is unavailable, only Git is configured; rerun the script after installing Jujutsu.
 
 ## Update
 
@@ -78,6 +80,7 @@ The script backs up configuration before optional removal steps and asks separat
 ## Files Overview
 
 - `.gitconfig.template` - Template for Git configuration with placeholders
+- `.config/jj/config.toml.template` - Template copied to the Jujutsu user configuration on first installation
 - `setup-user.sh` - Interactive script to configure personal settings
 - `installer.sh` - Main installation script
 - `update.sh` - Safe fast-forward update and configuration resync
@@ -97,6 +100,7 @@ The script backs up configuration before optional removal steps and asks separat
 
 - **Zsh**: Uses Prezto framework. Aliases and environment variables are defined in `.zshrc`
 - **Git**: `.gitconfig` sets up GPG signing, aliases, and Git LFS
+- **Jujutsu**: A personal TOML configuration holds identity and signing settings; `.zshrc` loads standard completions
 - **Editor**: `init.vim` loads dpp.vim; `dpp.ts` defines plugins through Denops
 
 ### How installer.sh Works
@@ -115,7 +119,8 @@ The default-shell change takes effect at the next login or in a new terminal. Ru
 
 - **JavaScript/TypeScript**: NVM, Node.js, pnpm, Bun, Deno (required by dpp.vim)
 - **Python**: uv (fast package manager)
-- **Rust**: rustup, Cargo
+- **Rust**: rustup, Cargo, cargo-binstall (when needed to install Jujutsu)
+- **Version control**: Git, Jujutsu (`jj`)
 - **Others**: Go, Herdr, CUDA (GPU computing), GitHub CLI
 - **GPU/CUDA** (optional): NVIDIA Container Toolkit, CUDA Toolkit 12.6
 
@@ -163,6 +168,20 @@ pnpm 11 is installed globally through npm after the NVM-managed Node.js LTS inst
 ```bash
 pnpm --version
 ```
+
+### Jujutsu
+
+Following the [official installation and setup guide](https://docs.jj-vcs.dev/latest/install-and-setup/), the installer runs `cargo binstall --strategies crate-meta-data jj-cli --no-confirm` after Rust is available. It first installs a missing cargo-binstall with `cargo install cargo-binstall --locked`. An existing `jj` installation is preserved, including when running `update.sh`.
+
+The installer copies `.config/jj/config.toml.template` to the path returned by `jj config path --user` (normally `~/.config/jj/config.toml`, respecting `XDG_CONFIG_HOME`). Existing configurations and configurations with multiple paths are preserved. Personal settings are edited with `jj config set --user` and are not linked back to the repository.
+
+```bash
+jj --version
+./setup-user.sh
+jj config edit --user
+```
+
+Zsh loads **standard** completions via `source <(jj util completion zsh)` after completion initialization. Open a new shell or run `source ~/.zshrc` to enable them.
 
 ### Herdr
 

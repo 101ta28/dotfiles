@@ -27,7 +27,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/in
 
 ## インストール後の設定
 
-インストール後、個人のGit設定を行う必要があります：
+インストール後、GitとJujutsuの個人設定を行います：
 
 ```shell
 # ユーザー設定スクリプトを実行
@@ -42,9 +42,11 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 以下の情報の入力を求められます：
 
-- Gitコミット用のフルネーム
+- GitとJujutsuのコミット用フルネーム
 - メールアドレス
 - GPGキーID（オプション、コミット署名用）
+
+同じ名前とメールアドレスを両方に保存します。GPGキーを入力すると、Gitの署名とJujutsuの自分のコミットへの署名を有効にし、空欄なら両方の自動署名を無効にします。`jj` が見つからない場合はGitだけを設定するため、Jujutsuのインストール後に再実行してください。
 
 ## 更新
 
@@ -78,6 +80,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 ## ファイル構成
 
 - `.gitconfig.template` - プレースホルダー付きGit設定テンプレート
+- `.config/jj/config.toml.template` - 初回インストール時にJujutsuのユーザー設定へコピーするテンプレート
 - `setup-user.sh` - 個人設定用インタラクティブスクリプト
 - `installer.sh` - メインインストールスクリプト
 - `update.sh` - fast-forwardによる安全な更新と設定の再同期
@@ -97,6 +100,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 - **Zsh設定**: Preztoフレームワークを使用。`.zshrc`でエイリアスと環境変数を定義
 - **Git設定**: `.gitconfig`でGPG署名、エイリアス、Git LFSを設定
+- **Jujutsu設定**: 個人用のTOMLファイルに名前・メールアドレス・署名設定を保存し、`.zshrc`でstandard補完を読み込む
 - **エディタ設定**: `init.vim`でdpp.vimを起動し、`dpp.ts`からDenops経由でプラグインを定義
 
 ### installer.shの動作
@@ -115,7 +119,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 - **JavaScript/TypeScript**: NVM、Node.js、pnpm、Bun、Deno（dpp.vimで必須）
 - **Python**: uv（高速パッケージマネージャ）
-- **Rust**: rustup、Cargo
+- **Rust**: rustup、Cargo、cargo-binstall（Jujutsuの導入に必要な場合）
+- **バージョン管理**: Git、Jujutsu（`jj`）
 - **その他**: Go、Herdr、CUDA（GPU計算）、GitHub CLI
 - **GPU/CUDA** (オプション): NVIDIA Container Toolkit、CUDA Toolkit 12.6
 
@@ -163,6 +168,20 @@ nvmで管理するNode.js LTSの導入後、npmを使ってpnpm 11をグロー�
 ```bash
 pnpm --version
 ```
+
+### Jujutsu
+
+[公式のインストール・設定手順](https://docs.jj-vcs.dev/latest/install-and-setup/)に従い、Rustの導入後に `cargo binstall --strategies crate-meta-data jj-cli --no-confirm` を実行します。cargo-binstallがなければ、先に `cargo install cargo-binstall --locked` で導入します。`update.sh` の実行時も、既存の `jj` はそのまま使います。
+
+`.config/jj/config.toml.template` は `jj config path --user` が返すパスへコピーします。通常は `~/.config/jj/config.toml` で、`XDG_CONFIG_HOME` にも対応します。既存の設定や複数のパスを使う設定は保持します。個人設定は `jj config set --user` で編集し、リポジトリへのシンボリックリンクにはしません。
+
+```bash
+jj --version
+./setup-user.sh
+jj config edit --user
+```
+
+Zshでは補完の初期化後、`source <(jj util completion zsh)` で **standard補完** を読み込みます。新しいシェルを開くか、`source ~/.zshrc` で反映してください。
 
 ### Herdr
 

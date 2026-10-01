@@ -90,6 +90,45 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+# Jujutsu本体と、個人用にコピーする初期設定を用意する
+install_jujutsu() {
+  local template="$DFILE_PATH/.config/jj/config.toml.template"
+  local config_path
+
+  if ! command_exists "jj"; then
+    if ! command_exists "cargo-binstall"; then
+      log_info "Installing cargo-binstall..."
+      cargo install cargo-binstall --locked
+    fi
+    log_info "Installing Jujutsu..."
+    cargo binstall --strategies crate-meta-data jj-cli --no-confirm
+    log_success "Jujutsu installed"
+  else
+    log_info "Jujutsu already installed"
+  fi
+
+  if [ ! -f "$template" ]; then
+    log_info "Jujutsu configuration template not found, skipping"
+    return
+  fi
+
+  if ! config_path="$(jj config path --user)"; then
+    log_warn "Could not determine Jujutsu user config path, skipping template"
+    return
+  fi
+
+  # 複数の設定パスや既存のファイル・ディレクトリはそのまま使う。
+  if [[ -z "$config_path" || "$config_path" == *$'\n'* ]] ||
+     [ -e "$config_path" ] || [ -L "$config_path" ]; then
+    log_info "Jujutsu configuration already exists or uses multiple paths, preserving it"
+    return
+  fi
+
+  mkdir -p "$(dirname "$config_path")"
+  cp "$template" "$config_path"
+  log_success "Jujutsu configuration created from template: $config_path"
+}
+
 # WSLでWindows側のコマンドをLinux版として誤検出しないようにする
 linux_command_exists() {
   local command_path
@@ -432,6 +471,9 @@ sync_codex_config
 install_via_curl "Rust" "https://sh.rustup.rs" "rustc" "-y"
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# Jujutsu
+install_jujutsu
+
 # GitHub CLI
 if ! command_exists "gh"; then
   log_info "Installing GitHub CLI..."
@@ -538,7 +580,7 @@ log_success "Setup complete!"
 echo ""
 echo "Launch Vim or Neovim. dpp.vim will generate state and install plugins defined in dpp.ts."
 echo ""
-echo "To configure your personal Git settings, run:"
+echo "To configure your personal Git and Jujutsu settings, run:"
 echo "  bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/setup-user.sh)\""
 echo "  or: ./setup-user.sh"
 echo ""
