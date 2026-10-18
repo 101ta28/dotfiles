@@ -208,6 +208,8 @@ Global instructions hold shared communication and work boundaries. Detailed Japa
 
 The two writing skills clarify subjects and operations and improve sentence flow while preserving facts and conditions. They include editing examples and choose wording and structure for the context, without fixed sentence-length or list-ratio targets.
 
+The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict recovery, bookmarks, and Git remotes. Its source is `.config/.codex/skills/jj/`, synced to `~/.agents/skills/jj/` by the installer. It uses an existing `jj` installation.
+
 ### Agent Skills
 
 The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Jujutsu (jj)"
+  short_description: "Work with jj changes, history, and Git remotes"
