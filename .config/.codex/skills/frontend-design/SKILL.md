@@ -10,6 +10,7 @@ Build a working interface whose visual choices follow the product context rather
 - Preserve the existing design system unless the user requests a redesign. Prefer explicit requirements and visual references, then existing tokens, components, and computed styles.
 - For greenfield work, choose one coherent direction based on the product's audience, task, and tone.
 - Implement in the repository's framework and reuse shared components and tokens.
+- Avoid unnecessary secondary labels and explanatory copy. Make relationships and actions clear through layout, grouping, spacing, and visual hierarchy.
 - Define responsive behavior from content constraints, including compact widths, long Japanese text, URLs, and relevant loading, empty, error, and disabled states.
 - Preserve semantic structure, keyboard operation, visible focus, sufficient contrast, usable pointer targets, and `prefers-reduced-motion` support.
 - Avoid arbitrary gradients, excessive blur or shadows, decorative motion, and interchangeable dashboard or landing-page layouts.
