@@ -91,7 +91,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `.config/ghostty/config.ghostty` - Ghostty configuration synced to `~/.config/ghostty/config.ghostty`
 - `.config/agents/skills.txt` - Agent Skills restored into `~/.agents/skills/`
 - `AGENTS.md` - Contributor guidance for this repository
-- `.config/.codex/` - Codex instructions and local skills synced to `~/.codex/` and `~/.agents/skills/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
+- `.config/.codex/` - Codex instructions, execution policy rules, and local skills synced to `~/.codex/` and `~/.agents/skills/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
 - `.zshrc` - Zsh shell configuration with Prezto
 
 ## Architecture Overview
@@ -160,6 +160,8 @@ codex --version
 # Edit synced agent instructions
 nvim ~/.codex/AGENTS.md
 ```
+
+`installer.sh` and `update.sh` copy `.config/.codex/rules/*.rules` to `~/.codex/rules/`. Files with the same name are updated; other rule files, including locally saved approvals in `default.rules`, are preserved. The managed `jj.rules` allows commands beginning with `jj` to run outside the sandbox without prompting. Restart Codex after syncing to load the rules.
 
 ### pnpm
 
@@ -250,7 +252,7 @@ git config --global commit.gpgSign true
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
 - dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
-- Codex instructions and local skills are managed under `.config/.codex/`; rerun the installer to sync them and remove paths listed in `obsolete-paths.txt`
+- Codex instructions, execution policy rules, and local skills are managed under `.config/.codex/`; run `update.sh` or rerun the installer to sync them and remove paths listed in `obsolete-paths.txt`
 - Agent Skills listed in `.config/agents/skills.txt` are restored additively; `~/.agents` itself is not tracked by Git
 - Git LFS is enabled for handling large files
 

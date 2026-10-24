@@ -196,13 +196,14 @@ sync_agent_skills() {
   log_success "Agent Skills synced"
 }
 
-# このリポジトリで管理するCodex指示書とSkillsをユーザー領域へ同期する
+# このリポジトリで管理するCodex指示書、実行ルール、Skillsをユーザー領域へ同期する
 sync_codex_config() {
   local codex_source="$DFILE_PATH/.config/.codex"
   local obsolete_manifest="$codex_source/obsolete-paths.txt"
   local obsolete_path
   local obsolete_target
   local extra
+  local rule_file
   local skill_dir
   local skill_name
 
@@ -211,8 +212,8 @@ sync_codex_config() {
     return
   fi
 
-  log_info "Syncing Codex instructions and skills..."
-  mkdir -p "$HOME/.codex" "$HOME/.agents/skills"
+  log_info "Syncing Codex instructions, rules, and skills..."
+  mkdir -p "$HOME/.codex/rules" "$HOME/.agents/skills"
 
   if [ -f "$obsolete_manifest" ]; then
     while read -r obsolete_path extra || [ -n "${obsolete_path:-}" ]; do
@@ -252,6 +253,14 @@ sync_codex_config() {
     cp "$codex_source/AGENTS.md" "$HOME/.codex/AGENTS.md"
   fi
 
+  for rule_file in "$codex_source"/rules/*.rules; do
+    if [ ! -f "$rule_file" ]; then
+      continue
+    fi
+
+    cp "$rule_file" "$HOME/.codex/rules/"
+  done
+
   for skill_dir in "$codex_source"/skills/*; do
     if [ ! -f "$skill_dir/SKILL.md" ]; then
       continue
@@ -262,7 +271,7 @@ sync_codex_config() {
     cp -R "$skill_dir/." "$HOME/.agents/skills/$skill_name/"
   done
 
-  log_success "Codex instructions and skills updated"
+  log_success "Codex instructions, rules, and skills updated"
 }
 
 # curlでインストールする汎用関数（第5引数でシェルを指定可）
