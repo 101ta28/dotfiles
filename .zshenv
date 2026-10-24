@@ -14,6 +14,20 @@ if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; t
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
 
+# Keep loopback services (including local MCP servers) off upstream proxies.
+# Merge both spellings because HTTP clients differ in which one they honor.
+() {
+  local -aU proxy_bypass_hosts
+  proxy_bypass_hosts=(
+    "${(@s:,:)NO_PROXY}"
+    "${(@s:,:)no_proxy}"
+    localhost 127.0.0.1 ::1
+  )
+  proxy_bypass_hosts=("${(@)proxy_bypass_hosts:#}")
+  export NO_PROXY="${(j:,:)proxy_bypass_hosts}"
+  export no_proxy="$NO_PROXY"
+}
+
 # =============================================================================
 # Tool-specific Environment
 # =============================================================================

@@ -258,6 +258,12 @@ git config --global commit.gpgSign true
 
 ## トラブルシューティング
 
+### プロキシ環境でローカルMCPへの接続に失敗する場合
+
+Codexで `codex_tui` の起動に失敗し、`127.0.0.1` に対するSquidのHTTP 503ページが表示される場合、ローカルへのリクエストがプロキシへ送られています。`.zshenv` は既存の `NO_PROXY` と `no_proxy` の除外先を統合し、両方に `localhost`・`127.0.0.1`・`::1` を追加します。
+
+Codexを終了し、起動元のZshで `source ~/.zshenv` を実行してから、Codexを起動し直してください。起動済みのプロセスには環境変数の変更が反映されません。
+
 ### dpp.vimが動作しない場合
 
 1. `deno --version` と `nvim --version`（または `vim --version`）でバージョンを確認

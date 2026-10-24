@@ -258,6 +258,12 @@ git config --global commit.gpgSign true
 
 ## Troubleshooting
 
+### Local MCP connections fail behind a proxy
+
+If Codex reports `codex_tui` startup failure and a Squid HTTP 503 page for `127.0.0.1`, the local request is being sent to the proxy. `.zshenv` merges existing `NO_PROXY` and `no_proxy` entries and adds `localhost`, `127.0.0.1`, and `::1` to both variables.
+
+Exit Codex, run `source ~/.zshenv` in the launching Zsh, and start Codex again. Already-running processes do not pick up the updated environment.
+
 ### dpp.vim not working
 
 1. Check versions with `deno --version` and `nvim --version` (or `vim --version`)
