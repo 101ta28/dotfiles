@@ -1,1 +1,50 @@
-prefix_rule(pattern=["jj"], decision="allow")
+# Follow the Git approval model: allow inspection, review mutations.
+# Do not allow the whole "jj" prefix: it also covers aliases and external tools.
+# Prefix rules do not parse arbitrary options or expand user-defined aliases;
+# unmatched invocations remain subject to Codex's normal approval/sandbox policy.
+
+inspection_patterns = [
+    [["status", "st", "log", "diff", "show", "interdiff", "evolog", "evolution-log", "root", "version", "help", "--help", "-h", "--version", "-V"]],
+    [["bookmark", "b"], ["list", "l"]],
+    ["tag", ["list", "l"]],
+    ["file", ["annotate", "list", "search", "show"]],
+    [["operation", "op"], ["log", "show", "diff"]],
+    ["config", ["get", "g", "list", "l", "path", "p"]],
+    ["git", "root"],
+    ["git", "remote", "list"],
+    ["workspace", ["list", "root"]],
+    ["sparse", "list"],
+    ["util", ["completion", "config-schema", "markdown-help"]],
+]
+
+mutation_patterns = [
+    [["abandon", "absorb", "arrange", "bisect", "commit", "ci", "converge", "describe", "desc", "diffedit", "duplicate", "edit", "fix", "gerrit", "metaedit", "new", "next", "parallelize", "prev", "rebase", "redo", "resolve", "restore", "revert", "run", "sign", "simplify-parents", "split", "squash", "undo", "unsign"]],
+    [["bookmark", "b"], ["advance", "a", "create", "c", "delete", "d", "forget", "f", "move", "m", "rename", "r", "set", "s", "track", "t", "untrack"]],
+    ["tag", ["delete", "d", "set", "s", "track", "untrack"]],
+    ["file", ["chmod", "delete", "edit", "track", "untrack"]],
+    [["operation", "op"], ["abandon", "integrate", "restore", "revert"]],
+    ["config", ["edit", "e", "gc", "set", "s", "unset", "u"]],
+    ["git", ["clone", "colocation", "export", "fetch", "import", "init", "push"]],
+    ["git", "remote", ["add", "remove", "rename", "set-url"]],
+    ["workspace", ["add", "forget", "remove", "rename", "update-stale"]],
+    ["sparse", ["edit", "reset", "set"]],
+    ["util", ["backend", "exec", "gc", "install-man-pages", "snapshot"]],
+]
+
+# Support common display/snapshot flags without granting a blanket flag prefix.
+# Other option orders and aliases do not receive automatic permission here.
+for prefix in [
+    ["jj"],
+    ["jj", "--no-pager"],
+    ["jj", "--ignore-working-copy"],
+    ["jj", "--no-pager", "--color", "never"],
+    ["jj", "--ignore-working-copy", "--no-pager", "--color", "never"],
+]:
+    for pattern in inspection_patterns:
+        prefix_rule(pattern=prefix + pattern, decision="allow")
+    for pattern in mutation_patterns:
+        prefix_rule(
+            pattern=prefix + pattern,
+            decision="prompt",
+            justification="Review Jujutsu repository changes, remote operations, configuration changes, or external command execution.",
+        )

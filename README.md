@@ -163,7 +163,11 @@ codex --version
 nvim ~/.codex/AGENTS.md
 ```
 
-`installer.sh` and `update.sh` copy `.config/.codex/rules/*.rules` to `~/.codex/rules/`. Files with the same name are updated; other rule files, including locally saved approvals in `default.rules`, are preserved. The managed `jj.rules` allows commands beginning with `jj` to run outside the sandbox without prompting. Restart Codex after syncing to load the rules.
+`installer.sh` and `update.sh` copy `.config/.codex/rules/*.rules` to `~/.codex/rules/`. Files with the same name are updated; other rule files, including locally saved approvals in `default.rules`, are preserved. Restart Codex after syncing to load the rules.
+
+The managed `jj.rules` follows the distinction in the [official Git approval example](https://learn.chatgpt.com/docs/enterprise/security-cookbook#require-approval-for-sensitive-commands): inspection commands such as `jj status`, `jj log`, and `jj diff` are allowed outside the sandbox; commits, history changes (including `restore`, `abandon`, and `rebase`), remote operations (`git fetch` / `git push`), configuration changes, and external command execution require approval. Bookmark and operation-log inspection is allowed, while changes require approval. Jujutsu inspection can still snapshot the working copy; use `--ignore-working-copy` when that must be avoided.
+
+These are command-prefix rules, not an automatic risk classifier. They cover the common leading options listed in `jj.rules`; other option orders and custom aliases fall back to the normal sandbox and approval policy. Remove any separately saved blanket `prefix_rule(pattern=["jj"], decision="allow")` when migrating, since it would still allow unmatched forms. To sync only this rule, run `cp .config/.codex/rules/jj.rules ~/.codex/rules/jj.rules`, then restart Codex.
 
 ### pnpm
 

@@ -163,7 +163,11 @@ codex --version
 nvim ~/.codex/AGENTS.md
 ```
 
-`installer.sh` と `update.sh` は `.config/.codex/rules/*.rules` を `~/.codex/rules/` へコピーします。同名ファイルは更新し、それ以外のルールファイルは保持します。ローカルで保存した承認を含む `default.rules` も保持されます。管理対象の `jj.rules` は、`jj` で始まるコマンドを承認確認なしでサンドボックス外で実行できるようにします。同期後は Codex を再起動してルールを読み込んでください。
+`installer.sh` と `update.sh` は `.config/.codex/rules/*.rules` を `~/.codex/rules/` へコピーします。同名ファイルは更新し、それ以外のルールファイルは保持します。ローカルで保存した承認を含む `default.rules` も保持されます。同期後は Codex を再起動してルールを読み込んでください。
+
+管理対象の `jj.rules` は、[公式の Git 承認設定例](https://learn.chatgpt.com/docs/enterprise/security-cookbook#require-approval-for-sensitive-commands)の区分を参考にしています。`jj status`・`jj log`・`jj diff` などの閲覧はサンドボックス外での実行を許可し、コミット、履歴変更（`restore`・`abandon`・`rebase` など）、リモート操作（`git fetch`・`git push`）、設定変更、外部コマンドの実行は確認対象にします。ブックマークや操作履歴も、閲覧は許可し、変更は確認対象です。Jujutsu は閲覧時にも作業コピーをスナップショットすることがあるため、避けたい場合は `--ignore-working-copy` を使ってください。
+
+このルールはコマンドの接頭辞で判定し、リスクを自動分類するものではありません。`jj.rules` に列挙した一般的な前置オプションには対応し、それ以外のオプション順序や独自エイリアスは通常のサンドボックス・承認設定に従います。別のファイルに包括許可の `prefix_rule(pattern=["jj"], decision="allow")` が保存されている場合は、未対応の形式が許可され続けるため、移行時に削除してください。このルールだけを同期する場合は `cp .config/.codex/rules/jj.rules ~/.codex/rules/jj.rules` を実行し、Codex を再起動します。
 
 ### pnpm
 
