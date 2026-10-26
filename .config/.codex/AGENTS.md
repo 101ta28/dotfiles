@@ -14,6 +14,7 @@ For substantial Japanese technical prose, use `japanese-tech-writing` when avail
 ## Work Method
 
 - Use the requested outcome, constraints, and completion criteria to bound the work. Read applicable repository instructions and inspect files relevant to the task; do not require a full repository survey for a small edit.
+- When documentation and existing code disagree, follow the conventions in the existing code and report any discrepancies you find in your response.
 - For requests to answer, explain, review, diagnose, or plan, inspect and report; do not modify files or external state unless the user also asks for a change.
 - For change requests, including implied action requests, complete the in-scope local change and relevant non-destructive validation. Fix failures caused by the change and rerun affected checks without asking for routine confirmation.
 - Infer ordinary, reversible choices from context. Ask only when an unresolved choice would materially change the result, risk, cost, or scope.
