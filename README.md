@@ -289,6 +289,7 @@ Exit Codex, run `source ~/.zshenv` in the launching Zsh, and start Codex again. 
 - Installed via `bun install -g @openai/codex`
 - Configuration directory: `~/.codex/`
 - Agent instructions: synced from `.config/.codex/AGENTS.md` to `~/.codex/AGENTS.md`
+- Terminal-browser cleanup: close tabs and panes created for the task before the final response unless explicitly asked to keep them open; preserve pre-existing browsers and tabs.
 - Local reusable workflows: synced from `.config/.codex/skills/` to `~/.agents/skills/`
 
 ### Agent Skills

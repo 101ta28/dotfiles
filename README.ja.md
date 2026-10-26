@@ -289,6 +289,7 @@ Codexを終了し、起動元のZshで `source ~/.zshenv` を実行してから�
 - `bun install -g @openai/codex` でインストールされます
 - 設定ディレクトリ: `~/.codex/`
 - エージェント指示書: `.config/.codex/AGENTS.md` から `~/.codex/AGENTS.md` へ同期
+- terminal-browserの終了処理: 明示的に残す指示がなければ、最終応答前にその作業で開いたタブとペインを閉じます。作業前から開いていたブラウザやタブは保持します。
 - ローカルの再利用ワークフロー: `.config/.codex/skills/` から `~/.agents/skills/` へ同期
 
 ### Agent Skills

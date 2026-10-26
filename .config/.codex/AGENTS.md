@@ -52,6 +52,14 @@ When `HERDR_ENV=1`, use Herdr only when a separate terminal context materially i
 - Create a new tab in the current workspace with the same working directory and `--no-focus` by default. Target the calling workspace with `$HERDR_WORKSPACE_ID`, then use the returned tab and root pane IDs; never infer IDs from UI focus.
 - Inspect existing output before waiting, collect every result, and close only tabs created for the current task.
 
+## Terminal Browser
+
+- Unless the user explicitly asks to keep it open, close terminal-browser tabs and panes created for the task when the task ends, before the final response. Apply the same cleanup when stopping after an error or cancellation.
+- Record existing browsers, tabs, and pane IDs before opening anything, and track what the task creates. Preserve pre-existing resources and anything the user explicitly asks to keep.
+- Close task-created tabs in shared browsers by explicit browser and tab IDs. Close task-created browser panes as well; closing the last tab can leave an empty browser pane. Use the host terminal's supported pane-close operation for the recorded pane ID only after checking that it contains no unrelated tabs.
+- Use `terminal-browser shutdown` only after `terminal-browser ls --all --json` confirms that every running browser and tab belongs to this task and none must stay open. It closes all terminal-browser instances.
+- `terminal-browser action done` only clears the activity indicator; it does not close the browser. Verify cleanup and report any resources that could not be closed.
+
 ## GitHub Source Files
 
 - When inspecting a file on GitHub, prefer its raw URL: replace `https://github.com/<owner>/<repo>/blob/<branch>/<path>` with `https://raw.githubusercontent.com/<owner>/<repo>/refs/heads/<branch>/<path>`.
