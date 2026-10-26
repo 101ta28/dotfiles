@@ -58,6 +58,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 
 `~/.dfiles` に未コミットの変更がある場合やfast-forwardできない場合、更新前に停止します。意図的なローカル変更は先にコミットまたはstashしてください。GPU/CUDA構成も適用する場合は `~/.dfiles/update.sh --gpu` を使用します。
 
+JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設定済みの `trunk()`（通常は `main@origin`）を更新先に使います。作業コピーが空で競合がなく、親が1つであることを確認し、その親から更新先へfast-forwardできる場合だけ、更新先に新しい空のchangeを作成します。ローカルのコミットが更新先より先に進んでいる場合は、それを保持して設定を再適用します。履歴が分岐している場合は停止します。作業コピーの変更は先に `jj commit` で保存してください。Gitのみのcheckoutでは、upstreamを設定したブランチに切り替えておく必要があります。
+
 ## アンインストール
 
 インストール済みcheckoutから対話式アンインストーラーを実行します：

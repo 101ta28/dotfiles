@@ -58,6 +58,8 @@ Update the installed checkout with a fast-forward pull, then recreate links and 
 
 The updater stops before changing files when `~/.dfiles` contains uncommitted changes or cannot be fast-forwarded. Commit or stash intentional local changes first. Use `~/.dfiles/update.sh --gpu` to retain the optional GPU/CUDA provisioning path.
 
+For colocated Jujutsu/Git checkouts, the updater uses `jj git fetch` and the configured `trunk()` revision (usually `main@origin`). It requires an empty, conflict-free working-copy change with one parent, and creates a new empty change on the fetched target only if that parent can be fast-forwarded. If local commits are ahead of the target, it preserves them and reapplies configuration; diverged histories stop the update. Save working-copy changes with `jj commit` first. Git-only checkouts require a checked-out branch with an upstream configured.
+
 ## Uninstall
 
 Run the interactive uninstaller from the installed checkout:
