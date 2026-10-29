@@ -31,23 +31,25 @@ Official reference: [bookmarks and remotes](https://docs.jj-vcs.dev/latest/bookm
 
 ## Publish exactly the intended bookmark
 
-A request for local edits or commits does not by itself request a push. If publication is already authorized, complete it without requesting the same permission again. Otherwise prepare the concrete target and preview for approval.
+A request for local edits or commits does not by itself request a push. If publication is already authorized, complete it without requesting the same permission again. Otherwise prepare the concrete target and change summary for approval.
 
 1. Inspect the completed revision by ID. If `jj commit` or `jj new` just created an empty working-copy child, do not publish `@` accidentally. Verify descriptions, tests, conflicts, and the ancestor changes that would be included.
 2. Create or advance only the intended bookmark with `jj bookmark set NAME -r REV`. A new child does not automatically advance its parent's bookmark.
-3. Preview the explicit target:
+3. Compare the intended bookmark with its remote-tracking target and review the included revisions for unintended creations, deletions, backward moves, or additional changes. Within existing authorization, execute the push directly:
 
    ```sh
-   jj git push --remote REMOTE --bookmark NAME --dry-run
+   jj git push --remote REMOTE --bookmark NAME
    ```
 
-4. Check for unintended creations, deletions, backward moves, or additional changes. Then, within existing authorization, run the same command without `--dry-run` and inspect the reported result and tracking state.
+4. Inspect the actual push result and tracking state before reporting completion. Setting a description or moving a local bookmark does not complete a push request.
 
-Avoid an unqualified push or broad `--all`/`--tracked` selection for a single-feature request. A bookmark push includes the required ancestors up to the target, even if the target's own diff is small. The dry run previews remote updates; it is not a promise of no local snapshot or metadata activity, and it does not eliminate a race with another remote writer.
+Do not add `--dry-run` as a routine prerequisite. Use it only when the user explicitly requests a preview or simulation. A preview alone does not complete an authorized push: if the user requests both a preview and publication, inspect the preview and then execute the actual push. A dry run may still snapshot the working copy or update local metadata, and it does not eliminate a race with another remote writer.
 
-In jj 0.46.0, `--remote` can be repeated and accepts remote-name patterns. For a single-destination request, supply one concrete remote name and check every destination shown in the preview; do not expand it to a wildcard or rely on configured defaults.
+Avoid an unqualified push or broad `--all`/`--tracked` selection for a single-feature request. A bookmark push includes the required ancestors up to the target, even if the target's own diff is small.
 
-New-bookmark push syntax varies by version. In the verified jj 0.46.0, explicit `--bookmark NAME` sets up tracking automatically when the bookmark is not tracking any remote yet. If it already tracks another remote, pushing to a new destination can be refused until `jj bookmark track NAME@REMOTE` explicitly establishes tracking for that intended destination. Inspect tracking and the requested destination before making that change, then repeat the dry run. Consult local help rather than blindly adding `--allow-new` from an old example.
+In jj 0.46.0, `--remote` can be repeated and accepts remote-name patterns. For a single-destination request, supply and verify one concrete remote name; do not expand it to a wildcard or rely on configured defaults.
+
+New-bookmark push syntax varies by version. In the verified jj 0.46.0, explicit `--bookmark NAME` sets up tracking automatically when the bookmark is not tracking any remote yet. If it already tracks another remote, pushing to a new destination can be refused until `jj bookmark track NAME@REMOTE` explicitly establishes tracking for that intended destination. Inspect tracking and the requested destination before making that change, then retry the authorized push. Consult local help rather than blindly adding `--allow-new` from an old example.
 
 jj's push safety checks can permit rewriting an already published bookmark without a separate force flag when the observed remote state matches expectations. Treat the intended history rewrite as part of the authorization decision. If rejected, inspect the reason, fetch the relevant remote when appropriate, and reassess; stop if resolving the mismatch would overwrite others' work or expand the requested scope. Do not bypass conflict, private-commit, or empty-description checks merely to make publication succeed.
 
