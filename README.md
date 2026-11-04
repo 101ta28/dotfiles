@@ -214,6 +214,8 @@ The installer also links `.config/ghostty/config.ghostty` to `~/.config/ghostty/
 
 Global instructions hold shared communication and work boundaries. Detailed Japanese prose guidance lives in `japanese-tech-writing`; `cognitive-rhythm-writing` handles reading rhythm when needed. `frontend-design` covers visible UI work, and `grilling` covers requested interviews to challenge a plan. Keep skill descriptions specific to these tasks, and load additional guidance only when relevant.
 
+`frontend-design` preserves the existing design system while guiding choices about color, spacing, typography, product visuals, and motion. It includes reviewing rendered views and fixing the most consequential issues within scope.
+
 The two writing skills clarify subjects and operations and improve sentence flow while preserving facts and conditions. They include editing examples and choose wording and structure for the context, without fixed sentence-length or list-ratio targets.
 
 The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict recovery, bookmarks, and Git remotes. Its source is `.config/.codex/skills/jj/`, synced to `~/.agents/skills/jj/` by the installer. It uses an existing `jj` installation.
