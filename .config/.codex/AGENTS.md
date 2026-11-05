@@ -49,7 +49,9 @@ When `HERDR_ENV=1`, use Herdr only when a separate terminal context materially i
 - Put long-running servers, watch processes, test suites, and log streams in a separate tab when the main tab should remain available.
 - Only when the user explicitly requests sub-agents, use another agent in a separate tab for an independent investigation, separable implementation subtask, or second-pass review when parallel work is likely to improve speed or correctness.
 - Do not use Herdr for short commands, simple inspection, or tightly coupled work.
+- Keep new tabs and panes in the calling space (workspace) unless there is an intentional, task-specific reason to use another space. State that reason before creating a tab or pane in another space.
 - Create a new tab in the current workspace with the same working directory and `--no-focus` by default. Target the calling workspace with `$HERDR_WORKSPACE_ID`, then use the returned tab and root pane IDs; never infer IDs from UI focus.
+- When splitting a pane, target the calling pane with `--current` or an explicit pane ID verified to belong to the intended workspace; never rely on UI focus to select the destination.
 - Inspect existing output before waiting, collect every result, and close only tabs created for the current task.
 
 ## Terminal Browser
