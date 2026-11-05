@@ -224,6 +224,8 @@ The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict r
 
 The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.
 
+The manifest includes `hallmark` (`nutlope/hallmark`), `yomiyasu` (`nanaism/yomiyasu`), `herdr`, and `find-skills`.
+
 To add a synchronized skill, add its source repository and skill name to the manifest, separated by whitespace, one entry per line. Empty lines and lines beginning with `#` are ignored.
 
 ### Updating Dotfiles

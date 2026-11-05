@@ -224,6 +224,8 @@ herdr server reload-config
 
 インストーラーは `.config/agents/skills.txt` を読み、各項目をSkills CLIでグローバルにインストールします。これにより、新しい端末や `update.sh` による設定の再適用時に、宣言したスキルが `~/.agents/skills/` へ復元されます。同期は加算型で、一覧にないスキルは削除しません。
 
+同期対象は `hallmark`（`nutlope/hallmark`）、`yomiyasu`（`nanaism/yomiyasu`）、`herdr`、`find-skills` です。
+
 同期対象を追加する場合は、マニフェストへ導入元リポジトリとスキル名を空白区切りで1行に1件記載します。空行と `#` で始まる行は無視されます。
 
 ### dotfilesの更新

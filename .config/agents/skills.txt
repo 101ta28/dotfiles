@@ -1,3 +1,5 @@
 # Source repository and skill name restored by installer.sh.
+nutlope/hallmark hallmark
+nanaism/yomiyasu yomiyasu
 ogulcancelik/herdr herdr
 vercel-labs/skills find-skills
