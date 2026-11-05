@@ -230,7 +230,7 @@ herdr server reload-config
 
 同期対象は `hallmark`（`nutlope/hallmark`）、`yomiyasu`（`nanaism/yomiyasu`）、`herdr`、`find-skills` です。
 
-外部スキルの導入後に、`.config/.codex/skills/` のファイルを上書きコピーします。この配下の `hallmark/` には、独自に変更した `SKILL.md`、`references/flow.md`、`references/gates.md`、`references/redesign.md` と配布元のライセンスを保存しています。スクリプト・テーマ・その他の資料は引き続き `nutlope/hallmark` から導入します。この順序でローカルの指示を毎回復元するため、同期順序を維持し、配布元の更新時には互換性を確認してください。
+外部スキルの導入後に、`.config/.codex/skills/` のファイルを上書きコピーします。この配下の `hallmark/` には、独自に変更した `SKILL.md`、`references/flow.md`、`references/gates.md`、`references/redesign.md`、参照検証スクリプトとそのテスト、配布元のライセンスを保存しています。本文のサイズ制限を守るため、ページ構成の詳細と Picks の出力例は `references/flow.md` に分けています。拡張フィールドは `metadata` 配下に置き、検証スクリプトはこの形式と配布元の version フィールドの両方に対応しています。その他のスクリプト・テーマ・資料は引き続き `nutlope/hallmark` から導入します。この順序でローカルの変更を毎回復元するため、同期順序を維持し、配布元の更新時には互換性を確認してください。
 
 同期対象を追加する場合は、マニフェストへ導入元リポジトリとスキル名を空白区切りで1行に1件記載します。空行と `#` で始まる行は無視されます。
 

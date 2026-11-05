@@ -1,9 +1,9 @@
 ---
 name: hallmark
 description: "Design distinctive new websites and pages, or UI the user explicitly asks Hallmark to design, redesign, or audit. Preserve an established design system. Apply to existing UI only when the user names Hallmark for that UI."
-argument-hint: "<prompt> | redesign <path> | audit <path>"
-version: 2.0.0
 metadata:
+  version: "2.0.0"
+  argument-hint: "<prompt> | redesign <path> | audit <path>"
   opencode/slash: "true"
 ---
 
@@ -78,17 +78,7 @@ Infer ordinary reversible design choices and state consequential assumptions bri
 
 ### 2. Shape
 
-**Material first.** The inventory, one line: *real* (every concrete thing the prompt and the project supply: name, claim, numbers, places, dates, images), *pictures* (what the page shows and where each comes from: the user's, screenshots of the real product, the product built, the library), *absent* (every proof it will not have: logos, quotes, metrics nobody gave). The shape follows it: a page with pictures leads with them (`imagery.md` § 1); a page about words carries type and facts (Long Document, Letter, Index-First, Manifesto).
-
-**The job.** Name what a visitor comes to do (subscribe, book, visit, attend, buy, try, sign up, hire, join, listen) and read that job in [`references/anatomy.md`](references/anatomy.md): where real sites in the category put the action, the sections they are built around (the menu, the lineup, the issues, the record), and how they end. The page is built from that anatomy, never from a default run of figures, steps and an email band (85).
-
-Then design the page: its shape, how it opens, each section's content and composition, the nav, the footer, what carries the hero. Starting points: 21 shapes in [`references/macrostructures.md`](references/macrostructures.md) (load only the file you pick); compositions, navs and footers in `layout.md`.
-
-**The draw.** On a theme build, once Step 3 has picked the theme, run `node <skill-dir>/scripts/theme.mjs draw --material photo|product|words --job <job> --theme <slug> [--log .hallmark/log.json]`. Clear of the log and the theme's picture, it deals a shape, the hero posture, the nav, the footer, the first section, where the action sits, two compositions to leave out and what the hero leads with. Take it unless the material refuses a pick, and name any swap in the Picks block: one prompt in one theme, built twice, makes two pages. **Mirror test:** would a neighbouring prompt in the same category get this exact combination? If yes, change one decision and say which.
-
-**Signature.** The one thing a visitor would remember: the prompt's strongest real thing shown at its best (the photograph that is the place, the product doing its one job, a price set huge because it is the offer, a control to try). Make it in the theme's material (on a custom run, in its own look), show it on the first screen, name it in the Picks block and the stamp. A number drawn as marks is a device, not a signature (82).
-
-Hold all of it; it is said once, at Step 5.
+For a page build, read [`references/flow.md`](references/flow.md) § Page shape before choosing composition. Inventory real material, picture sources, and absent proof; choose the visitor's job and build from its anatomy. Show one memorable signature from real material on the first screen. Keep these decisions for Step 5.
 
 ### 3. Direction
 
@@ -121,18 +111,7 @@ Only when needed, in `references/`: one macrostructure file · `microinteraction
 
 The run's only recital of its decisions, and the user's redirect window:
 
-```markdown
-**Hallmark · v2.0.0**
-
-- **Shape** · Workbench, from draw 7f3a2c · genre modern-minimal · job: sign up, the action in the hero and beside the price
-- **Theme** · Coral, dealt 2/3 (warm grey, one coral signal, General Sans, soft pills) · clears Cobalt on paper band
-- **Chrome** · nav: edge-aligned, a wordmark and one action · footer: a mast, the wordmark over the links
-- **Hero** · Stage: head on columns 1 to 5, the slot on 6 to 12 at 560px, centred
-- **Signature** · the invoice list chasing a late payment, built live in the hero
-- **Sections** · Hero (the invoice list) · Pinned (one late payment, chased in three panels) · Switcher (the client's view and yours) · Table (pricing) · Footer
-- **Material** · real: the 2-minute setup, the CSV import, Lisbon · pictures: the invoice list built in the hero, library photos of a Lisbon studio (muted) · absent: logos, quotes, metrics
-- **Sweep** · run after build
-```
+Use the example in [`references/flow.md`](references/flow.md) § Picks block for a theme-led page. Record only decisions relevant to the target; inherited systems, components, and app screens use their scoped rows.
 
 A custom run's rows are in `direction.md`. Then one quiet line, skipped in component scope or when `design.md` exists: *System portable? Say `lock the system` for a `design.md`.* On signal 9, `comp.md` runs here.
 

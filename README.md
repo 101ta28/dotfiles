@@ -230,7 +230,7 @@ The installer reads `.config/agents/skills.txt` and installs each entry globally
 
 The manifest includes `hallmark` (`nutlope/hallmark`), `yomiyasu` (`nanaism/yomiyasu`), `herdr`, and `find-skills`.
 
-After installing external skills, the installer copies `.config/.codex/skills/` over them. The `hallmark/` directory stores the customized `SKILL.md`, `references/flow.md`, `references/gates.md`, and `references/redesign.md`, together with the upstream license. Its scripts, themes, and other resources still come from `nutlope/hallmark`. This order restores the local instructions after each installation; keep this order and check compatibility when updating upstream resources.
+After installing external skills, the installer copies `.config/.codex/skills/` over them. The `hallmark/` directory stores the customized `SKILL.md`, `references/flow.md`, `references/gates.md`, and `references/redesign.md`, plus the reference validator, its tests, and the upstream license. Page composition details and the Picks example live in `references/flow.md` to keep the entrypoint within its size limit. Extension fields live under `metadata`; the validator accepts both this format and the upstream version field. Other scripts, themes, and resources still come from `nutlope/hallmark`. This order restores the local changes after each installation; keep this order and check compatibility when updating upstream resources.
 
 To add a synchronized skill, add its source repository and skill name to the manifest, separated by whitespace, one entry per line. Empty lines and lines beginning with `#` are ignored.
 
