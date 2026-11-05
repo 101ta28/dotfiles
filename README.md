@@ -218,6 +218,8 @@ Global instructions hold shared communication and work boundaries. Detailed Japa
 
 `frontend-design` preserves the existing design system while guiding choices about color, spacing, typography, product visuals, and motion. It includes reviewing rendered views and fixing the most consequential issues within scope.
 
+When used together, `hallmark` supplies visual direction and stylistic defaults, while `frontend-design` covers implementation, responsive behavior, accessibility, and functional verification. They share one workflow and prioritize user requirements and the existing design system.
+
 The two writing skills clarify subjects and operations and improve sentence flow while preserving facts and conditions. They include editing examples and choose wording and structure for the context, without fixed sentence-length or list-ratio targets.
 
 The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict recovery, bookmarks, and Git remotes. Its source is `.config/.codex/skills/jj/`, synced to `~/.agents/skills/jj/` by the installer. It uses an existing `jj` installation.
@@ -227,6 +229,8 @@ The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict r
 The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.
 
 The manifest includes `hallmark` (`nutlope/hallmark`), `yomiyasu` (`nanaism/yomiyasu`), `herdr`, and `find-skills`.
+
+After installing external skills, the installer copies `.config/.codex/skills/` over them. The `hallmark/` directory stores the customized `SKILL.md`, `references/flow.md`, `references/gates.md`, and `references/redesign.md`, together with the upstream license. Its scripts, themes, and other resources still come from `nutlope/hallmark`. This order restores the local instructions after each installation; keep this order and check compatibility when updating upstream resources.
 
 To add a synchronized skill, add its source repository and skill name to the manifest, separated by whitespace, one entry per line. Empty lines and lines beginning with `#` are ignored.
 

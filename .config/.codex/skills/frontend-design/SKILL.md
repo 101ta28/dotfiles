@@ -7,6 +7,12 @@ description: Design and implement frontend interfaces. Use when building or chan
 
 Build a working interface whose visual choices follow the product context rather than a generic template.
 
+## Working with Hallmark
+
+When Hallmark also applies, use one design workflow: Hallmark supplies the visual direction and its stylistic defaults; this skill covers implementation, responsive behavior, accessibility, and functional verification. Reuse the same direction, questions, previews, and review findings rather than running both workflows independently.
+
+User requirements and supplied references, repository instructions, and an established design system take precedence over either skill's aesthetic defaults. Preserve functional and accessibility requirements throughout. Hallmark does not authorize a redesign by itself: ordinary edits keep the product's design, and a new page in an existing product inherits its shared components and tokens unless the user requests a different direction.
+
 ## Establish the direction
 
 - Preserve the existing design system unless the user requests a redesign. Prefer explicit requirements and visual references, then existing tokens, components, and computed styles.
