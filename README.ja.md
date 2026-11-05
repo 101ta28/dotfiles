@@ -208,6 +208,8 @@ herdr server reload-config
 
 `Ctrl+Tab` で次のタブ、`Ctrl+Shift+Tab` で前のタブへ切り替えます。
 
+`.config/.codex/AGENTS.md` では、Herdr のタブとペインを現在の作業対象リポジトリの space 内に作成するよう指示しています。継承された `HERDR_*` の ID や UI のフォーカスは別リポジトリを指す場合があるため、workspace と pane の一覧で対応する space を確認し、その CLI workspace ID を指定します。既存の space を一意に特定できない場合は、追加確認なしで対象リポジトリのルートを作業ディレクトリとする space を新規作成し、初期タブとペインで作業します。
+
 ### Ghostty
 
 インストーラーは `.config/ghostty/config.ghostty` も `~/.config/ghostty/config.ghostty` へリンクし、既存ファイルを同じ方針で保護します。Ghostty本体はインストールしません。GNOME Terminalのプロファイル `b1dcc9dd-5262-4d8d-a863-c897e6d979b9` から、点滅するブロックカーソル、スクロール動作、システムベル、コマンド終了後に閉じる動作をコピーしています。フォントはHackGen Console NF（13 pt）、初期表示領域はこの環境のGNOME Terminalと同程度の134列 × 34行を目標にしています。`window-height = 34` で実表示が31行になったため、設定値は `window-width = 134`、`window-height = 37` としています。この環境では補正後の実表示が134列 × 34行になることをユーザーが確認済みです。別の環境では補正量が異なる場合があります。配色はGhostty標準のままです。履歴10,000行やスクロールバーの常時表示など、正確に対応する設定がないものはGhostty標準のままにしています。コピー時点の固定値のため、変更するときはリポジトリ内のファイルを編集してください。GTKのウィンドウ装飾により、実際の行・列数が指定した初期サイズとずれる場合があります。
