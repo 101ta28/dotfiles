@@ -8,5 +8,6 @@ vercel-labs/skills find-skills
 local cognitive-rhythm-writing
 local frontend-design
 local grilling
+local herdr-app
 local japanese-tech-writing
 local jj

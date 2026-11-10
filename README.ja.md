@@ -209,7 +209,11 @@ herdr server reload-config
 
 `Ctrl+Tab` で次のタブ、`Ctrl+Shift+Tab` で前のタブへ切り替えます。
 
-`.config/.codex/AGENTS.md` では、Herdr のタブとペインを現在の作業対象リポジトリの space 内に作成するよう指示しています。継承された `HERDR_*` の ID や UI のフォーカスは別リポジトリを指す場合があるため、workspace と pane の一覧で対応する space を確認し、その CLI workspace ID を指定します。既存の space を一意に特定できない場合は、追加確認なしで対象リポジトリのルートを作業ディレクトリとする space を新規作成し、初期タブとペインで作業します。
+`.config/.codex/AGENTS.md` では、TUI 用の `herdr` スキルとデスクトップ用の `herdr-app` スキルで、リポジトリの選択と委任の方針を共通化しています。どちらも稼働中の space と端末のディレクトリで作業先を確認し、マシンや worktree を区別します。サブエージェントは依頼された場合だけ起動し、後片付けは自分で作成したリソースに限ります。継承された ID や UI のフォーカスは、別リポジトリを指す場合があります。
+
+TUI では `--no-focus` を付けて別タブを使います。対応する workspace を一意に特定できない場合は、リポジトリのルートで新規作成し、初期タブを使います。アプリでは画面を切り替えずに作業できるよう、バックグラウンド処理を配置用ラベルのない `hc` 端末で実行します。表示するタブや分割は依頼された場合に作成し、その際に対応する space がなければ依頼の一部として作成します。アプリの端末アドレスとペイン ID は別物で、TUI のコマンド引数も流用しません。
+
+各スキルは、導入済みの `herdr --skill`、`herdr-app --skill`、`hc --skill` で現行の仕様を確認します。アプリ固有のリモート実行、端末の復旧、mod・レイアウト・キー設定は専用の手順を保ち、カスタマイズ時はアプリの設定ディレクトリに生成される説明書と型定義を参照します。ここで追加するのはスキルの対応です。アプリと core は別途導入しておく必要があり、実際の設定は移行しません。
 
 ### Ghostty
 
@@ -236,9 +240,11 @@ nutlope/hallmark hallmark
 local jj
 ```
 
-同期対象は外部スキル4件（`hallmark`、`yomiyasu`、`herdr`、`find-skills`）とローカルスキル5件（`cognitive-rhythm-writing`、`frontend-design`、`grilling`、`japanese-tech-writing`、`jj`）です。ローカルスキルを追加するには、一覧と同じディレクトリ内に `skills/<名前>/SKILL.md` を作り、`local <名前>` を一覧へ追記します。名前の重複、書式の不備、ローカルディレクトリの `SKILL.md` 欠落がある場合は、スキルのインストールやコピーを始める前に同期を中止します。`npx` がない場合は警告を出して外部スキルの導入を省略し、ローカルファイルのコピーは続けます。
+同期対象は外部スキル4件（`hallmark`、`yomiyasu`、`herdr`、`find-skills`）とローカルスキル6件（`cognitive-rhythm-writing`、`frontend-design`、`grilling`、`herdr-app`、`japanese-tech-writing`、`jj`）です。ローカルスキルを追加するには、一覧と同じディレクトリ内に `skills/<名前>/SKILL.md` を作り、`local <名前>` を一覧へ追記します。名前の重複、書式の不備、ローカルディレクトリの `SKILL.md` 欠落がある場合は、スキルのインストールやコピーを始める前に同期を中止します。`npx` がない場合は警告を出して外部スキルの導入を省略し、ローカルファイルのコピーは続けます。
 
 `hallmark` の導入後には `.config/agents/skills/hallmark/` のファイルを上書きコピーします。このディレクトリには、独自に変更した `SKILL.md`、`references/flow.md`、`references/gates.md`、`references/redesign.md`、参照検証スクリプトとそのテスト、配布元のライセンスを保存しています。本文のサイズ制限を守るため、ページ構成の詳細と Picks の出力例は `references/flow.md` に分けています。拡張フィールドは `metadata` 配下に置き、検証スクリプトはこの形式と配布元の version フィールドの両方に対応しています。その他のスクリプト・テーマ・資料は引き続き `nutlope/hallmark` から導入します。この順序でローカルの変更を毎回復元するため、配布元の更新時には互換性を確認してください。
+
+`herdr` の導入後にも `.config/agents/skills/herdr/SKILL.md` を重ね、配布元のリソースを保ちながらローカルの TUI 運用方針を復元します。ローカルの `herdr-app` スキルには、デスクトップと core の操作方針、および必要に応じて読む端末管理・カスタマイズ用の資料を置きます。互換性のないコマンドを混同しないよう、スキルの入口は2つに分けています。
 
 ### dotfilesの更新
 

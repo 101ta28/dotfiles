@@ -209,7 +209,11 @@ The installer installs Herdr to `~/.local/bin/herdr` using its official installe
 
 Switch to the next tab with `Ctrl+Tab` and to the previous tab with `Ctrl+Shift+Tab`.
 
-The Codex instructions in `.config/.codex/AGENTS.md` require new Herdr tabs and panes to stay in the space for the current task's repository. Codex verifies that space against the live workspace and pane lists before selecting its CLI workspace ID; inherited `HERDR_*` IDs and UI focus may point to another repository. If no existing space can be identified unambiguously, Codex creates a new space rooted at the task's repository without additional confirmation and works in its initial tab and pane.
+The Codex instructions in `.config/.codex/AGENTS.md` share the repository-targeting and delegation policy between the `herdr` TUI skill and the `herdr-app` desktop skill. Both verify the destination against live spaces and terminal directories, distinguish machines and worktrees, start subagents only when requested, and clean up only their own resources. Inherited IDs and UI focus may point to another repository.
+
+The TUI uses a separate tab with `--no-focus`; if no workspace matches unambiguously, it creates one at the repository root and uses its initial tab. The app uses `hc` terminals without layout labels for background work, preserving the current view. Visible tabs/splits are created when requested; a missing repository space is then created as part of that request. App terminal addresses and pane IDs are distinct, and TUI command flags do not apply.
+
+The local skills read the installed `herdr --skill`, `herdr-app --skill`, and `hc --skill` manuals for current interfaces. App-specific remote execution, terminal recovery, mods, layouts, and keys retain their own workflows; customization reads the generated guide and types in the app home. This adds skill support, not an app/core installation or a migration of live settings. The app and core must already be installed.
 
 ### Ghostty
 
@@ -236,9 +240,11 @@ nutlope/hallmark hallmark
 local jj
 ```
 
-The manifest includes four external skills (`hallmark`, `yomiyasu`, `herdr`, and `find-skills`) and five local skills (`cognitive-rhythm-writing`, `frontend-design`, `grilling`, `japanese-tech-writing`, and `jj`). To add a local skill, create `skills/<name>/SKILL.md` beside the manifest and add a `local <name>` entry. Duplicate names, invalid entries, and local directories missing `SKILL.md` stop skill syncing before any skill is installed or copied. Without `npx`, external installation is skipped with a warning while local files are still copied.
+The manifest includes four external skills (`hallmark`, `yomiyasu`, `herdr`, and `find-skills`) and six local skills (`cognitive-rhythm-writing`, `frontend-design`, `grilling`, `herdr-app`, `japanese-tech-writing`, and `jj`). To add a local skill, create `skills/<name>/SKILL.md` beside the manifest and add a `local <name>` entry. Duplicate names, invalid entries, and local directories missing `SKILL.md` stop skill syncing before any skill is installed or copied. Without `npx`, external installation is skipped with a warning while local files are still copied.
 
 After installing `hallmark`, the installer copies `.config/agents/skills/hallmark/` over it. This directory stores the customized `SKILL.md`, `references/flow.md`, `references/gates.md`, and `references/redesign.md`, plus the reference validator, its tests, and the upstream license. Page composition details and the Picks example live in `references/flow.md` to keep the entrypoint within its size limit. Extension fields live under `metadata`; the validator accepts both this format and the upstream version field. Other scripts, themes, and resources still come from `nutlope/hallmark`. This order restores the local changes after each installation; check compatibility when updating upstream resources.
+
+The `herdr` installation is also overlaid with `.config/agents/skills/herdr/SKILL.md`, preserving upstream resources while restoring the local TUI policy. The local `herdr-app` skill supplies desktop/core guidance and conditional references for orchestration and customization. Both remain available as separate entrypoints so their incompatible commands are not mixed.
 
 ### Updating Dotfiles
 

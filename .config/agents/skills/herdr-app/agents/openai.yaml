@@ -1,0 +1,3 @@
+interface:
+  display_name: "Herdr App"
+  short_description: "Operate Herdr desktop and hc with repository-aware targeting"
