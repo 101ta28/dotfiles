@@ -1,5 +1,12 @@
-# Source repository and skill name restored by installer.sh.
+# Source repository (or "local") and skill name restored by installer.sh.
+# Local files in skills/<name>/ are copied after any external installation.
+# This manifest lists all managed skills; unlisted skills are left untouched.
 nutlope/hallmark hallmark
 nanaism/yomiyasu yomiyasu
 ogulcancelik/herdr herdr
 vercel-labs/skills find-skills
+local cognitive-rhythm-writing
+local frontend-design
+local grilling
+local japanese-tech-writing
+local jj

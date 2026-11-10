@@ -91,9 +91,10 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 - `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
 - `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
 - `.config/ghostty/config.ghostty` - `~/.config/ghostty/config.ghostty` と同期するGhostty設定
-- `.config/agents/skills.txt` - `~/.agents/skills/` へ復元するAgent Skills一覧
+- `.config/agents/skills.txt` - `~/.agents/skills/` へ復元する外部・ローカルの全Agent Skills一覧
+- `.config/agents/skills/` - ローカルスキルと外部スキルへの上書きファイル
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
-- `.config/.codex/` - `~/.codex/` と `~/.agents/skills/` へ同期されるCodex向け指示書、実行ポリシールール、ローカルSkills。削除済みの管理対象は `obsolete-paths.txt` に従って除去されます
+- `.config/.codex/` - `~/.codex/` へ同期されるCodex向け指示書と実行ポリシールール。削除済みの管理対象は `obsolete-paths.txt` に従って除去されます
 - `.zshrc` - Prezto使用のZshシェル設定
 
 ## アーキテクチャ概要
@@ -222,17 +223,22 @@ herdr server reload-config
 
 文章向けの2つのスキルは、事実と条件を保ちながら主述関係・操作の説明・文のつながりを整えます。編集の判断例を備え、文長や箇条書き率を一律の目標にせず、文脈に応じて表現と構成を選びます。
 
-`jj` スキルは、Jujutsuの作業コピーの変更、履歴の書き換え、競合からの復旧、ブックマーク、Gitリモートを扱います。管理元は `.config/.codex/skills/jj/` で、インストーラーが `~/.agents/skills/jj/` へ同期します。実行には既存の `jj` を使用します。
+`jj` スキルは、Jujutsuの作業コピーの変更、履歴の書き換え、競合からの復旧、ブックマーク、Gitリモートを扱います。管理元は `.config/agents/skills/jj/` で、インストーラーが `~/.agents/skills/jj/` へ同期します。実行には既存の `jj` を使用します。
 
 ### Agent Skills
 
-インストーラーは `.config/agents/skills.txt` を読み、各項目をSkills CLIでグローバルにインストールします。これにより、新しい端末や `update.sh` による設定の再適用時に、宣言したスキルが `~/.agents/skills/` へ復元されます。同期は加算型で、一覧にないスキルは削除しません。
+管理対象の全Agent Skillsを `.config/agents/skills.txt` に定義します。`installer.sh` と `update.sh` は、インストーラーの `sync_agent_skills` 関数を通じて `~/.agents/skills/` へ復元します。同期は加算型で、一覧にないインストール済みスキルは保持し、未登録のローカルディレクトリはコピーしません。
 
-同期対象は `hallmark`（`nutlope/hallmark`）、`yomiyasu`（`nanaism/yomiyasu`）、`herdr`、`find-skills` です。
+各行には導入元とスキル名を空白区切りで記載します。導入元がリポジトリならSkills CLIでグローバルにインストールし、`local` なら `.config/agents/skills/<名前>/` をコピーします。どちらの場合も、同名のローカルディレクトリ内のファイルがインストール先のファイルに優先します。空行と `#` で始まる行は無視されます。記載例は次のとおりです。
 
-外部スキルの導入後に、`.config/.codex/skills/` のファイルを上書きコピーします。この配下の `hallmark/` には、独自に変更した `SKILL.md`、`references/flow.md`、`references/gates.md`、`references/redesign.md`、参照検証スクリプトとそのテスト、配布元のライセンスを保存しています。本文のサイズ制限を守るため、ページ構成の詳細と Picks の出力例は `references/flow.md` に分けています。拡張フィールドは `metadata` 配下に置き、検証スクリプトはこの形式と配布元の version フィールドの両方に対応しています。その他のスクリプト・テーマ・資料は引き続き `nutlope/hallmark` から導入します。この順序でローカルの変更を毎回復元するため、同期順序を維持し、配布元の更新時には互換性を確認してください。
+```text
+nutlope/hallmark hallmark
+local jj
+```
 
-同期対象を追加する場合は、マニフェストへ導入元リポジトリとスキル名を空白区切りで1行に1件記載します。空行と `#` で始まる行は無視されます。
+同期対象は外部スキル4件（`hallmark`、`yomiyasu`、`herdr`、`find-skills`）とローカルスキル5件（`cognitive-rhythm-writing`、`frontend-design`、`grilling`、`japanese-tech-writing`、`jj`）です。ローカルスキルを追加するには、一覧と同じディレクトリ内に `skills/<名前>/SKILL.md` を作り、`local <名前>` を一覧へ追記します。名前の重複、書式の不備、ローカルディレクトリの `SKILL.md` 欠落がある場合は、スキルのインストールやコピーを始める前に同期を中止します。`npx` がない場合は警告を出して外部スキルの導入を省略し、ローカルファイルのコピーは続けます。
+
+`hallmark` の導入後には `.config/agents/skills/hallmark/` のファイルを上書きコピーします。このディレクトリには、独自に変更した `SKILL.md`、`references/flow.md`、`references/gates.md`、`references/redesign.md`、参照検証スクリプトとそのテスト、配布元のライセンスを保存しています。本文のサイズ制限を守るため、ページ構成の詳細と Picks の出力例は `references/flow.md` に分けています。拡張フィールドは `metadata` 配下に置き、検証スクリプトはこの形式と配布元の version フィールドの両方に対応しています。その他のスクリプト・テーマ・資料は引き続き `nutlope/hallmark` から導入します。この順序でローカルの変更を毎回復元するため、配布元の更新時には互換性を確認してください。
 
 ### dotfilesの更新
 
@@ -268,8 +274,8 @@ git config --global commit.gpgSign true
 - `ls`コマンドは`lsd`（Rust製の高機能ls）にエイリアスされています
 - 日本語入力にはfcitxが設定されています
 - dpp.vimは初回エディター起動時にstateを生成し、`dpp.ts`で定義したプラグインをインストールします
-- Codex向け指示書、実行ポリシールール、ローカルSkillsは `.config/.codex/` で管理します。`update.sh` またはインストーラーを実行すると、同期と `obsolete-paths.txt` に記載したパスの除去が行われます
-- `.config/agents/skills.txt` のAgent Skillsは加算型で復元され、`~/.agents` 自体はGit管理しません
+- Codex向け指示書と実行ポリシールールは `.config/.codex/` で管理します。`update.sh` またはインストーラーを実行すると、同期と `obsolete-paths.txt` に記載したパスの除去が行われます
+- 全Agent Skillsは `.config/agents/` で管理し、`skills.txt` の一覧から加算型で復元します。`~/.agents` 自体はGit管理しません
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 
 ## トラブルシューティング
@@ -306,11 +312,11 @@ Codexを終了し、起動元のZshで `source ~/.zshenv` を実行してから�
 - 設定ディレクトリ: `~/.codex/`
 - エージェント指示書: `.config/.codex/AGENTS.md` から `~/.codex/AGENTS.md` へ同期
 - terminal-browserの終了処理: 明示的に残す指示がなければ、最終応答前にその作業で開いたタブとペインを閉じます。作業前から開いていたブラウザやタブは保持します。
-- ローカルの再利用ワークフロー: `.config/.codex/skills/` から `~/.agents/skills/` へ同期
+- 再利用ワークフロー: `.config/agents/skills.txt` で定義し、`~/.agents/skills/` へ同期
 
 ### Agent Skills
 
-- `.config/agents/skills.txt` の一覧から `npx skills add` でグローバルインストールされます
+- `.config/agents/skills.txt` で定義します。外部スキルは `npx skills add` で導入し、ローカルスキルと上書きファイルは `.config/agents/skills/` からコピーします
 - 共通スキルディレクトリ: `~/.agents/skills/`
 
 ## ライセンス

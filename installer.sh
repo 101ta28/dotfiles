@@ -164,21 +164,23 @@ configure_default_shell() {
 # 宣言ファイルにあるAgent Skillsをユーザー領域へ復元する
 sync_agent_skills() {
   local manifest="$DFILE_PATH/.config/agents/skills.txt"
+  local skills_source="$DFILE_PATH/.config/agents/skills"
   local source
   local skill
   local extra
+  local skill_dir
+  local index
+  local warned_no_npx=false
+  local sources=()
+  local skills=()
+  local -A seen_skills=()
 
   if [ ! -f "$manifest" ]; then
     log_info "Agent Skills manifest not found, skipping"
     return
   fi
 
-  if ! command_exists "npx"; then
-    log_warn "npx not found, skipping Agent Skills sync"
-    return
-  fi
-
-  log_info "Syncing Agent Skills..."
+  # 一覧全体を検証してから、インストールとコピーを開始する。
   while read -r source skill extra || [ -n "${source:-}" ]; do
     case "$source" in
       ""|\#*) continue ;;
@@ -189,14 +191,61 @@ sync_agent_skills() {
       return 1
     fi
 
-    log_info "Installing Agent Skill: $source ($skill)"
-    # An explicit target avoids selecting project-only PromptScript.
-    npx --yes skills add "$source" --skill "$skill" --agent codex -g -y
+    if [[ ! "$skill" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]]; then
+      log_error "Invalid Agent Skill name: $skill"
+      return 1
+    fi
+    if [ -n "${seen_skills[$skill]:-}" ]; then
+      log_error "Duplicate Agent Skill: $skill"
+      return 1
+    fi
+
+    skill_dir="$skills_source/$skill"
+    if [ "$source" = local ] || [ -d "$skill_dir" ]; then
+      if [ ! -f "$skill_dir/SKILL.md" ]; then
+        log_error "Agent Skill entrypoint not found: $skill_dir/SKILL.md"
+        return 1
+      fi
+    fi
+
+    seen_skills[$skill]=1
+    sources+=("$source")
+    skills+=("$skill")
   done < "$manifest"
-  log_success "Agent Skills synced"
+
+  log_info "Syncing Agent Skills..."
+  for index in "${!skills[@]}"; do
+    source="${sources[$index]}"
+    skill="${skills[$index]}"
+    skill_dir="$skills_source/$skill"
+
+    if [ "$source" != local ]; then
+      if command_exists "npx"; then
+        log_info "Installing Agent Skill: $source ($skill)"
+        # An explicit target avoids selecting project-only PromptScript.
+        npx --yes skills add "$source" --skill "$skill" --agent codex -g -y || return $?
+      elif [ "$warned_no_npx" = false ]; then
+        log_warn "npx not found, skipping external Agent Skills installation"
+        warned_no_npx=true
+      fi
+    fi
+
+    # 外部スキルの導入後に同名のローカルファイルを重ね、独自変更を復元する。
+    if [ -d "$skill_dir" ]; then
+      log_info "Copying local Agent Skill files: $skill"
+      mkdir -p "$HOME/.agents/skills/$skill" || return $?
+      cp -R "$skill_dir/." "$HOME/.agents/skills/$skill/" || return $?
+    fi
+  done
+
+  if [ "$warned_no_npx" = true ]; then
+    log_warn "Agent Skills local files synced; external installation was skipped"
+  else
+    log_success "Agent Skills synced"
+  fi
 }
 
-# このリポジトリで管理するCodex指示書、実行ルール、Skillsをユーザー領域へ同期する
+# このリポジトリで管理するCodex指示書と実行ルールをユーザー領域へ同期する
 sync_codex_config() {
   local codex_source="$DFILE_PATH/.config/.codex"
   local obsolete_manifest="$codex_source/obsolete-paths.txt"
@@ -204,16 +253,14 @@ sync_codex_config() {
   local obsolete_target
   local extra
   local rule_file
-  local skill_dir
-  local skill_name
 
   if [ ! -d "$codex_source" ]; then
     log_info "Codex configuration not found, skipping"
     return
   fi
 
-  log_info "Syncing Codex instructions, rules, and skills..."
-  mkdir -p "$HOME/.codex/rules" "$HOME/.agents/skills"
+  log_info "Syncing Codex instructions and rules..."
+  mkdir -p "$HOME/.codex/rules"
 
   if [ -f "$obsolete_manifest" ]; then
     while read -r obsolete_path extra || [ -n "${obsolete_path:-}" ]; do
@@ -261,17 +308,7 @@ sync_codex_config() {
     cp "$rule_file" "$HOME/.codex/rules/"
   done
 
-  for skill_dir in "$codex_source"/skills/*; do
-    if [ ! -f "$skill_dir/SKILL.md" ]; then
-      continue
-    fi
-
-    skill_name="$(basename "$skill_dir")"
-    mkdir -p "$HOME/.agents/skills/$skill_name"
-    cp -R "$skill_dir/." "$HOME/.agents/skills/$skill_name/"
-  done
-
-  log_success "Codex instructions, rules, and skills updated"
+  log_success "Codex instructions and rules updated"
 }
 
 # curlでインストールする汎用関数（第5引数でシェルを指定可）
@@ -472,9 +509,9 @@ else
   log_warn "npm not found, skipping pnpm installation"
 fi
 
-# Agent Skills
-sync_agent_skills
+# Codex configuration and Agent Skills
 sync_codex_config
+sync_agent_skills
 
 # Rust
 install_via_curl "Rust" "https://sh.rustup.rs" "rustc" "-y"

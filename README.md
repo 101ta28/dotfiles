@@ -91,9 +91,10 @@ The script backs up configuration before optional removal steps and asks separat
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
 - `.config/ghostty/config.ghostty` - Ghostty configuration synced to `~/.config/ghostty/config.ghostty`
-- `.config/agents/skills.txt` - Agent Skills restored into `~/.agents/skills/`
+- `.config/agents/skills.txt` - Unified manifest for external and local Agent Skills restored into `~/.agents/skills/`
+- `.config/agents/skills/` - Local skills and overrides for external skills
 - `AGENTS.md` - Contributor guidance for this repository
-- `.config/.codex/` - Codex instructions, execution policy rules, and local skills synced to `~/.codex/` and `~/.agents/skills/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
+- `.config/.codex/` - Codex instructions and execution policy rules synced to `~/.codex/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
 - `.zshrc` - Zsh shell configuration with Prezto
 
 ## Architecture Overview
@@ -222,17 +223,22 @@ When used together, `hallmark` supplies visual direction and stylistic defaults,
 
 The two writing skills clarify subjects and operations and improve sentence flow while preserving facts and conditions. They include editing examples and choose wording and structure for the context, without fixed sentence-length or list-ratio targets.
 
-The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict recovery, bookmarks, and Git remotes. Its source is `.config/.codex/skills/jj/`, synced to `~/.agents/skills/jj/` by the installer. It uses an existing `jj` installation.
+The `jj` skill covers Jujutsu working-copy changes, history rewrites, conflict recovery, bookmarks, and Git remotes. Its source is `.config/agents/skills/jj/`, synced to `~/.agents/skills/jj/` by the installer. It uses an existing `jj` installation.
 
 ### Agent Skills
 
-The installer reads `.config/agents/skills.txt` and installs each entry globally with the Skills CLI. This restores the declared skills into `~/.agents/skills/` on a new machine and whenever `update.sh` reapplies the configuration. The sync is additive: skills not listed in the manifest are preserved.
+All managed Agent Skills are declared in `.config/agents/skills.txt`. Both `installer.sh` and `update.sh` use the installer's `sync_agent_skills` function to restore them into `~/.agents/skills/`. The sync is additive: installed skills not listed in the manifest are preserved, and unlisted local directories are not copied.
 
-The manifest includes `hallmark` (`nutlope/hallmark`), `yomiyasu` (`nanaism/yomiyasu`), `herdr`, and `find-skills`.
+Each entry contains a source and skill name, separated by whitespace. A repository source is installed globally with the Skills CLI; `local` copies `.config/agents/skills/<name>/`. For either source, files in that local directory take precedence over installed files. Empty lines and lines beginning with `#` are ignored. For example:
 
-After installing external skills, the installer copies `.config/.codex/skills/` over them. The `hallmark/` directory stores the customized `SKILL.md`, `references/flow.md`, `references/gates.md`, and `references/redesign.md`, plus the reference validator, its tests, and the upstream license. Page composition details and the Picks example live in `references/flow.md` to keep the entrypoint within its size limit. Extension fields live under `metadata`; the validator accepts both this format and the upstream version field. Other scripts, themes, and resources still come from `nutlope/hallmark`. This order restores the local changes after each installation; keep this order and check compatibility when updating upstream resources.
+```text
+nutlope/hallmark hallmark
+local jj
+```
 
-To add a synchronized skill, add its source repository and skill name to the manifest, separated by whitespace, one entry per line. Empty lines and lines beginning with `#` are ignored.
+The manifest includes four external skills (`hallmark`, `yomiyasu`, `herdr`, and `find-skills`) and five local skills (`cognitive-rhythm-writing`, `frontend-design`, `grilling`, `japanese-tech-writing`, and `jj`). To add a local skill, create `skills/<name>/SKILL.md` beside the manifest and add a `local <name>` entry. Duplicate names, invalid entries, and local directories missing `SKILL.md` stop skill syncing before any skill is installed or copied. Without `npx`, external installation is skipped with a warning while local files are still copied.
+
+After installing `hallmark`, the installer copies `.config/agents/skills/hallmark/` over it. This directory stores the customized `SKILL.md`, `references/flow.md`, `references/gates.md`, and `references/redesign.md`, plus the reference validator, its tests, and the upstream license. Page composition details and the Picks example live in `references/flow.md` to keep the entrypoint within its size limit. Extension fields live under `metadata`; the validator accepts both this format and the upstream version field. Other scripts, themes, and resources still come from `nutlope/hallmark`. This order restores the local changes after each installation; check compatibility when updating upstream resources.
 
 ### Updating Dotfiles
 
@@ -268,8 +274,8 @@ git config --global commit.gpgSign true
 - `ls` command is aliased to `lsd` (feature-rich ls written in Rust)
 - Japanese input is configured with fcitx
 - dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
-- Codex instructions, execution policy rules, and local skills are managed under `.config/.codex/`; run `update.sh` or rerun the installer to sync them and remove paths listed in `obsolete-paths.txt`
-- Agent Skills listed in `.config/agents/skills.txt` are restored additively; `~/.agents` itself is not tracked by Git
+- Codex instructions and execution policy rules are managed under `.config/.codex/`; run `update.sh` or rerun the installer to sync them and remove paths listed in `obsolete-paths.txt`
+- All Agent Skills are managed under `.config/agents/`, declared in `skills.txt`, and restored additively; `~/.agents` itself is not tracked by Git
 - Git LFS is enabled for handling large files
 
 ## Troubleshooting
@@ -306,11 +312,11 @@ Exit Codex, run `source ~/.zshenv` in the launching Zsh, and start Codex again. 
 - Configuration directory: `~/.codex/`
 - Agent instructions: synced from `.config/.codex/AGENTS.md` to `~/.codex/AGENTS.md`
 - Terminal-browser cleanup: close tabs and panes created for the task before the final response unless explicitly asked to keep them open; preserve pre-existing browsers and tabs.
-- Local reusable workflows: synced from `.config/.codex/skills/` to `~/.agents/skills/`
+- Reusable workflows: declared in `.config/agents/skills.txt` and synced to `~/.agents/skills/`
 
 ### Agent Skills
 
-- Installed globally with `npx skills add` from `.config/agents/skills.txt`
+- Declared in `.config/agents/skills.txt`: external sources use `npx skills add`; local skills and overrides are copied from `.config/agents/skills/`
 - Shared skills directory: `~/.agents/skills/`
 
 ## License

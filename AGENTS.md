@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository manages a personal Ubuntu/WSL development environment. Root-level dotfiles such as `.zshrc`, `.zpreztorc`, and `.gitconfig.template` configure the shell and Git. `init.vim` defines editor behavior, while `.config/nvim/dpp.ts` defines plugins managed by dpp.vim and Denops. Lifecycle scripts are `installer.sh`, `update.sh`, and `uninstaller.sh`; `setup-user.sh` collects per-user Git settings. Codex configuration is under `.config/.codex/`. Keep English and Japanese documentation aligned in `README.md` and `README.ja.md` when behavior changes.
+This repository manages a personal Ubuntu/WSL development environment. Root-level dotfiles such as `.zshrc`, `.zpreztorc`, and `.gitconfig.template` configure the shell and Git. `init.vim` defines editor behavior, while `.config/nvim/dpp.ts` defines plugins managed by dpp.vim and Denops. Lifecycle scripts are `installer.sh`, `update.sh`, and `uninstaller.sh`; `setup-user.sh` collects per-user Git settings. Codex configuration is under `.config/.codex/`. Shared Agent Skills are declared in `.config/agents/skills.txt`, with local files under `.config/agents/skills/`. Keep English and Japanese documentation aligned in `README.md` and `README.ja.md` when behavior changes.
 
 ## Build, Test, and Development Commands
 
@@ -21,7 +21,7 @@ Follow the style of the file being edited. Shell functions and local variables u
 
 ## Testing Guidelines
 
-No automated test suite or coverage threshold is configured. At minimum, run syntax checks for every changed script and exercise affected option parsers with safe inputs. For installer changes, verify behavior in a fresh Ubuntu/WSL container or VM and report the tested platform. Never test uninstallation against a workstation containing irreplaceable configuration.
+No general test suite or coverage threshold is configured. `tests/agent-skills.sh` checks skill syncing in a fresh Ubuntu container with a mocked Skills CLI; its header documents the command. At minimum, run syntax checks for every changed script and exercise affected option parsers with safe inputs. For installer changes, verify behavior in a fresh Ubuntu/WSL container or VM and report the tested platform. Never test uninstallation against a workstation containing irreplaceable configuration.
 
 ## Commit & Pull Request Guidelines
 
