@@ -90,6 +90,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `init.vim` - Vim/Neovim configuration and dpp.vim startup
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
+- `.config/herdr-app/keys.json` - Windows Herdr app keybindings that prioritize Codex CLI; applied manually
 - `.config/ghostty/config.ghostty` - Ghostty configuration synced to `~/.config/ghostty/config.ghostty`
 - `.config/agents/skills.txt` - Unified manifest for external and local Agent Skills restored into `~/.agents/skills/`
 - `.config/agents/skills/` - Local skills and overrides for external skills
@@ -214,6 +215,42 @@ The Codex instructions in `.config/.codex/AGENTS.md` share the repository-target
 The TUI uses a separate tab with `--no-focus`; if no workspace matches unambiguously, it creates one at the repository root and uses its initial tab. The app uses `hc` terminals without layout labels for background work, preserving the current view. Visible tabs/splits are created when requested; a missing repository space is then created as part of that request. App terminal addresses and pane IDs are distinct, and TUI command flags do not apply.
 
 The local skills read the installed `herdr --skill`, `herdr-app --skill`, and `hc --skill` manuals for current interfaces. App-specific remote execution, terminal recovery, mods, layouts, and keys retain their own workflows; customization reads the generated guide and types in the app home. This adds skill support, not an app/core installation or a migration of live settings. The app and core must already be installed.
+
+### Herdr app (Windows)
+
+[`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) stores the Windows desktop app's keybindings, with Codex CLI shortcuts taking priority. `F1`–`F12`, `Alt+Arrow`, and `Ctrl+Left/Right` go to the terminal program. `Ctrl+J` sends Windows key-down/key-up events to preserve Control+J through ConPTY; this binding is specific to Windows.
+
+Install Herdr app and herdr-core first. From this repository's root, run the following in Windows PowerShell to back up the current key file and apply the configuration. `HERDR_APP_HOME` is respected when set.
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$herdrConfigDir = if ($env:HERDR_APP_HOME) {
+    $env:HERDR_APP_HOME
+} else {
+    Join-Path $env:USERPROFILE '.config\herdr-app'
+}
+New-Item -ItemType Directory -Path $herdrConfigDir -Force | Out-Null
+$herdrKeysPath = Join-Path $herdrConfigDir 'keys.json'
+if (Test-Path -LiteralPath $herdrKeysPath) {
+    $herdrBackupPath = "$herdrKeysPath.bak-$(Get-Date -Format yyyyMMdd-HHmmss-fff)"
+    Copy-Item -LiteralPath $herdrKeysPath -Destination $herdrBackupPath
+}
+Copy-Item -LiteralPath '.config\herdr-app\keys.json' -Destination $herdrKeysPath
+herdr-app status
+```
+
+Herdr reloads the file while running. Check `herdr-app status` for errors; an invalid file leaves the last working configuration active and writes `keys.error` in the app home. `installer.sh`, `update.sh`, and `uninstaller.sh` do not manage this Windows configuration.
+
+| Herdr app action | Shortcut |
+|---|---|
+| Rename tab / space | `Ctrl+Shift+F2` / `Ctrl+Shift+F3` |
+| Select tab 1–9 | `Ctrl+Shift+1`–`9` |
+| Previous / next agent | `Alt+Shift+Up` / `Alt+Shift+Down` |
+| Focus pane left / down / up / right | `Alt+H` / `J` / `K` / `L` |
+| Show keybindings | `Ctrl+Shift+F1` |
+| Zoom in / out / reset | `Alt+=` / `Alt+-` / `Alt+0` |
+
+The configuration was prepared for Herdr app 0.1.15 and Codex CLI 0.167.1. JSON parsing, live reload, and Control+J reception in an isolated Windows console were checked; physical keypresses in Codex were not verified. After applying it, check that `Ctrl+J` inserts a newline in the composer and `F2` opens Codex warnings instead of Herdr's rename dialog. Customizing `keys.json` also stops Herdr from automatically replacing it with newer default keybindings; add new defaults manually when needed.
 
 ### Ghostty
 

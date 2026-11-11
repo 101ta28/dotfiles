@@ -90,6 +90,7 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 - `init.vim` - Vim/Neovim設定とdpp.vimの起動処理
 - `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
 - `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
+- `.config/herdr-app/keys.json` - Codex CLIの操作を優先するWindows版Herdr appのキー設定（手動で反映）
 - `.config/ghostty/config.ghostty` - `~/.config/ghostty/config.ghostty` と同期するGhostty設定
 - `.config/agents/skills.txt` - `~/.agents/skills/` へ復元する外部・ローカルの全Agent Skills一覧
 - `.config/agents/skills/` - ローカルスキルと外部スキルへの上書きファイル
@@ -214,6 +215,42 @@ herdr server reload-config
 TUI では `--no-focus` を付けて別タブを使います。対応する workspace を一意に特定できない場合は、リポジトリのルートで新規作成し、初期タブを使います。アプリでは画面を切り替えずに作業できるよう、バックグラウンド処理を配置用ラベルのない `hc` 端末で実行します。表示するタブや分割は依頼された場合に作成し、その際に対応する space がなければ依頼の一部として作成します。アプリの端末アドレスとペイン ID は別物で、TUI のコマンド引数も流用しません。
 
 各スキルは、導入済みの `herdr --skill`、`herdr-app --skill`、`hc --skill` で現行の仕様を確認します。アプリ固有のリモート実行、端末の復旧、mod・レイアウト・キー設定は専用の手順を保ち、カスタマイズ時はアプリの設定ディレクトリに生成される説明書と型定義を参照します。ここで追加するのはスキルの対応です。アプリと core は別途導入しておく必要があり、実際の設定は移行しません。
+
+### Herdr app（Windows）
+
+[`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) に、Codex CLIの操作を優先するWindows版デスクトップアプリのキーバインドを保存しています。`F1`～`F12`、`Alt+矢印`、`Ctrl+←/→` は端末内のプログラムへ渡します。`Ctrl+J` は、ConPTYを通してControl+Jを保持するため、Windowsのキー押下・解放イベントとして送信します。この割り当てはWindows専用です。
+
+Herdr appとherdr-coreを導入したうえで、リポジトリのルートから次のコマンドをWindows PowerShellで実行してください。現在のキー設定をバックアップしてから反映します。`HERDR_APP_HOME` を設定している場合は、その保存先を使います。
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$herdrConfigDir = if ($env:HERDR_APP_HOME) {
+    $env:HERDR_APP_HOME
+} else {
+    Join-Path $env:USERPROFILE '.config\herdr-app'
+}
+New-Item -ItemType Directory -Path $herdrConfigDir -Force | Out-Null
+$herdrKeysPath = Join-Path $herdrConfigDir 'keys.json'
+if (Test-Path -LiteralPath $herdrKeysPath) {
+    $herdrBackupPath = "$herdrKeysPath.bak-$(Get-Date -Format yyyyMMdd-HHmmss-fff)"
+    Copy-Item -LiteralPath $herdrKeysPath -Destination $herdrBackupPath
+}
+Copy-Item -LiteralPath '.config\herdr-app\keys.json' -Destination $herdrKeysPath
+herdr-app status
+```
+
+Herdrは起動中でも設定を再読み込みします。`herdr-app status` でエラーの有無を確認してください。設定が不正な場合は最後に読み込めた設定が維持され、アプリの設定ディレクトリに `keys.error` が作られます。`installer.sh`、`update.sh`、`uninstaller.sh` は、このWindows用設定を管理しません。
+
+| Herdr appの操作 | キー |
+|---|---|
+| タブ名変更 / スペース名変更 | `Ctrl+Shift+F2` / `Ctrl+Shift+F3` |
+| タブ1～9を選択 | `Ctrl+Shift+1`～`9` |
+| 前 / 次のエージェントへ移動 | `Alt+Shift+↑` / `Alt+Shift+↓` |
+| 左 / 下 / 上 / 右のペインへ移動 | `Alt+H` / `J` / `K` / `L` |
+| ショートカット一覧 | `Ctrl+Shift+F1` |
+| 拡大 / 縮小 / 倍率リセット | `Alt+=` / `Alt+-` / `Alt+0` |
+
+Herdr app 0.1.15とCodex CLI 0.167.1を対象に作成しました。JSONの構文、起動中の再読み込み、隔離したWindowsコンソールでのControl+J受信は確認済みです。Codex画面での実キー操作は未確認のため、反映後に `Ctrl+J` で入力欄に改行が入り、`F2` でHerdrの名前変更ではなくCodexの警告一覧が開くことを確認してください。`keys.json` をカスタマイズすると、Herdrの更新時に新しい既定の割り当てへ自動置換されなくなるため、必要な新規キーは手動で追加します。
 
 ### Ghostty
 
