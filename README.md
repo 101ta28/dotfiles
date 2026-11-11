@@ -90,7 +90,9 @@ The script backs up configuration before optional removal steps and asks separat
 - `init.vim` - Vim/Neovim configuration and dpp.vim startup
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
-- `.config/herdr-app/keys.json` - Windows Herdr app keybindings that prioritize Codex CLI; applied manually
+- `.config/herdr-app/keys.json` - Shared Linux/Windows Herdr app keybindings that prioritize Codex CLI
+- `.config/herdr-app/keys.windows.json` - Windows-only `Ctrl+J` override
+- `.config/herdr-app/apply-windows.ps1` - Apply the Windows override with a backup
 - `.config/ghostty/config.ghostty` - Ghostty configuration synced to `~/.config/ghostty/config.ghostty`
 - `.config/agents/skills.txt` - Unified manifest for external and local Agent Skills restored into `~/.agents/skills/`
 - `.config/agents/skills/` - Local skills and overrides for external skills
@@ -216,41 +218,46 @@ The TUI uses a separate tab with `--no-focus`; if no workspace matches unambiguo
 
 The local skills read the installed `herdr --skill`, `herdr-app --skill`, and `hc --skill` manuals for current interfaces. App-specific remote execution, terminal recovery, mods, layouts, and keys retain their own workflows; customization reads the generated guide and types in the app home. This adds skill support, not an app/core installation or a migration of live settings. The app and core must already be installed.
 
-### Herdr app (Windows)
+### Herdr app (Linux / Windows)
 
-[`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) stores the Windows desktop app's keybindings, with Codex CLI shortcuts taking priority. `F1`–`F12`, `Alt+Arrow`, and `Ctrl+Left/Right` go to the terminal program. `Ctrl+J` sends Windows key-down/key-up events to preserve Control+J through ConPTY; this binding is specific to Windows.
+The shared [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) prioritizes Codex CLI shortcuts. `F1`–`F12`, `Alt+Arrow`, `Ctrl+Left/Right`, and `Ctrl+J` go to the terminal program. Linux uses this file directly. Windows applies only the `terminal.ctrl-j` value from [`keys.windows.json`](.config/herdr-app/keys.windows.json), preserving Control+J through ConPTY with Windows key-down/key-up events.
 
-Install Herdr app and herdr-core first. From this repository's root, run the following in Windows PowerShell to back up the current key file and apply the configuration. `HERDR_APP_HOME` is respected when set.
+Herdr reads the resulting `keys.json`; it does not automatically merge `keys.windows.json`. Install Herdr app and herdr-core first, then apply the files for the OS running the Herdr app window. A Windows app connected to Linux or WSL still uses the Windows configuration.
 
-```powershell
-$ErrorActionPreference = 'Stop'
-$herdrConfigDir = if ($env:HERDR_APP_HOME) {
-    $env:HERDR_APP_HOME
-} else {
-    Join-Path $env:USERPROFILE '.config\herdr-app'
-}
-New-Item -ItemType Directory -Path $herdrConfigDir -Force | Out-Null
-$herdrKeysPath = Join-Path $herdrConfigDir 'keys.json'
-if (Test-Path -LiteralPath $herdrKeysPath) {
-    $herdrBackupPath = "$herdrKeysPath.bak-$(Get-Date -Format yyyyMMdd-HHmmss-fff)"
-    Copy-Item -LiteralPath $herdrKeysPath -Destination $herdrBackupPath
-}
-Copy-Item -LiteralPath '.config\herdr-app\keys.json' -Destination $herdrKeysPath
+#### Linux
+
+From the repository root, copy the common configuration. GNU `cp --backup=numbered` keeps an existing file as `keys.json.~1~`, `keys.json.~2~`, and so on. `HERDR_APP_HOME` overrides the destination when set.
+
+```bash
+herdr_config_dir="${HERDR_APP_HOME:-$HOME/.config/herdr-app}"
+mkdir -p "$herdr_config_dir"
+cp --backup=numbered .config/herdr-app/keys.json "$herdr_config_dir/keys.json"
 herdr-app status
 ```
 
-Herdr reloads the file while running. Check `herdr-app status` for errors; an invalid file leaves the last working configuration active and writes `keys.error` in the app home. `installer.sh`, `update.sh`, and `uninstaller.sh` do not manage this Windows configuration.
+#### Windows
+
+From the repository root, run the following in PowerShell. The helper reads both JSON files, overrides only `Ctrl+J`, and writes the merged `keys.json` to `$env:USERPROFILE\.config\herdr-app` or `HERDR_APP_HOME` when set. It backs up an existing file before replacing it and skips an identical configuration.
+
+```powershell
+& .\.config\herdr-app\apply-windows.ps1
+herdr-app status
+```
+
+Use `-ConfigDir <directory>` to choose another app configuration directory. The checked-in common file and override remain unchanged. After editing either source file or pulling updates, rerun the command for your platform. `installer.sh`, `update.sh`, and `uninstaller.sh` do not apply or remove these Herdr app settings.
+
+Herdr reloads `keys.json` while running. Check `herdr-app status` for errors; an invalid file leaves the last working configuration active and writes `keys.error` in the app home.
 
 | Herdr app action | Shortcut |
 |---|---|
 | Rename tab / space | `Ctrl+Shift+F2` / `Ctrl+Shift+F3` |
 | Select tab 1–9 | `Ctrl+Shift+1`–`9` |
 | Previous / next agent | `Alt+Shift+Up` / `Alt+Shift+Down` |
-| Focus pane left / down / up / right | `Alt+H` / `J` / `K` / `L` |
+| Focus pane left / down / up / right | `Alt+H` / `Alt+J` / `Alt+K` / `Alt+L` |
 | Show keybindings | `Ctrl+Shift+F1` |
 | Zoom in / out / reset | `Alt+=` / `Alt+-` / `Alt+0` |
 
-The configuration was prepared for Herdr app 0.1.15 and Codex CLI 0.167.1. JSON parsing, live reload, and Control+J reception in an isolated Windows console were checked; physical keypresses in Codex were not verified. After applying it, check that `Ctrl+J` inserts a newline in the composer and `F2` opens Codex warnings instead of Herdr's rename dialog. Customizing `keys.json` also stops Herdr from automatically replacing it with newer default keybindings; add new defaults manually when needed.
+The bindings target Herdr app 0.1.15 and Codex CLI 0.167.1. Windows key encoding was checked in an isolated console. Physical keypresses in Codex and the Linux app have not been verified; after applying, check that `Ctrl+J` inserts a newline and `F2` opens Codex warnings. Customizing `keys.json` stops Herdr from automatically replacing it with newer default bindings; add new defaults manually when needed.
 
 ### Ghostty
 
