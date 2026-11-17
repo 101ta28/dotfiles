@@ -29,7 +29,7 @@ Colocated Jujutsu workspaces fetch with jj and advance an empty working copy
 to trunk() only when its parent can be fast-forwarded.
 
 Options:
-  --gpu     Install or refresh optional GPU/CUDA tooling
+  --gpu     Install or refresh optional GPU/CUDA tooling and enable CUDA shell paths
   -h, --help
             Show this help message
 EOF

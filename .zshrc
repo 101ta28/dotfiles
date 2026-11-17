@@ -16,12 +16,6 @@ fi
 zstyle ':prezto:module:git:info:position' format ''
 
 # ============================================================================
-# Configuration Variables
-# ============================================================================
-CUDA_VERSION="12.9"
-CUDA_PATH="/usr/local/cuda-${CUDA_VERSION}"
-
-# ============================================================================
 # Aliases
 # ============================================================================
 alias ls="lsd"
@@ -45,15 +39,16 @@ path=(
   "${BUN_INSTALL}/bin"
   "${HOME}/.local/bin"
   "${HOME}/.cargo/bin"
-  "${CUDA_PATH}/bin"
   "/usr/local/go/bin"
   "${HOME}/.deno/bin"
   $path
 )
 export PATH
 
-# CUDA Library Path
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${CUDA_PATH}/lib64"
+# Optional CUDA configuration, linked only by installer.sh --gpu.
+if [[ -s "$HOME/.zshrc.gpu" ]]; then
+  source "$HOME/.zshrc.gpu"
+fi
 
 # NVM
 export NVM_DIR="${HOME}/.nvm"

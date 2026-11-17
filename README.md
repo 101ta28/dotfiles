@@ -56,7 +56,11 @@ Update the installed checkout with a fast-forward pull, then recreate links and 
 ~/.dfiles/update.sh
 ```
 
-The updater stops before changing files when `~/.dfiles` contains uncommitted changes or cannot be fast-forwarded. Commit or stash intentional local changes first. Use `~/.dfiles/update.sh --gpu` to retain the optional GPU/CUDA provisioning path.
+The updater stops before changing files when `~/.dfiles` contains uncommitted changes or cannot be fast-forwarded. Commit or stash intentional local changes first.
+
+Normal installation and updates do not install GPU/CUDA tools or enable CUDA shell paths. Use `~/.dfiles/update.sh --gpu` to install the optional tools and link `~/.zshrc.gpu`. Only this optional file adds CUDA paths, using `/usr/local/cuda` by default (override with `CUDA_PATH` before loading `.zshrc`). Later normal updates preserve this opt-in configuration and installed GPU/CUDA tools.
+
+The old unconditional CUDA 12.9 paths have been removed. To keep enabling CUDA paths through these dotfiles, run with `--gpu` once. Start a fresh login session to avoid inheriting paths from the old shell.
 
 For colocated Jujutsu/Git checkouts, the updater uses `jj git fetch` and the configured `trunk()` revision (usually `main@origin`). It requires an empty, conflict-free working-copy change with one parent, and creates a new empty change on the fetched target only if that parent can be fast-forwarded. If local commits are ahead of the target, it preserves them and reapplies configuration; diverged histories stop the update. Save working-copy changes with `jj commit` first. Git-only checkouts require a checked-out branch with an upstream configured.
 
@@ -99,6 +103,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `AGENTS.md` - Contributor guidance for this repository
 - `.config/.codex/` - Codex instructions and execution policy rules synced to `~/.codex/`; removed repository-managed paths are pruned via `obsolete-paths.txt`
 - `.zshrc` - Zsh shell configuration with Prezto
+- `.zshrc.gpu` - Optional CUDA paths, linked only when installing or updating with `--gpu`
 
 ## Architecture Overview
 

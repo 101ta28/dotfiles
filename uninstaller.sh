@@ -129,6 +129,7 @@ EOF
     
     # Zsh関連
     remove_symlink "$HOME/.zshrc"
+    remove_symlink "$HOME/.zshrc.gpu"
     remove_symlink "$HOME/.zpreztorc"
     remove_symlink "$HOME/.zlogin"
     remove_symlink "$HOME/.zlogout"

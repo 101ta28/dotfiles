@@ -355,7 +355,7 @@ while [[ $# -gt 0 ]]; do
     --help|-h)
       echo "Usage: $0 [OPTIONS]"
       echo "Options:"
-      echo "  --gpu     Install GPU/CUDA development tools"
+      echo "  --gpu     Install GPU/CUDA development tools and enable CUDA shell paths"
       echo "  --dotfiles-dir PATH"
       echo "            Use an existing dotfiles checkout (used by update.sh)"
       echo "  --help    Show this help message"
@@ -612,6 +612,8 @@ if [ "$INSTALL_GPU" = true ]; then
     log_info "CUDA Toolkit already installed"
   fi
   
+  create_symlink "$DFILE_PATH/.zshrc.gpu" "$HOME/.zshrc.gpu"
+
   log_success "GPU/CUDA development tools installation complete!"
   echo ""
   log_info "Note: You may need to restart your system for GPU drivers to work properly."

@@ -56,7 +56,11 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/101ta28/dotfiles/main/se
 ~/.dfiles/update.sh
 ```
 
-`~/.dfiles` に未コミットの変更がある場合やfast-forwardできない場合、更新前に停止します。意図的なローカル変更は先にコミットまたはstashしてください。GPU/CUDA構成も適用する場合は `~/.dfiles/update.sh --gpu` を使用します。
+`~/.dfiles` に未コミットの変更がある場合やfast-forwardできない場合、更新前に停止します。意図的なローカル変更は先にコミットまたはstashしてください。
+
+通常のインストール・更新では、GPU/CUDAツールの導入やCUDA用の環境変数の追加は行いません。`~/.dfiles/update.sh --gpu` を実行すると、オプションのツールを導入し、`~/.zshrc.gpu` へのリンクを作成します。このファイルがある場合だけCUDAのパスを追加します。既定の参照先は `/usr/local/cuda` です（変更する場合は `.zshrc` を読み込む前に `CUDA_PATH` を設定）。その後の通常更新でも、有効にした設定と導入済みのGPU/CUDAツールは維持します。
+
+従来のCUDA 12.9のパスを無条件に追加する設定は削除しました。引き続きこのdotfilesでCUDAのパスを設定する場合は、一度 `--gpu` を付けて実行してください。古いシェルのパスを引き継がないよう、新しいログインセッションで反映を確認してください。
 
 JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設定済みの `trunk()`（通常は `main@origin`）を更新先に使います。作業コピーが空で競合がなく、親が1つであることを確認し、その親から更新先へfast-forwardできる場合だけ、更新先に新しい空のchangeを作成します。ローカルのコミットが更新先より先に進んでいる場合は、それを保持して設定を再適用します。履歴が分岐している場合は停止します。作業コピーの変更は先に `jj commit` で保存してください。Gitのみのcheckoutでは、upstreamを設定したブランチに切り替えておく必要があります。
 
@@ -99,6 +103,7 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
 - `.config/.codex/` - `~/.codex/` へ同期されるCodex向け指示書と実行ポリシールール。削除済みの管理対象は `obsolete-paths.txt` に従って除去されます
 - `.zshrc` - Prezto使用のZshシェル設定
+- `.zshrc.gpu` - `--gpu` を指定してインストール・更新した場合だけリンクするCUDAのパス設定
 
 ## アーキテクチャ概要
 

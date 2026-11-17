@@ -1,0 +1,10 @@
+# Use the toolkit selected by CUDA's /usr/local/cuda symlink unless overridden.
+CUDA_PATH="${CUDA_PATH:-/usr/local/cuda}"
+
+if [[ -d "${CUDA_PATH}/bin" ]]; then
+  path=("${CUDA_PATH}/bin" $path)
+fi
+
+if [[ -d "${CUDA_PATH}/lib64" && ":${LD_LIBRARY_PATH}:" != *":${CUDA_PATH}/lib64:"* ]]; then
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}${CUDA_PATH}/lib64"
+fi
