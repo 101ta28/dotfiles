@@ -2,16 +2,27 @@
 
 Read `hc --skill` and relevant command help for the installed runtime. This reference applies the local delegation and cleanup policy to that runtime, not the TUI's agent-detection model.
 
-## Ordinary programs
+## Ordinary programs: decide placement first
 
-Choose an explicit task directory and a useful unique name, and keep the returned terminal address:
+Use the [placement rules in SKILL.md](../SKILL.md#choose-direct-execution-a-split-or-a-tab) before launching. Run short commands directly. For work that needs a separate terminal in the app, launch it in the chosen tab or split and keep that terminal's address. `hc run --bg` alone only creates a core terminal; it does not arrange a pane.
+
+For example, a brief package setup stays in the shell tool. A large Chromium download that should continue alongside other work belongs in a named setup tab with `--focus false`; a dev server whose logs should remain beside the current work belongs in a split. The program's name alone does not determine placement.
+
+Only for hidden execution or a core-only environment, choose an explicit task directory and a useful unique name:
 
 ```sh
 hc run --bg --name <task-name> --cwd <task-directory> <program> <args...>
+```
+
+For either an app-created terminal or a hidden core terminal, collect results from the same returned address:
+
+```sh
 hc get <returned-address>
 hc read <returned-address> --lines 120
 hc wait <returned-address> --timeout 60
 ```
+
+An `<hc>...exited...</hc>` message is a parent notification, not a separate pane or the full result. If explicitly waiting for a hidden one-shot job, `--no-notify` on `hc run` can avoid a redundant exit note; still collect its exit code and output. Do not disable notifications globally, detach the parent, or use notification suppression as a substitute for correct placement.
 
 Read existing output before waiting. `hc wait --output <text>` matches output printed after the wait starts, unlike TUI `pane wait-output`; a readiness line already printed will not satisfy it. Inspect current readiness first, use a meaningful program check when needed, and do not wait repeatedly for a past line.
 
@@ -21,7 +32,7 @@ Do not use `--rm` when output must be read after exit. After collecting results,
 
 ## Explicitly requested agents
 
-Inspect `hc templates` for an appropriate role. Run agents interactively with `--bg`, a name, the task directory, and a narrow initial task. Prefer supplying that task at launch; a send to a booting agent can be lost. Do not start additional agents just because the bundled manual recommends delegation.
+Inspect `hc templates` for an appropriate role. Run agents interactively with a name, the task directory, and a narrow initial task, keeping the chosen tab/split placement. If using `hc run` for a template, use `--bg` and arrange its visible placement using verified app IDs; leave it hidden only when hidden execution was selected. Prefer supplying the task at launch; a send to a booting agent can be lost. Do not start additional agents just because the bundled manual recommends delegation.
 
 Use the requested agent/model. For Codex, the installed hc manual requires `--no-daemon` so commands execute inside the core terminal; check template commands for it too. Verify the agent CLI supports required flags rather than silently omitting them.
 
