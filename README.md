@@ -106,7 +106,7 @@ The script backs up configuration before optional removal steps and asks separat
 
 - **Zsh**: Uses Prezto framework. Aliases and environment variables are defined in `.zshrc`
 - **Git**: `.gitconfig` sets up GPG signing, aliases, and Git LFS
-- **Jujutsu**: A personal TOML configuration holds identity and signing settings; `.zshrc` loads standard completions
+- **Jujutsu**: A personal TOML configuration holds identity and signing settings; `.zshrc` loads standard and dynamic completions
 - **Editor**: `init.vim` loads dpp.vim; `dpp.ts` defines plugins through Denops
 
 ### How installer.sh Works
@@ -193,7 +193,7 @@ jj --version
 jj config edit --user
 ```
 
-Zsh loads **standard** completions via `source <(jj util completion zsh)` after completion initialization. Open a new shell or run `source ~/.zshrc` to enable them.
+Zsh loads standard completions via `source <(jj util completion zsh)`, followed by dynamic completions via `source <(COMPLETE=zsh jj)`, after completion initialization. Open a new shell or run `source ~/.zshrc` to enable them.
 
 ### Herdr
 

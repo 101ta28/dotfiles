@@ -106,7 +106,7 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 
 - **Zsh設定**: Preztoフレームワークを使用。`.zshrc`でエイリアスと環境変数を定義
 - **Git設定**: `.gitconfig`でGPG署名、エイリアス、Git LFSを設定
-- **Jujutsu設定**: 個人用のTOMLファイルに名前・メールアドレス・署名設定を保存し、`.zshrc`でstandard補完を読み込む
+- **Jujutsu設定**: 個人用のTOMLファイルに名前・メールアドレス・署名設定を保存し、`.zshrc`で標準補完と動的補完を読み込む
 - **エディタ設定**: `init.vim`でdpp.vimを起動し、`dpp.ts`からDenops経由でプラグインを定義
 
 ### installer.shの動作
@@ -193,7 +193,7 @@ jj --version
 jj config edit --user
 ```
 
-Zshでは補完の初期化後、`source <(jj util completion zsh)` で **standard補完** を読み込みます。新しいシェルを開くか、`source ~/.zshrc` で反映してください。
+Zshでは補完の初期化後、`source <(jj util completion zsh)` で標準補完を、続けて `source <(COMPLETE=zsh jj)` で動的補完を読み込みます。新しいシェルを開くか、`source ~/.zshrc` で反映してください。
 
 ### Herdr
 
