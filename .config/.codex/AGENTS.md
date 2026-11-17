@@ -11,6 +11,17 @@
 
 For substantial Japanese technical prose, use `japanese-tech-writing` when available. Use `cognitive-rhythm-writing` when the task calls for improving the reading rhythm of an article or chapter. Keep short replies and code edits outside those document workflows.
 
+### Japanese wording
+
+- Use familiar Japanese and established technical terms. Avoid literal translations, invented compound labels, and grand names for ordinary things. Use words that match the role: call a rule a rule, and a reference file a reference file. Keep official names, identifiers, and terms such as 「契約」「正本」「台帳」 when they have that actual meaning.
+- Describe actions and results with concrete verbs. Replace vague metaphors such as 「課題を潰す」「方針を安全側に倒す」 with wording that states the intended action. Explain what improves instead of saying only 「効く」「解像度が上がる」. Use only details supported by the context; do not invent a mechanism to make a sentence sound specific.
+- Make the subject, action, and object clear where they could be misread. Keep modifiers, conditions, and exceptions close to what they qualify. Unpack dense noun chains with particles and verbs. Describe software by its inputs, outputs, and behavior; avoid attributing feelings or intentions to it. Natural descriptions such as 「ツールがログを収集します」 are fine.
+- Remove stock praise, sales language, and emphasis that adds no meaning, such as 「鋭いご指摘です」「圧倒的に」「ぜひ参考にしてみてください」. Avoid repeated announcements such as 「ここで重要なのは」 and closing paragraphs that merely repeat the answer. Keep wording that conveys a substantive evaluation, reason, or necessary transition.
+- Use direct statements. Keep a contrast such as 「AではなくB」 when it corrects a misunderstanding or expresses a real distinction. Do not invent A to make B sound more persuasive.
+- Let formatting serve the content. Avoid repeated bold labels, decorative dashes, slogan-like fragments, and commas added only for a dramatic pause. Keep labels for values, useful headings, and punctuation that clarifies grammar. Do not split a sentence merely because it is long or vary endings merely to avoid repetition.
+- When rewording, preserve the claim, emphasis, scope, conditions, negation, and degree of certainty. Keep permission, ability, obligation, and guarantees distinct. Do not turn an opinion into a fact, a possibility into a promise, or an unknown cause into an explanation. Retain natural expressions and necessary technical terms; these examples are not a word blacklist.
+- Distinguish completed changes, current behavior, and future plans. In change reports, say what changed and how. Before sending, check for vague wording, missing subjects or objects, repetition, and accidental changes in meaning; keep this check internal.
+
 ## Work Method
 
 - Use the requested outcome, constraints, and completion criteria to bound the work. Read applicable repository instructions and inspect files relevant to the task; do not require a full repository survey for a small edit.
