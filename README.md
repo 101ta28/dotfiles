@@ -173,6 +173,8 @@ The managed `jj.rules` follows the distinction in the [official Git approval exa
 
 These are command-prefix rules, not an automatic risk classifier. They cover the common leading options listed in `jj.rules`; other option orders and custom aliases fall back to the normal sandbox and approval policy. Remove any separately saved blanket `prefix_rule(pattern=["jj"], decision="allow")` when migrating, since it would still allow unmatched forms. To sync only this rule, run `cp .config/.codex/rules/jj.rules ~/.codex/rules/jj.rules`, then restart Codex.
 
+The managed `herdr-app.rules` allows all subcommands of `hc`, `herdr-app`, and `herdr-app.exe`, including terminal execution and app changes. To sync only this rule, run `cp .config/.codex/rules/herdr-app.rules ~/.codex/rules/herdr-app.rules`, then restart Codex.
+
 ### pnpm
 
 pnpm 11 is installed globally through npm after the NVM-managed Node.js LTS installation. On WSL, a pnpm executable inherited from the Windows PATH is ignored so that a native Linux installation is used. Verify it with:

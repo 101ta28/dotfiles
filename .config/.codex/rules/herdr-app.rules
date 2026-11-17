@@ -1,0 +1,5 @@
+# Allow all app/core subcommands, including terminal execution and app changes.
+# Include the Windows app executable used from WSL.
+prefix_rule(pattern=["hc"], decision="allow")
+prefix_rule(pattern=["herdr-app"], decision="allow")
+prefix_rule(pattern=["herdr-app.exe"], decision="allow")

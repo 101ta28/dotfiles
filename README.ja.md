@@ -173,6 +173,8 @@ nvim ~/.codex/AGENTS.md
 
 このルールはコマンドの接頭辞で判定し、リスクを自動分類するものではありません。`jj.rules` に列挙した一般的な前置オプションには対応し、それ以外のオプション順序や独自エイリアスは通常のサンドボックス・承認設定に従います。別のファイルに包括許可の `prefix_rule(pattern=["jj"], decision="allow")` が保存されている場合は、未対応の形式が許可され続けるため、移行時に削除してください。このルールだけを同期する場合は `cp .config/.codex/rules/jj.rules ~/.codex/rules/jj.rules` を実行し、Codex を再起動します。
 
+管理対象の `herdr-app.rules` は、`hc`・`herdr-app`・`herdr-app.exe` の全サブコマンドを許可します。端末でのコマンド実行やアプリの変更操作も含みます。このルールだけを同期する場合は `cp .config/.codex/rules/herdr-app.rules ~/.codex/rules/herdr-app.rules` を実行し、Codex を再起動します。
+
 ### pnpm
 
 nvmで管理するNode.js LTSの導入後、npmを使ってpnpm 11をグローバルインストールします。WSLではWindowsのPATHから継承されたpnpmを無視し、Linux版を導入します。次のコマンドで確認できます：
