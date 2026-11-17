@@ -1,4 +1,6 @@
 # Add deno completions to search path
+if [[ ":$FPATH:" != *":/home/tatsuya/.zsh/completions:"* ]]; then export FPATH="/home/tatsuya/.zsh/completions:$FPATH"; fi
+# Add deno completions to search path
 ZSH_COMPLETIONS_DIR="${HOME}/.zsh/completions"
 if [[ ":${FPATH}:" != *":${ZSH_COMPLETIONS_DIR}:"* ]]; then
   export FPATH="${ZSH_COMPLETIONS_DIR}:${FPATH}"
@@ -26,8 +28,8 @@ alias vim="nvim"
 # ============================================================================
 
 # Input Method
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
+# export GTK_IM_MODULE=fcitx
+# export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 
 # Bun
@@ -121,3 +123,12 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+. "/home/tatsuya/.deno/env"
+
+# pnpm
+export PNPM_HOME='/home/tatsuya/.local/share/pnpm'
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
