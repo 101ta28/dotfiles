@@ -46,7 +46,13 @@
 - If lookup or creation fails, do not fall back to an inherited or focused space in another repository. Inspect existing output before waiting and verify the command's actual result using the selected product's wait and output behavior.
 - Collect results and recheck occupants before closing resources created for the task. Preserve requested persistent work. Closing the app window leaves terminals running. Closing its panes, tabs, or spaces ends their terminals. Leave the user's app and servers running unless asked to stop them.
 
-### Terminal browser
+### Browser selection
+
+- Use `terminal-browser` when reviewing pages with the user, showing the browser while discussing next steps, or handing page interaction to the user.
+- Use `agent-browser` for browsing, inspection, and verification that you can complete independently. Default to it when the task does not require a shared browser view.
+- Honor the user's explicit browser choice. If shared review or user interaction becomes necessary during independent work, switch to `terminal-browser`.
+
+### Terminal browser cleanup
 
 Record existing browser, tab, and pane IDs before opening anything. Unless the user asks to keep them, close task-created tabs and panes on completion, error, or cancellation. In a shared browser, close each task-created tab by browser and tab ID. After checking the recorded pane for unrelated tabs, close an empty task-created pane through its host terminal.
 

@@ -370,6 +370,7 @@ Exit Codex, run `source ~/.zshenv` in the launching Zsh, and start Codex again. 
 - Installed via `bun install -g @openai/codex`
 - Configuration directory: `~/.codex/`
 - Agent instructions: synced from `.config/.codex/AGENTS.md` to `~/.codex/AGENTS.md`
+- Browser selection: use `terminal-browser` to review pages with the user or let them interact with the page; use `agent-browser` for work the agent can complete independently. Default to `agent-browser` when no shared view is needed, honor an explicit user choice, and switch to `terminal-browser` if user participation becomes necessary.
 - Terminal-browser cleanup: close tabs and panes created for the task before the final response unless explicitly asked to keep them open; preserve pre-existing browsers and tabs.
 - Reusable workflows: declared in `.config/agents/skills.txt` and synced to `~/.agents/skills/`
 
