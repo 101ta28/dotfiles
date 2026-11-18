@@ -179,6 +179,10 @@ The managed `jj.rules` follows the distinction in the [official Git approval exa
 
 These are command-prefix rules, not an automatic risk classifier. They cover the common leading options listed in `jj.rules`; other option orders and custom aliases fall back to the normal sandbox and approval policy. Remove any separately saved blanket `prefix_rule(pattern=["jj"], decision="allow")` when migrating, since it would still allow unmatched forms. To sync only this rule, run `cp .config/.codex/rules/jj.rules ~/.codex/rules/jj.rules`, then restart Codex.
 
+`agent-browser.rules` lets Codex browse without approval through `agent-browser-inspect`. For example, `agent-browser-inspect open https://example.com` opens a page and `agent-browser-inspect snapshot -i` lists its interactive elements. The helper also supports reading page text, checking element state, waiting for a page to load, and taking a screenshot at the default temporary path. Use `--session NAME` to select a session or `--json` for structured output.
+
+Codex requests approval for direct `agent-browser` commands, including clicks, form input, uploads, JavaScript execution, and access to saved credentials. The helper checks every argument because the CLI also accepts launch options such as `--config` after a read command. The installer places the helper in `~/.local/bin` and syncs its rule and usage instructions.
+
 The managed `herdr-app.rules` allows all subcommands of `hc`, `herdr-app`, and `herdr-app.exe`, including terminal execution and app changes. To sync only this rule, run `cp .config/.codex/rules/herdr-app.rules ~/.codex/rules/herdr-app.rules`, then restart Codex.
 
 ### pnpm

@@ -1,0 +1,14 @@
+# Only the inspection entry point validates all trailing arguments.
+prefix_rule(
+    pattern=["agent-browser-inspect"],
+    decision="allow",
+    match=["agent-browser-inspect snapshot -i"],
+    not_match=["agent-browser snapshot -i"],
+)
+prefix_rule(
+    pattern=["agent-browser"],
+    decision="prompt",
+    justification="Review the browser action and its options. Use agent-browser-inspect for routine browsing.",
+    match=["agent-browser click @e1", "agent-browser snapshot --config custom.json"],
+    not_match=["agent-browser-inspect get title"],
+)

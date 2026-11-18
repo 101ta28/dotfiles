@@ -192,6 +192,7 @@ EOF
             rm -rf "$HOME/.codex"
             log_success "Removed: $HOME/.codex"
         fi
+        rm -f -- "$HOME/.local/bin/agent-browser-inspect"
 
         # Agent Skillsは他のエージェントも共有するため、別途確認する
         if [[ -d "$HOME/.agents" ]] && confirm_action "Back up and remove shared Agent Skills directory ($HOME/.agents)"; then

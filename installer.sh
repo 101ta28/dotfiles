@@ -300,6 +300,8 @@ sync_codex_config() {
     cp "$codex_source/AGENTS.md" "$HOME/.codex/AGENTS.md"
   fi
 
+  install -D -m 0755 "$codex_source/bin/agent-browser-inspect" "$HOME/.local/bin/agent-browser-inspect"
+
   for rule_file in "$codex_source"/rules/*.rules; do
     if [ ! -f "$rule_file" ]; then
       continue

@@ -179,6 +179,10 @@ nvim ~/.codex/AGENTS.md
 
 このルールはコマンドの接頭辞で判定し、リスクを自動分類するものではありません。`jj.rules` に列挙した一般的な前置オプションには対応し、それ以外のオプション順序や独自エイリアスは通常のサンドボックス・承認設定に従います。別のファイルに包括許可の `prefix_rule(pattern=["jj"], decision="allow")` が保存されている場合は、未対応の形式が許可され続けるため、移行時に削除してください。このルールだけを同期する場合は `cp .config/.codex/rules/jj.rules ~/.codex/rules/jj.rules` を実行し、Codex を再起動します。
 
+`agent-browser.rules` は、Codex が `agent-browser-inspect` で行う閲覧を確認なしで許可します。たとえば `agent-browser-inspect open https://example.com` でページを開き、`agent-browser-inspect snapshot -i` で操作可能な要素を一覧できます。本文の取得、要素の状態確認、読み込み待ち、一時ファイルへのスクリーンショット保存にも対応します。セッションを指定するには `--session NAME`、結果を JSON で取得するには `--json` を使います。
+
+クリック、フォーム入力、アップロード、JavaScript 実行、保存した認証情報へのアクセスなどで `agent-browser` を直接使うと、Codex が実行前に確認します。`agent-browser` は閲覧コマンドの後ろにも `--config` などの起動オプションを指定できるため、`agent-browser-inspect` はすべての引数を検査します。インストーラーはこのコマンドを `~/.local/bin` に配置し、ルールと利用手順を Codex に同期します。
+
 管理対象の `herdr-app.rules` は、`hc`・`herdr-app`・`herdr-app.exe` の全サブコマンドを許可します。端末でのコマンド実行やアプリの変更操作も含みます。このルールだけを同期する場合は `cp .config/.codex/rules/herdr-app.rules ~/.codex/rules/herdr-app.rules` を実行し、Codex を再起動します。
 
 ### pnpm

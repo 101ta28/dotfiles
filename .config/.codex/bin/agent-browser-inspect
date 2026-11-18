@@ -1,0 +1,79 @@
+#!/bin/bash
+set -eu
+
+unsupported() {
+  printf '%s\n' 'For this operation or option, use agent-browser with Codex approval.' >&2
+  exit 2
+}
+
+# agent-browser recognizes global options even after a selector or URL. Validate
+# the entire argument list before starting it outside the Codex sandbox.
+global_args=()
+args=()
+while (( $# )); do
+  case "$1" in
+    --json) global_args+=(--json) ;;
+    --session)
+      [[ ${2:-} =~ ^[[:alnum:]_][[:alnum:]_-]*$ ]] || unsupported
+      global_args+=(--session "$2")
+      shift ;;
+    *) args+=("$1") ;;
+  esac
+  shift
+done
+
+set -- "${args[@]}"
+command=${1:-}
+(( $# )) || unsupported
+shift
+
+case "$command" in
+  --help|--version) (( $# == 0 )) || unsupported ;;
+  open|read)
+    if (( $# )); then
+      (( $# == 1 )) && [[ $1 == http://* || $1 == https://* ]] || unsupported
+    fi ;;
+  snapshot)
+    while (( $# )); do
+      case "$1" in
+        -i|-c|-u|--interactive|--compact|--urls|--delta|--full) ;;
+        -d|--depth) [[ ${2:-} =~ ^[0-9]+$ ]] || unsupported; shift ;;
+        -s|--selector) [[ -n ${2:-} && $2 != -* ]] || unsupported; shift ;;
+        *) unsupported ;;
+      esac
+      shift
+    done ;;
+  get)
+    case "${1:-}" in
+      title|url) (( $# == 1 )) || unsupported ;;
+      text|html|count|box|styles) (( $# == 2 )) && [[ $2 != -* ]] || unsupported ;;
+      attr) (( $# == 3 )) && [[ $2 != -* && $3 != -* ]] || unsupported ;;
+      *) unsupported ;;
+    esac ;;
+  is)
+    (( $# == 2 )) && [[ $1 =~ ^(visible|enabled|checked)$ && $2 != -* ]] || unsupported ;;
+  wait)
+    if (( $# == 1 )); then
+      [[ $1 != -* ]] || unsupported
+    else
+      (( $# == 2 )) && [[ $1 =~ ^--(load|text|url)$ && $2 != -* ]] || unsupported
+    fi ;;
+  screenshot) (( $# == 0 )) || { (( $# == 1 )) && [[ $1 == --full ]]; } || unsupported ;;
+  tab|session) (( $# == 1 )) && [[ $1 == list ]] || unsupported ;;
+  skills)
+    case "${1:-}" in
+      list) (( $# == 1 )) || unsupported ;;
+      get)
+        [[ ${2:-} =~ ^[[:alnum:]][[:alnum:]-]*$ ]] || unsupported
+        case $# in
+          2) ;;
+          3) [[ $3 == --full ]] || unsupported ;;
+          4) [[ $3 == --ref && $4 =~ ^[[:alnum:]][[:alnum:]-]*$ ]] || unsupported ;;
+          *) unsupported ;;
+        esac ;;
+      *) unsupported ;;
+    esac ;;
+  *) unsupported ;;
+esac
+
+exec agent-browser "${global_args[@]}" "${args[@]}"

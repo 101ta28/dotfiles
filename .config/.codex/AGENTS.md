@@ -50,6 +50,7 @@
 
 - Use `terminal-browser` when reviewing pages with the user, showing the browser while discussing next steps, or handing page interaction to the user.
 - Use `agent-browser` for browsing, inspection, and verification that you can complete independently. Default to it when the task does not require a shared browser view.
+- Run routine `agent-browser` commands through `agent-browser-inspect`, for example `agent-browser-inspect skills get core`, `agent-browser-inspect open https://example.com`, and `agent-browser-inspect snapshot -i`. It accepts `--session NAME` and `--json`. For interactions or unsupported options, use the regular `agent-browser` command so Codex can request approval.
 - Honor the user's explicit browser choice. If shared review or user interaction becomes necessary during independent work, switch to `terminal-browser`.
 
 ### Terminal browser cleanup
