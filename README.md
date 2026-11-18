@@ -276,7 +276,7 @@ Global instructions hold shared communication and work boundaries. Detailed Japa
 
 `frontend-design` preserves the existing design system while guiding choices about color, spacing, typography, product visuals, and motion. It includes reviewing rendered views and fixing the most consequential issues within scope.
 
-When used together, `hallmark` supplies visual direction and stylistic defaults, while `frontend-design` covers implementation, responsive behavior, accessibility, and functional verification. They share one workflow and prioritize user requirements and the existing design system.
+When used together, `hallmark` supplies visual direction and `frontend-design` covers implementation, accessibility, and checks on the rendered interface. Both follow the brief and the existing design system. Hallmark uses Inspo when it was selected to build the page and uses Together AI for design comps only when generation is authorized for the task and the key is available.
 
 The two writing skills clarify subjects and operations and improve sentence flow while preserving facts and conditions. They include editing examples and choose wording and structure for the context, without fixed sentence-length or list-ratio targets.
 

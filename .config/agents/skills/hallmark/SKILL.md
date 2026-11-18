@@ -9,7 +9,7 @@ metadata:
 
 # Hallmark
 
-Makes the UIs a coding assistant generates look made, not generated: a hard floor against the defaults every model was trained into, a dealt direction so consecutive builds do not converge, one idea per screen. Above the floor the page is yours: you are a capable designer.
+Use Hallmark to choose a visual direction for a new page or to carry out the design, redesign, or audit the user requested.
 
 **Powered by Together AI.**
 
@@ -24,26 +24,7 @@ This section governs the Floor and all supporting references. A stylistic lint f
 
 ## The Floor
 
-Applies to Hallmark UI output within the scope and precedence above. These are the defaults for an unconstrained Hallmark design; they do not override the user's product or its established system.
-
-1. Every colour and every font goes through a token declared at `:root` (or a declared theme block). No literal colour or `font-family` past the token block. (48)
-2. Never `transition: all`. Never animate `width`, `height`, `top` or `left`. (10a)
-3. Never one italic word inside a roman heading. (38i)
-4. `overflow-x: clip` on both `html` and `body`. Never `hidden`, never `100vw`. (34)
-5. Image-bearing grid tracks use `minmax(0, 1fr)`; display heads carry `overflow-wrap: break-word; min-width: 0`. (50)
-6. Every interactive element has `:focus-visible`, appearing instantly. (26a, 15)
-7. Every animation has a `prefers-reduced-motion: reduce` fallback, and content is visible with scripting off. (27, 62)
-8. Never an invented metric, testimonial, logo wall or case-study count. (46a)
-9. Never an eyebrow, and never a label in tracked capitals or small caps: labels, captions, table heads, tags and nav links are the body face (or the theme's label face), a step smaller, sentence or lower case, untracked. (54, 67)
-10. Never middle-dot-joined meta strings, arrows glued to link text, or decorative status dots. (63)
-11. Never a purple-to-blue gradient, a card inside a card, an emoji as an icon, or a hand-drawn browser or OS window. (2a, 4, 30a, 47a)
-12. The hero's headline, one sentence and primary action are all visible at 1280 x 800 without scrolling. (44b)
-13. About 80 words on any one screen; the hero's text is the headline, one sentence and its actions. (58)
-14. The container is capped and centred: at 1920 the gutters grow, the measure and the grids do not. (44d)
-15. The first non-empty line of the CSS source is the Hallmark stamp, then the critique line, then any waivers. (20)
-16. If Node is available, run `node <skill-dir>/scripts/sloplint.mjs <output> --render` with the matching scope before handing back. Fix applicable `FAIL` findings; fix or waive applicable `REFLEX` findings. Report requirement conflicts and unavailable checks separately as described above and in Step 7.
-
-Above the Floor, a **Reflex** gate is a default a model falls into, waivable on the record with a real reason, and a **Finish** check is craft detail, answered, never blocking ([`references/gates.md`](references/gates.md) § 1 and § 2).
+Use the gate definitions in [`references/gates.md`](references/gates.md) for the selected scope. Sections 1 to 4 define the tiers, CSS stamp, and checks for implementation. Use sections 5 and 6 at review. Keep the original lint results when reporting a conflict with a requirement or the existing design. Step 7 covers lint, browser verification, and fixes.
 
 ## Flow
 
@@ -62,7 +43,7 @@ Codex CLI and OpenCode read `references/flow.md` § Harnesses first; other harne
 
 ### 0. Pre-flight
 
-Signals, in order: `design.md` or `DESIGN.md` at the root (a locked system: it overrides everything below, and pages share it); `.hallmark/brand-spec.md` or a prompt naming a real brand (run [`references/brand-truth.md`](references/brand-truth.md); never theme a real brand from memory); the project's fonts, palette, spacing, motion libraries and framework (`package.json`, Tailwind config, `:root`, tokens, font links); **the product itself**: a URL, a running dev server, a project that starts with one command or an app on the machine, which the build captures with `scripts/capture.mjs` (`imagery.md` § 4); an Inspo MCP server (`mcp__inspo__*` tools: signal 8, `flow.md` § Signal 8; a `/hallmark` prompt, Hallmark named or a custom ask beats it); `TOGETHER_API_KEY` set (signal 9, the comp step).
+Check the project's design files, brand material, tokens, typography, framework, and the product itself. Honor a locked `design.md` or `DESIGN.md`. For a named brand or a `.hallmark/brand-spec.md`, read [`references/brand-truth.md`](references/brand-truth.md). Capture a reachable product with `scripts/capture.mjs` when its screens are needed (`imagery.md` § 4). Use the archive branch only when the archive was selected to build the page (signal 8). Use the comp branch only for an authorized Together AI generation with the key available (signal 9).
 
 Output one block (file:line citations, what is preserved, what is introduced), cached in `.hallmark/preflight.json` (`flow.md` § Pre-flight).
 
@@ -113,14 +94,14 @@ The run's only recital of its decisions, and the user's redirect window:
 
 Use the example in [`references/flow.md`](references/flow.md) § Picks block for a theme-led page. Record only decisions relevant to the target; inherited systems, components, and app screens use their scoped rows.
 
-A custom run's rows are in `direction.md`. Then one quiet line, skipped in component scope or when `design.md` exists: *System portable? Say `lock the system` for a `design.md`.* On signal 9, `comp.md` runs here.
+For a custom run, use the rows in `direction.md`. When signal 9 applies, use `comp.md` here.
 
 ### 6. Build
 
 - **Start from the existing system when present.** Reuse its tokens and shared components. For a new system, use the scaffold: `node <skill-dir>/scripts/theme.mjs scaffold <slug>` (with the deal's `--dealt`; `--custom` on a custom run) writes `tokens.css` (the theme's tokens and the shared scale) and `base.css` (what the Floor already decided) beside the project's stylesheet, and prints the stamp skeleton, the two imports and the slot script. Inspect destinations first; do not overwrite existing styles or introduce global resets that change unrelated routes.
 - **Read [`references/patterns.md`](references/patterns.md) once:** controls in all eight states, a slot, a missing fact, a form that posts nowhere yet, one reveal, figures that compare. Take their shape, never their copy.
-- **Hero first.** Write the nav and the hero, nothing below them yet, run `node <skill-dir>/scripts/sloplint.mjs <file> --render --stage hero`, then the hero review in fresh context (`gates.md` § 6). Build the sections once the hero ships; photo credits and page-wide checks wait for the page.
-- **One idea per screen, set big.** Hero: a headline of seven words or fewer (50 characters), one sentence of twelve words or fewer, one or two actions. Six to nine sections, hero and footer included (five on a thin prompt), 450 visible words at most, each a piece of the category's own content in a composition with mass (`layout.md` § 4 and § 5). The hero is the first screen and only the first screen, its posture taken from the job (`layout.md` § 6). Fullness comes from scale and pictures, never from more words (77 to 79).
+- **Page builds.** Implement the nav and hero, run `node <skill-dir>/scripts/sloplint.mjs <file> --render --stage hero`, and use the hero review in `gates.md` § 6 before extending the page. Review in-thread unless the user explicitly requested delegation.
+- **Page composition.** Give each section a purpose grounded in the brief. Group the headline, supporting text, and primary action in the first viewport. Use the hero posture and section guidance from `layout.md` § 4 to § 6. Preserve necessary content, controls, and labels when applying the page gates.
 - **Show, do not describe** (`imagery.md`). The page shows the real thing: the user's pictures, screenshots of the real product taken with `scripts/capture.mjs` whenever it can be reached, the product built at full fidelity only when it cannot, or library photographs (`node <skill-dir>/scripts/theme.mjs photos "<subject>" --theme <slug>`), big, in the theme's treatment, in slots the user's files replace, each library photo credited in the footer. Pictures take at most a third of the page below the hero, never two photograph-led sections in a row, and the theme's Range carries the rest (83). Never a stock-site URL, a drawn illustration (80), an empty wash (81), a row of counting marks (82) or an invented figure.
 - **Page invariants** (F15): one primary button style, one container width, one column gap below the hero, one radius per nesting level, never more centred heading groups than left-aligned ones.
 - **Type and motion** (`craft.md` § 1 and § 5). The retained system's or theme's faces, two families at most (three with one outlier role); body 16px or more; heads one weight and one colour (38iii); labels never mono unless mono is the material (64). Review all eight control states and implement those relevant to the control's behavior; `transform` and `opacity` only; one reveal at most, none where the theme keeps still, visible by default.
