@@ -132,6 +132,7 @@ The default-shell change takes effect at the next login or in a new terminal. Ru
 - **Python**: uv (fast package manager)
 - **Rust**: rustup, Cargo, cargo-binstall (when needed to install Jujutsu)
 - **Version control**: Git, Jujutsu (`jj`)
+- **Browser tools**: terminal-browser, agent-browser (including its browser and Linux libraries)
 - **Others**: Go, Herdr, CUDA (GPU computing), GitHub CLI
 - **GPU/CUDA** (optional): NVIDIA Container Toolkit, CUDA Toolkit 12.6
 
@@ -334,7 +335,7 @@ git config --global commit.gpgSign true
 - Japanese input is configured with fcitx
 - dpp.vim generates state and installs plugins defined in `dpp.ts` on first editor startup
 - Codex instructions and execution policy rules are managed under `.config/.codex/`; run `update.sh` or rerun the installer to sync them and remove paths listed in `obsolete-paths.txt`
-- All Agent Skills are managed under `.config/agents/`, declared in `skills.txt`, and restored additively; `~/.agents` itself is not tracked by Git
+- Agent Skills declared in `.config/agents/skills.txt` are managed under `.config/agents/` and restored additively; `~/.agents` itself is not tracked by Git. terminal-browser also provides its own bundled skill through its setup process
 - Git LFS is enabled for handling large files
 
 ## Troubleshooting
@@ -378,6 +379,16 @@ Exit Codex, run `source ~/.zshenv` in the launching Zsh, and start Codex again. 
 
 - Declared in `.config/agents/skills.txt`: external sources use `npx skills add`; local skills and overrides are copied from `.config/agents/skills/`
 - Shared skills directory: `~/.agents/skills/`
+- The `agent-browser` skill is restored from `vercel-labs/agent-browser`. The bundled `terminal-browser` skill is installed by its official setup process, outside this manifest.
+
+### Browser tools
+
+Normal installation and `update.sh` install both tools when missing:
+
+- [agent-browser](https://github.com/vercel-labs/agent-browser): `npm install --global agent-browser`, followed by `agent-browser install --with-deps` to download its browser and install Linux libraries. The latter also runs when the CLI is already installed, so an interrupted browser download can be retried.
+- [terminal-browser](https://terminal-browser.com/): the official `https://terminal-browser.sh/install` script installs the CLI and bundled browser. Its setup may ask to install the agent skill and configure terminal integration; accept the skill prompt to enable it. Rerun `terminal-browser setup` if needed. The CLI directory (`${XDG_BIN_HOME:-$HOME/.local/bin}`) is added to PATH for the installer process.
+
+These steps download browser binaries and may use `sudo` for Linux libraries and terminal-browser's sandbox setup. Existing CLIs are preserved. To use terminal-browser's visible interface, use a terminal that supports the kitty graphics protocol. See the Codex instructions above for choosing between the two tools.
 
 ## License
 

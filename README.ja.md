@@ -132,6 +132,7 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 - **Python**: uv（高速パッケージマネージャ）
 - **Rust**: rustup、Cargo、cargo-binstall（Jujutsuの導入に必要な場合）
 - **バージョン管理**: Git、Jujutsu（`jj`）
+- **ブラウザーツール**: terminal-browser、agent-browser（ブラウザー本体とLinux用ライブラリを含む）
 - **その他**: Go、Herdr、CUDA（GPU計算）、GitHub CLI
 - **GPU/CUDA** (オプション): NVIDIA Container Toolkit、CUDA Toolkit 12.6
 
@@ -334,7 +335,7 @@ git config --global commit.gpgSign true
 - 日本語入力にはfcitxが設定されています
 - dpp.vimは初回エディター起動時にstateを生成し、`dpp.ts`で定義したプラグインをインストールします
 - Codex向け指示書と実行ポリシールールは `.config/.codex/` で管理します。`update.sh` またはインストーラーを実行すると、同期と `obsolete-paths.txt` に記載したパスの除去が行われます
-- 全Agent Skillsは `.config/agents/` で管理し、`skills.txt` の一覧から加算型で復元します。`~/.agents` 自体はGit管理しません
+- `.config/agents/skills.txt` に記載したAgent Skillsは `.config/agents/` で管理し、加算型で復元します。`~/.agents` 自体はGit管理しません。terminal-browserの同梱スキルは公式のセットアップ処理が別途導入します
 - Git LFSが有効化されています（大容量ファイルの取り扱いに対応）
 
 ## トラブルシューティング
@@ -378,6 +379,16 @@ Codexを終了し、起動元のZshで `source ~/.zshenv` を実行してから�
 
 - `.config/agents/skills.txt` で定義します。外部スキルは `npx skills add` で導入し、ローカルスキルと上書きファイルは `.config/agents/skills/` からコピーします
 - 共通スキルディレクトリ: `~/.agents/skills/`
+- `agent-browser` スキルは `vercel-labs/agent-browser` から復元します。`terminal-browser` の同梱スキルは、この一覧とは別に公式のセットアップ処理が導入します。
+
+### ブラウザーツール
+
+通常のインストールと `update.sh` で、未導入の両ツールをインストールします。
+
+- [agent-browser](https://github.com/vercel-labs/agent-browser): `npm install --global agent-browser` の後に `agent-browser install --with-deps` を実行し、ブラウザー本体とLinux用ライブラリを導入します。CLIが導入済みでも後者は実行するため、途中で失敗したブラウザーのダウンロードを再試行できます。
+- [terminal-browser](https://terminal-browser.com/): 公式の `https://terminal-browser.sh/install` スクリプトでCLIと同梱ブラウザーを導入します。セットアップでスキル導入や端末連携の設定を求められた場合は、スキルの導入に同意すると利用できます。必要に応じて `terminal-browser setup` で再設定できます。CLIの配置先（`${XDG_BIN_HOME:-$HOME/.local/bin}`）はインストーラー実行中のPATHに追加します。
+
+ブラウザーのバイナリーをダウンロードし、Linux用ライブラリやterminal-browserのサンドボックス設定には `sudo` を使う場合があります。既存のCLIはそのまま利用します。terminal-browserの画面表示にはkitty graphics protocol対応の端末が必要です。両ツールの使い分けは上記のCodex向け指示に従います。
 
 ## ライセンス
 

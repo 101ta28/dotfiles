@@ -332,6 +332,35 @@ install_via_curl() {
   fi
 }
 
+# ブラウザー本体と依存ライブラリを、Agent Skillsより先に用意する。
+install_browser_tools() {
+  if ! linux_command_exists "agent-browser"; then
+    if ! linux_command_exists "npm"; then
+      log_error "npm is required to install agent-browser"
+      return 1
+    fi
+    log_info "Installing agent-browser..."
+    npm install --global agent-browser || return $?
+    log_success "agent-browser installed"
+  else
+    log_info "agent-browser already installed"
+  fi
+
+  # CLIだけ導入済みの場合や、前回のダウンロード失敗時にも復旧する。
+  agent-browser install --with-deps || return $?
+
+  export PATH="${XDG_BIN_HOME:-$HOME/.local/bin}:$PATH"
+  if ! linux_command_exists "terminal-browser"; then
+    log_info "Installing terminal-browser..."
+    # 配信元の失敗を空のbash入力による成功として扱わない。
+    (set -o pipefail; curl -fsSL https://terminal-browser.sh/install | bash) || return $?
+    terminal-browser --version || return $?
+    log_success "terminal-browser installed"
+  else
+    log_info "terminal-browser already installed"
+  fi
+}
+
 # =============================================================================
 # オプション解析
 # =============================================================================
@@ -508,6 +537,9 @@ if command_exists "npm"; then
 else
   log_warn "npm not found, skipping pnpm installation"
 fi
+
+# Browser tools (including Linux browser dependencies)
+install_browser_tools
 
 # Codex configuration and Agent Skills
 sync_codex_config

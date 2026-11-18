@@ -52,7 +52,8 @@ DFILE_PATH="$repo_dir"
 mkdir -p "$HOME/.agents/skills/unmanaged"
 printf 'preserve\n' > "$HOME/.agents/skills/unmanaged/SKILL.md"
 sync_agent_skills > "$test_root/real-sync.log"
-[ "$(wc -l < "$test_root/npx.log")" -eq 4 ]
+[ "$(wc -l < "$test_root/npx.log")" -eq 5 ]
+grep -Fxq 'vercel-labs/agent-browser agent-browser' "$test_root/npx.log"
 while read -r source skill extra; do
   case "$source" in ""|\#*) continue ;; esac
   [ -f "$HOME/.agents/skills/$skill/SKILL.md" ]
