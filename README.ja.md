@@ -235,6 +235,19 @@ herdr server reload-config
 
 共通の [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) は、`F1`～`F12`、`Alt+矢印`、`Ctrl+←/→` を端末内のプログラムへ渡します。Herdr のキー設定は、アプリのウィンドウを開く OS に適用します。Windows 版の Herdr から WSL を使う場合も、Windows 側に適用してください。
 
+Codex CLI 0.172.0 で権限モードを切り替えるには、**Codex を起動する OS** のユーザー設定に次のキーを追加します。設定ファイルは Windows では `%USERPROFILE%\.codex\config.toml`、Linux・WSL では `~/.codex/config.toml` です。同じテーブルがすでにある場合は、その中の項目を編集してください。改行は既定の割り当てから `Ctrl+J` だけを外しています。
+
+```toml
+[tui.keymap.chat]
+next_permission_mode = "f6"
+previous_permission_mode = "f5"
+
+[tui.keymap.editor]
+insert_newline = ["ctrl-m", "enter", "shift-enter", "alt-enter"]
+```
+
+Codex を再起動してください。チャット入力欄で `F6` を押すと次の権限モードに、`F5` を押すと前のモードに切り替わります。`/permissions` で現在のモードを確認し、`Esc` で入力欄に戻れます。
+
 #### Linux
 
 リポジトリのルートから共通設定をコピーします。GNU版の `cp --backup=numbered` により、既存ファイルは `keys.json.~1~`、`keys.json.~2~` などの名前で保存されます。`HERDR_APP_HOME` を設定している場合は、その保存先を使います。

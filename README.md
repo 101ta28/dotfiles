@@ -235,6 +235,19 @@ The local skills read the installed `herdr --skill`, `herdr-app --skill`, and `h
 
 The shared [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) passes `F1`–`F12`, `Alt+Arrow`, and `Ctrl+Left/Right` to the terminal program. Apply it on the OS running the Herdr app window, including Windows when the terminal runs in WSL.
 
+To cycle permission modes in Codex CLI 0.172.0, add the following bindings to the Codex user configuration on the OS running **Codex** (`%USERPROFILE%\.codex\config.toml` on Windows, `~/.codex/config.toml` on Linux or WSL). If either table exists, edit its entries in place. The newline binding keeps the other default keys and removes `Ctrl+J`.
+
+```toml
+[tui.keymap.chat]
+next_permission_mode = "f6"
+previous_permission_mode = "f5"
+
+[tui.keymap.editor]
+insert_newline = ["ctrl-m", "enter", "shift-enter", "alt-enter"]
+```
+
+Restart Codex and press `F6` for the next mode or `F5` for the previous mode while the chat input is focused. Open `/permissions` to see the current mode and press `Esc` to return to the input.
+
 #### Linux
 
 From the repository root, copy the common configuration. GNU `cp --backup=numbered` keeps an existing file as `keys.json.~1~`, `keys.json.~2~`, and so on. `HERDR_APP_HOME` overrides the destination when set.
