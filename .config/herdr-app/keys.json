@@ -66,7 +66,6 @@
     "ctrl-v": "terminal.paste_image",
     "ctrl-insert": "terminal.copy",
     "shift-insert": "terminal.paste",
-    "ctrl-j": "terminal",
     "alt-left": "terminal",
     "alt-right": "terminal",
     "alt-up": "terminal",

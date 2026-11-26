@@ -95,7 +95,6 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 - `.config/nvim/dpp.ts` - dpp.vimのプラグイン定義
 - `.config/herdr/config.toml` - `~/.config/herdr/config.toml` と同期するHerdr設定
 - `.config/herdr-app/keys.json` - Codex CLIの操作を優先するLinux・Windows共通のキー設定
-- `.config/herdr-app/keys.windows.json` - Windows専用の `Ctrl+J` 上書き設定
 - `.config/herdr-app/apply-windows.ps1` - バックアップ付きでWindows用設定を反映するスクリプト
 - `.config/ghostty/config.ghostty` - `~/.config/ghostty/config.ghostty` と同期するGhostty設定
 - `.config/agents/skills.txt` - `~/.agents/skills/` へ復元する外部・ローカルの全Agent Skills一覧
@@ -234,9 +233,7 @@ herdr server reload-config
 
 ### Herdr app（Linux / Windows）
 
-共通の [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) は、Codex CLIの操作を優先する設定です。`F1`～`F12`、`Alt+矢印`、`Ctrl+←/→`、`Ctrl+J` を端末内のプログラムへ渡します。Linuxではこのファイルをそのまま使います。Windowsでは [`keys.windows.json`](.config/herdr-app/keys.windows.json) の `terminal.ctrl-j` だけを上書きし、ConPTYを通してControl+Jを保持するため、Windowsのキー押下・解放イベントとして送信します。
-
-Herdrが読み込むのは適用後の `keys.json` です。`keys.windows.json` を置くだけでは自動で統合されません。Herdr appとherdr-coreを導入し、アプリのウィンドウを動かしているOSに合わせて次の手順を実行してください。Windows版アプリからLinuxやWSLへ接続する場合も、Windows用の設定を使います。
+共通の [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) は、`F1`～`F12`、`Alt+矢印`、`Ctrl+←/→` を端末内のプログラムへ渡します。Herdr のキー設定は、アプリのウィンドウを開く OS に適用します。Windows 版の Herdr から WSL を使う場合も、Windows 側に適用してください。
 
 #### Linux
 
@@ -251,14 +248,14 @@ herdr-app status
 
 #### Windows
 
-リポジトリのルートから、次のコマンドをPowerShellで実行してください。スクリプトが両方のJSONを読み、`Ctrl+J` だけを上書きした `keys.json` を `$env:USERPROFILE\.config\herdr-app` へ保存します。`HERDR_APP_HOME` があればそちらを使います。既存ファイルは置換前にバックアップし、同じ内容なら書き込みを省略します。
+リポジトリのルートから、次のコマンドを PowerShell で実行してください。スクリプトは共通の `keys.json` を `$env:USERPROFILE\.config\herdr-app` へコピーします。`HERDR_APP_HOME` があればそちらを使います。既存ファイルは置換前にバックアップし、同じ内容なら書き込みを省略します。
 
 ```powershell
 & .\.config\herdr-app\apply-windows.ps1
 herdr-app status
 ```
 
-保存先を個別に指定する場合は `-ConfigDir <ディレクトリ>` を付けます。リポジトリ内の共通設定と上書き設定は変更しません。元ファイルを編集した後や更新を取得した後は、使うOSのコマンドを再実行してください。`installer.sh`、`update.sh`、`uninstaller.sh` は、これらのHerdr app設定を反映・削除しません。
+保存先を個別に指定する場合は `-ConfigDir <ディレクトリ>` を付けます。共通のキー設定を更新した後は、使う OS のコマンドを再実行してください。Herdr app の設定は `installer.sh`、`update.sh`、`uninstaller.sh` とは個別に管理します。
 
 Herdrは起動中でも `keys.json` を再読み込みします。`herdr-app status` でエラーの有無を確認してください。設定が不正な場合は最後に読み込めた設定が維持され、アプリの設定ディレクトリに `keys.error` が作られます。
 
@@ -271,7 +268,7 @@ Herdrは起動中でも `keys.json` を再読み込みします。`herdr-app sta
 | ショートカット一覧 | `Ctrl+Shift+F1` |
 | 拡大 / 縮小 / 倍率リセット | `Alt+=` / `Alt+-` / `Alt+0` |
 
-Herdr app 0.1.15とCodex CLI 0.167.1を対象にしています。Windowsの入力形式は隔離コンソールで確認済みです。Codex画面での実キー操作とLinux版アプリでの動作は未確認のため、反映後に `Ctrl+J` で改行が入り、`F2` でCodexの警告一覧が開くことを確認してください。`keys.json` をカスタマイズすると、Herdrの更新時に新しい既定の割り当てへ自動置換されなくなるため、必要な新規キーは手動で追加します。
+Herdr は更新時にカスタマイズ済みの `keys.json` を保持します。新しい既定のショートカットが必要になったら、手動で追加してください。
 
 ### Ghostty
 

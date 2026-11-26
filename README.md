@@ -95,8 +95,7 @@ The script backs up configuration before optional removal steps and asks separat
 - `.config/nvim/dpp.ts` - dpp.vim plugin definitions
 - `.config/herdr/config.toml` - Herdr configuration synced to `~/.config/herdr/config.toml`
 - `.config/herdr-app/keys.json` - Shared Linux/Windows Herdr app keybindings that prioritize Codex CLI
-- `.config/herdr-app/keys.windows.json` - Windows-only `Ctrl+J` override
-- `.config/herdr-app/apply-windows.ps1` - Apply the Windows override with a backup
+- `.config/herdr-app/apply-windows.ps1` - Apply the shared keybindings on Windows with a backup
 - `.config/ghostty/config.ghostty` - Ghostty configuration synced to `~/.config/ghostty/config.ghostty`
 - `.config/agents/skills.txt` - Unified manifest for external and local Agent Skills restored into `~/.agents/skills/`
 - `.config/agents/skills/` - Local skills and overrides for external skills
@@ -234,9 +233,7 @@ The local skills read the installed `herdr --skill`, `herdr-app --skill`, and `h
 
 ### Herdr app (Linux / Windows)
 
-The shared [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) prioritizes Codex CLI shortcuts. `F1`–`F12`, `Alt+Arrow`, `Ctrl+Left/Right`, and `Ctrl+J` go to the terminal program. Linux uses this file directly. Windows applies only the `terminal.ctrl-j` value from [`keys.windows.json`](.config/herdr-app/keys.windows.json), preserving Control+J through ConPTY with Windows key-down/key-up events.
-
-Herdr reads the resulting `keys.json`; it does not automatically merge `keys.windows.json`. Install Herdr app and herdr-core first, then apply the files for the OS running the Herdr app window. A Windows app connected to Linux or WSL still uses the Windows configuration.
+The shared [`.config/herdr-app/keys.json`](.config/herdr-app/keys.json) passes `F1`–`F12`, `Alt+Arrow`, and `Ctrl+Left/Right` to the terminal program. Apply it on the OS running the Herdr app window, including Windows when the terminal runs in WSL.
 
 #### Linux
 
@@ -251,14 +248,14 @@ herdr-app status
 
 #### Windows
 
-From the repository root, run the following in PowerShell. The helper reads both JSON files, overrides only `Ctrl+J`, and writes the merged `keys.json` to `$env:USERPROFILE\.config\herdr-app` or `HERDR_APP_HOME` when set. It backs up an existing file before replacing it and skips an identical configuration.
+From the repository root, run the following in PowerShell. The helper copies the shared `keys.json` to `$env:USERPROFILE\.config\herdr-app` or `HERDR_APP_HOME` when set. It backs up an existing file before replacing it and skips an identical configuration.
 
 ```powershell
 & .\.config\herdr-app\apply-windows.ps1
 herdr-app status
 ```
 
-Use `-ConfigDir <directory>` to choose another app configuration directory. The checked-in common file and override remain unchanged. After editing either source file or pulling updates, rerun the command for your platform. `installer.sh`, `update.sh`, and `uninstaller.sh` do not apply or remove these Herdr app settings.
+Use `-ConfigDir <directory>` to choose another app configuration directory. After updating the shared keybindings, rerun the command for your platform. Herdr app settings are managed separately from `installer.sh`, `update.sh`, and `uninstaller.sh`.
 
 Herdr reloads `keys.json` while running. Check `herdr-app status` for errors; an invalid file leaves the last working configuration active and writes `keys.error` in the app home.
 
@@ -271,7 +268,7 @@ Herdr reloads `keys.json` while running. Check `herdr-app status` for errors; an
 | Show keybindings | `Ctrl+Shift+F1` |
 | Zoom in / out / reset | `Alt+=` / `Alt+-` / `Alt+0` |
 
-The bindings target Herdr app 0.1.15 and Codex CLI 0.167.1. Windows key encoding was checked in an isolated console. Physical keypresses in Codex and the Linux app have not been verified; after applying, check that `Ctrl+J` inserts a newline and `F2` opens Codex warnings. Customizing `keys.json` stops Herdr from automatically replacing it with newer default bindings; add new defaults manually when needed.
+Herdr preserves a customized `keys.json` across upgrades. Add new default shortcuts manually when needed.
 
 ### Ghostty
 

@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
-    throw 'Use keys.json directly on Linux. This script applies the Windows override.'
+    throw 'Use keys.json directly on Linux. Run this script on Windows.'
 }
 
 if ([string]::IsNullOrWhiteSpace($ConfigDir)) {
@@ -18,22 +18,14 @@ if ([string]::IsNullOrWhiteSpace($ConfigDir)) {
 }
 $ConfigDir = [IO.Path]::GetFullPath($ConfigDir)
 $commonPath = Join-Path $PSScriptRoot 'keys.json'
-$overridePath = Join-Path $PSScriptRoot 'keys.windows.json'
 $targetPath = Join-Path $ConfigDir 'keys.json'
 
 if ($targetPath -eq [IO.Path]::GetFullPath($commonPath)) {
     throw 'Choose the app configuration directory, not this repository directory.'
 }
 
-$keys = Get-Content -LiteralPath $commonPath -Raw -Encoding UTF8 | ConvertFrom-Json
-$windowsKeys = Get-Content -LiteralPath $overridePath -Raw -Encoding UTF8 | ConvertFrom-Json
-# Only Ctrl+J needs Windows key events; all other bindings come from the common file.
-$ctrlJ = $windowsKeys.terminal.'ctrl-j'
-if ([string]::IsNullOrWhiteSpace($ctrlJ)) {
-    throw 'keys.windows.json must define terminal.ctrl-j.'
-}
-$keys.terminal.'ctrl-j' = $ctrlJ
-$content = ($keys | ConvertTo-Json -Depth 20) + [Environment]::NewLine
+$content = [IO.File]::ReadAllText($commonPath)
+$null = $content | ConvertFrom-Json
 
 if ((Test-Path -LiteralPath $targetPath -PathType Leaf) -and
     ([IO.File]::ReadAllText($targetPath).TrimEnd() -eq $content.TrimEnd())) {
