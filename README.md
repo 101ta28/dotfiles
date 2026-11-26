@@ -219,7 +219,7 @@ herdr update
 herdr server reload-config
 ```
 
-The installer installs Herdr to `~/.local/bin/herdr` using its official installer and links `.config/herdr/config.toml` to `~/.config/herdr/config.toml`. An existing non-symlink file is preserved unless its contents already match the repository copy.
+The installer installs Herdr to `~/.local/bin/herdr` using its official installer. Both `installer.sh` and `update.sh` link the TUI's configuration to the repository's `.config/herdr/config.toml`. The default location is `~/.config/herdr/config.toml`. Herdr uses `XDG_CONFIG_HOME` if set, and `HERDR_CONFIG_PATH` overrides the full path. When replacing an existing configuration, the scripts keep a numbered backup beside it, such as `config.toml.~1~`. Run `herdr server reload-config` to apply the settings to a running TUI.
 
 Switch to the next tab with `Ctrl+Tab` and to the previous tab with `Ctrl+Shift+Tab`.
 
@@ -250,13 +250,10 @@ Restart Codex and press `F6` for the next mode or `F5` for the previous mode whi
 
 #### Linux
 
-From the repository root, copy the common configuration. GNU `cp --backup=numbered` keeps an existing file as `keys.json.~1~`, `keys.json.~2~`, and so on. `HERDR_APP_HOME` overrides the destination when set.
+`installer.sh` and `update.sh` also copy the shared keybindings to `~/.config/herdr-app/keys.json`. Set `HERDR_APP_HOME` to use another app directory. When the contents differ, the scripts keep the old file beside the new one as `keys.json.~1~`, `keys.json.~2~`, and so on. To sync just the two Herdr files, run the following from the repository root.
 
 ```bash
-herdr_config_dir="${HERDR_APP_HOME:-$HOME/.config/herdr-app}"
-mkdir -p "$herdr_config_dir"
-cp --backup=numbered .config/herdr-app/keys.json "$herdr_config_dir/keys.json"
-herdr-app status
+bash sync-herdr.sh
 ```
 
 #### Windows
@@ -268,7 +265,7 @@ From the repository root, run the following in PowerShell. The helper copies the
 herdr-app status
 ```
 
-Use `-ConfigDir <directory>` to choose another app configuration directory. After updating the shared keybindings, rerun the command for your platform. Herdr app settings are managed separately from `installer.sh`, `update.sh`, and `uninstaller.sh`.
+Use `-ConfigDir <directory>` to choose another app configuration directory. Rerun the PowerShell command after a change to the shared keybindings if the Herdr window runs on Windows, including when its terminal uses WSL.
 
 Herdr reloads `keys.json` while running. Check `herdr-app status` for errors; an invalid file leaves the last working configuration active and writes `keys.error` in the app home.
 

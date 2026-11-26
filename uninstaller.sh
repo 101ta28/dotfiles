@@ -144,7 +144,10 @@ EOF
     remove_symlink "$HOME/.vimrc"
     remove_symlink "$HOME/.config/nvim/init.vim"
     remove_symlink "$HOME/.config/nvim/dpp.ts"
-    remove_symlink "$HOME/.config/herdr/config.toml"
+    local herdr_config="${HERDR_CONFIG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/herdr/config.toml}"
+    if [[ -L "$herdr_config" || -f "$herdr_config" ]]; then
+        remove_symlink "$herdr_config"
+    fi
     remove_symlink "$HOME/.config/ghostty/config.ghostty"
     
     log_success "Symlinks removal completed"

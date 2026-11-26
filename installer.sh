@@ -456,8 +456,7 @@ remove_managed_symlink "$HOME/.config/nvim/dein.toml" "$DFILE_PATH/.config/nvim/
 remove_managed_symlink "$HOME/.config/nvim/dein_lazy.toml" "$DFILE_PATH/.config/nvim/dein_lazy.toml"
 
 # Herdr 設定
-mkdir -p "$HOME/.config/herdr"
-create_symlink "$DFILE_PATH/.config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+bash "$DFILE_PATH/sync-herdr.sh"
 
 # Ghostty 設定
 mkdir -p "$HOME/.config/ghostty"

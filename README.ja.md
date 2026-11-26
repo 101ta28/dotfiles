@@ -219,7 +219,7 @@ herdr update
 herdr server reload-config
 ```
 
-インストーラーはHerdr公式スクリプトを使用して `~/.local/bin/herdr` へ導入し、`.config/herdr/config.toml` を `~/.config/herdr/config.toml` へリンクします。既存の通常ファイルは、リポジトリ内の設定と内容が一致する場合に限りシンボリックリンクへ移行します。
+インストーラーは公式スクリプトを使って Herdr を `~/.local/bin/herdr` に導入します。`installer.sh` と `update.sh` は、TUI が読み込む設定ファイルをリポジトリの `.config/herdr/config.toml` へのリンクにします。既定の配置先は `~/.config/herdr/config.toml` です。`XDG_CONFIG_HOME` で設定ディレクトリを、`HERDR_CONFIG_PATH` でファイルのパスを指定でき、後者が優先されます。既存の設定を置き換えるときは、同じディレクトリに `config.toml.~1~` などの連番で保存します。起動中の TUI に反映するには `herdr server reload-config` を実行してください。
 
 `Ctrl+Tab` で次のタブ、`Ctrl+Shift+Tab` で前のタブへ切り替えます。
 
@@ -250,13 +250,10 @@ Codex を再起動してください。チャット入力欄で `F6` を押す�
 
 #### Linux
 
-リポジトリのルートから共通設定をコピーします。GNU版の `cp --backup=numbered` により、既存ファイルは `keys.json.~1~`、`keys.json.~2~` などの名前で保存されます。`HERDR_APP_HOME` を設定している場合は、その保存先を使います。
+`installer.sh` と `update.sh` は、アプリの共通キー設定も `~/.config/herdr-app/keys.json` にコピーします。`HERDR_APP_HOME` を設定した場合は、そのディレクトリを使います。内容が異なるときは、元のファイルを同じディレクトリに `keys.json.~1~`、`keys.json.~2~` のような連番で保存します。Herdr の設定2ファイルだけを同期する場合は、リポジトリのルートで次のコマンドを実行してください。
 
 ```bash
-herdr_config_dir="${HERDR_APP_HOME:-$HOME/.config/herdr-app}"
-mkdir -p "$herdr_config_dir"
-cp --backup=numbered .config/herdr-app/keys.json "$herdr_config_dir/keys.json"
-herdr-app status
+bash sync-herdr.sh
 ```
 
 #### Windows
@@ -268,7 +265,7 @@ herdr-app status
 herdr-app status
 ```
 
-保存先を個別に指定する場合は `-ConfigDir <ディレクトリ>` を付けます。共通のキー設定を更新した後は、使う OS のコマンドを再実行してください。Herdr app の設定は `installer.sh`、`update.sh`、`uninstaller.sh` とは個別に管理します。
+保存先を個別に指定する場合は `-ConfigDir <ディレクトリ>` を付けます。Windows 版の Herdr を使う場合は、共通のキー設定を更新した後にこの PowerShell コマンドを再実行してください。Windows 版のウィンドウで WSL の端末を使う場合も同じです。
 
 Herdrは起動中でも `keys.json` を再読み込みします。`herdr-app status` でエラーの有無を確認してください。設定が不正な場合は最後に読み込めた設定が維持され、アプリの設定ディレクトリに `keys.error` が作られます。
 
