@@ -6,16 +6,16 @@ Use this reference for setup, colocated repositories, remote bookmarks, and publ
 
 For a requested clone, use `jj git clone URL DEST`. For a requested migration of an existing Git checkout, inspect its Git status and staged/unstaged changes first, then use `jj git init --colocate` in that checkout. Inspect the result with jj. Do not initialize repositories merely to inspect them with this skill.
 
-Choose colocation deliberately using `--colocate` or `--no-colocate` where supported; defaults have changed across releases. Keep an existing workspace's layout unless a change was requested.
+`jj git init` and `jj git clone` create colocated workspaces by default in 0.47.1. The `git.colocate` setting changes the default. Use `--colocate` or `--no-colocate` if the task requires a particular layout.
 
 In a colocated workspace:
 
 - Git and jj share files and the backing Git repository. jj normally imports and exports Git refs automatically; routine manual `jj git import`/`export` is unnecessary.
-- Git's HEAD/index view can differ from jj's working-copy commit. Use `jj status`, `jj diff`, and `jj log` to reason about jj work, and use jj commands for its history changes. If a Git operation is required for a Git-specific tool, inspect jj state again afterward.
-- A Git staging boundary does not separate jj's snapshot of the working copy. Preserve the distinction before a requested migration rather than assuming staged paths become a separate jj change.
+- Git HEAD normally points to the first parent of `@`. Inspect `jj diff` for the whole working-copy change and `git diff --cached` for the staged part. jj snapshots working files regardless of what was staged.
+- In 0.47.1, snapshotting and `jj describe -r @` preserve an existing Git staging selection. Changing the working-copy parent with `jj new @-` can reset it. If staged work must survive a migration or checkout, inspect and preserve the selection first.
 - Do not assume Git hooks run under jj. Run repository-required validation explicitly. Check installed-version support before relying on Git attributes, LFS, submodules, or Git worktrees; use jj workspaces for additional jj working copies.
 
-Official reference: [Git compatibility](https://docs.jj-vcs.dev/latest/git-compatibility/).
+In a non-colocated workspace, `jj git fetch` and `jj git push` update jj's remote bookmarks. Since 0.47 they leave the backing Git repository's remote-tracking refs alone. Use `jj bookmark list --all` to inspect jj's view. If a Git-only consumer needs those refs updated, `jj git export` copies jj's refs to the backing repository. [Git compatibility](https://docs.jj-vcs.dev/latest/git-compatibility/) and [release notes](https://docs.jj-vcs.dev/v0.47.1/changelog/).
 
 ## Fetch and tracking
 
@@ -23,7 +23,7 @@ Inspect `jj git remote list` and `jj bookmark list --all`. Resolve the actual re
 
 `jj git fetch --remote REMOTE` refreshes remote state and can update tracked local bookmarks or expose bookmark conflicts. It does not automatically rebase the user's feature stack. Inspect before choosing any rebase.
 
-`NAME@REMOTE` is the last observed remote position, not necessarily the current server state. For an existing remote bookmark that should be tracked, use `jj bookmark track NAME@REMOTE` after inspecting both local and remote targets. Tracking is separate from advancing a bookmark and from choosing a push remote.
+`NAME@REMOTE` records the last observed remote position. A clone tracks the remote's default bookmark. Other bookmarks fetched later normally require explicit tracking unless `remotes.<name>.auto-track-bookmarks` matches them. To follow an existing bookmark, inspect both targets, then use `jj bookmark track NAME@REMOTE`. Use `jj bookmark list --tracked` to inspect tracking and `--remote REMOTE` on the push to choose its destination.
 
 If targets conflict, inspect `jj bookmark list --all` and the competing revisions. Rebase, merge, or select a specific target according to the requested history. `jj bookmark set NAME -r REV` can resolve the target; use `--allow-backwards` only when a backward or sideways move is intended.
 
@@ -47,11 +47,13 @@ Do not add `--dry-run` as a routine prerequisite. Use it only when the user expl
 
 Avoid an unqualified push or broad `--all`/`--tracked` selection for a single-feature request. A bookmark push includes the required ancestors up to the target, even if the target's own diff is small.
 
-In jj 0.46.0, `--remote` can be repeated and accepts remote-name patterns. For a single-destination request, supply and verify one concrete remote name; do not expand it to a wildcard or rely on configured defaults.
+Both `--remote` and `--bookmark` accept glob patterns in 0.47.1. For a single target, pass its concrete name. Use the `exact:` prefix if that name contains pattern characters.
 
-New-bookmark push syntax varies by version. In the verified jj 0.46.0, explicit `--bookmark NAME` sets up tracking automatically when the bookmark is not tracking any remote yet. If it already tracks another remote, pushing to a new destination can be refused until `jj bookmark track NAME@REMOTE` explicitly establishes tracking for that intended destination. Inspect tracking and the requested destination before making that change, then retry the authorized push. Consult local help rather than blindly adding `--allow-new` from an old example.
+An explicit `--bookmark NAME` can create and track a new remote bookmark when the local bookmark tracks no remote yet. If it already tracks another remote, inspect the intended destination and use `jj bookmark track NAME@REMOTE` when tracking there is also intended. Then retry the scoped push.
 
 jj's push safety checks can permit rewriting an already published bookmark without a separate force flag when the observed remote state matches expectations. Treat the intended history rewrite as part of the authorization decision. If rejected, inspect the reason, fetch the relevant remote when appropriate, and reassess; stop if resolving the mismatch would overwrite others' work or expand the requested scope. Do not bypass conflict, private-commit, or empty-description checks merely to make publication succeed.
+
+If signing on push is configured, jj signs matching mutable commits in a separate local operation before pushing. A failed push can therefore leave signed commits with new commit IDs. Re-read the bookmark target before retrying. In 0.47.1 the setting is `revsets.git-sign-on-push`. [Signing configuration](https://docs.jj-vcs.dev/latest/config/#automatically-signing-commits).
 
 ## GitHub pull requests
 
