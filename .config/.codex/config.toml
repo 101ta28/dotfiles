@@ -1,0 +1,2 @@
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "permissions", "approval-mode", "thread-name"]
