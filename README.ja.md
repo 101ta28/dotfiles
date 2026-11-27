@@ -194,7 +194,9 @@ pnpm --version
 
 ### Jujutsu
 
-[公式のインストール・設定手順](https://docs.jj-vcs.dev/latest/install-and-setup/)に従い、Rustの導入後に `cargo binstall --strategies crate-meta-data jj-cli --no-confirm` を実行します。cargo-binstallがなければ、先に `cargo install cargo-binstall --locked` で導入します。`update.sh` の実行時も、既存の `jj` はそのまま使います。
+`jj` が未導入の場合、インストーラーは `cargo binstall --strategies crate-meta-data jj-cli --no-confirm` で導入します。cargo-binstall が必要な場合は、先に `cargo install cargo-binstall --locked` で導入します。[Jujutsu 公式のインストール手順](https://docs.jj-vcs.dev/latest/install-and-setup/)
+
+`update.sh` は実行のたびに、`PATH` で選ばれた `jj` を確認します。その実行ファイルが crates.io の安定版 `jj-cli` として Cargo に登録されていれば、cargo-binstall が新版を確認し、同じインストール先に更新します。OS のパッケージ、手動配置のバイナリ、Git やローカルソースからのビルドは、それぞれの方法で更新します。インストーラーを直接実行した場合は、既定で導入済みの `jj` を引き続き使います。
 
 `.config/jj/config.toml.template` は `jj config path --user` が返すパスへコピーします。通常は `~/.config/jj/config.toml` で、`XDG_CONFIG_HOME` にも対応します。既存の設定や複数のパスを使う設定は保持します。個人設定は `jj config set --user` で編集し、リポジトリへのシンボリックリンクにはしません。
 

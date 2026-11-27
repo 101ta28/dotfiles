@@ -194,7 +194,9 @@ pnpm --version
 
 ### Jujutsu
 
-Following the [official installation and setup guide](https://docs.jj-vcs.dev/latest/install-and-setup/), the installer runs `cargo binstall --strategies crate-meta-data jj-cli --no-confirm` after Rust is available. It first installs a missing cargo-binstall with `cargo install cargo-binstall --locked`. An existing `jj` installation is preserved, including when running `update.sh`.
+The installer uses `cargo binstall --strategies crate-meta-data jj-cli --no-confirm` to install a missing `jj`. It installs cargo-binstall with `cargo install cargo-binstall --locked` when needed. [Official installation guide](https://docs.jj-vcs.dev/latest/install-and-setup/)
+
+Each time you run `update.sh`, it checks the `jj` selected by your `PATH`. If Cargo lists that executable as a stable crates.io release of `jj-cli`, cargo-binstall checks for a newer release and installs it in the same Cargo root. System packages, manually installed binaries, and Git or path builds keep their own update method. Running the installer directly keeps an existing `jj` by default.
 
 The installer copies `.config/jj/config.toml.template` to the path returned by `jj config path --user` (normally `~/.config/jj/config.toml`, respecting `XDG_CONFIG_HOME`). Existing configurations and configurations with multiple paths are preserved. Personal settings are edited with `jj config set --user` and are not linked back to the repository.
 

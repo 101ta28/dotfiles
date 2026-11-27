@@ -27,6 +27,7 @@ Fast-forward the current dotfiles checkout and reapply its configuration.
 The update stops without changing files when the checkout has local changes.
 Colocated Jujutsu workspaces fetch with jj and advance an empty working copy
 to trunk() only when its parent can be fast-forwarded.
+After updating the checkout, refresh the active Cargo-installed Jujutsu release.
 
 Options:
   --gpu     Install or refresh optional GPU/CUDA tooling and enable CUDA shell paths
@@ -132,7 +133,7 @@ if [ ! -x "$DFILE_PATH/installer.sh" ]; then
   exit 1
 fi
 
-installer_args=(--dotfiles-dir "$DFILE_PATH")
+installer_args=(--dotfiles-dir "$DFILE_PATH" --update-jj)
 if [ "$INSTALL_GPU" = true ]; then
   installer_args+=(--gpu)
 fi

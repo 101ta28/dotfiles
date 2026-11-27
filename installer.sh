@@ -93,16 +93,34 @@ command_exists() {
 # Jujutsu本体と、個人用にコピーする初期設定を用意する
 install_jujutsu() {
   local template="$DFILE_PATH/.config/jj/config.toml.template"
-  local config_path
+  local config_path bin_dir cargo_root installed_crates
+  local root_args=()
 
-  if ! command_exists "jj"; then
+  # Inspect the jj selected by the caller, before provisioning changed PATH.
+  if [[ -n "${1:-}" ]]; then
+    bin_dir="$(cd -P -- "$(dirname -- "$1")" && pwd)" || return $?
+    cargo_root="${bin_dir%/bin}"
+    if [[ "$bin_dir" == */bin && -f "$cargo_root/.crates.toml" ]]; then
+      installed_crates="$(cargo install --list --root "$cargo_root")" || return $?
+      # Only stable crates.io releases have this header. The indented lines list their binaries.
+      if awk '
+        /^[^[:space:]]/ { release = ($0 ~ /^jj-cli v[0-9]+\.[0-9]+\.[0-9]+:$/) }
+        release && $1 == "jj" { found = 1 }
+        END { exit !found }
+      ' <<< "$installed_crates"; then
+        root_args=(--root "$cargo_root")
+      fi
+    fi
+  fi
+
+  if ! command_exists "jj" || (( ${#root_args[@]} )); then
     if ! command_exists "cargo-binstall"; then
       log_info "Installing cargo-binstall..."
-      cargo install cargo-binstall --locked
+      cargo install cargo-binstall --locked || return $?
     fi
-    log_info "Installing Jujutsu..."
-    cargo binstall --strategies crate-meta-data jj-cli --no-confirm
-    log_success "Jujutsu installed"
+    log_info "Checking for the latest Jujutsu release..."
+    cargo binstall --strategies crate-meta-data "${root_args[@]}" jj-cli --no-confirm || return $?
+    log_success "Jujutsu is up to date"
   else
     log_info "Jujutsu already installed"
   fi
@@ -367,12 +385,17 @@ install_browser_tools() {
 # オプション解析
 # =============================================================================
 INSTALL_GPU=false
+JJ_UPDATE_PATH=""
 
 # 引数解析
 while [[ $# -gt 0 ]]; do
   case $1 in
     --gpu)
       INSTALL_GPU=true
+      shift
+      ;;
+    --update-jj)
+      JJ_UPDATE_PATH="$(type -P jj || true)"
       shift
       ;;
     --dotfiles-dir)
@@ -387,6 +410,7 @@ while [[ $# -gt 0 ]]; do
       echo "Usage: $0 [OPTIONS]"
       echo "Options:"
       echo "  --gpu     Install GPU/CUDA development tools and enable CUDA shell paths"
+      echo "  --update-jj  Update the active Cargo-installed Jujutsu release (used by update.sh)"
       echo "  --dotfiles-dir PATH"
       echo "            Use an existing dotfiles checkout (used by update.sh)"
       echo "  --help    Show this help message"
@@ -551,7 +575,7 @@ install_via_curl "Rust" "https://sh.rustup.rs" "rustc" "-y"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Jujutsu
-install_jujutsu
+install_jujutsu "$JJ_UPDATE_PATH"
 
 # GitHub CLI
 if ! command_exists "gh"; then
