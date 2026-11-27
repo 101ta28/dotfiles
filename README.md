@@ -286,7 +286,7 @@ The installer also links `.config/ghostty/config.ghostty` to `~/.config/ghostty/
 
 Global instructions hold shared communication and work boundaries. Detailed Japanese prose guidance lives in `japanese-tech-writing`; `cognitive-rhythm-writing` handles reading rhythm when needed. `frontend-design` covers visible UI work, and `grilling` covers requested interviews to challenge a plan. Keep skill descriptions specific to these tasks, and load additional guidance only when relevant.
 
-`frontend-design` preserves the existing design system while guiding choices about color, spacing, typography, product visuals, and motion. It includes reviewing rendered views and fixing the most consequential issues within scope.
+`frontend-design` preserves the existing design system. For a new screen, it uses the user's primary task to decide which product content to emphasize. For an existing screen, it identifies where the design makes that task harder, then checks the fix at compact and wide widths using the same content and state.
 
 When used together, `hallmark` supplies visual direction and `frontend-design` covers implementation, accessibility, and checks on the rendered interface. Both follow the brief and the existing design system. Hallmark uses Inspo when it was selected to build the page and uses Together AI for design comps only when generation is authorized for the task and the key is available.
 
