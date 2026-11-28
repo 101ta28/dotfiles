@@ -151,12 +151,14 @@ printf 'PASS: absent and empty manifests\n'
 
 # Codex configuration remains independent of skill restoration.
 mkdir -p "$DFILE_PATH/.config/.codex/rules" "$HOME/.codex/rules"
+cp -R "$repo_dir/.config/.codex/bin" "$DFILE_PATH/.config/.codex/"
 printf 'instructions\n' > "$DFILE_PATH/.config/.codex/AGENTS.md"
 printf 'managed rule\n' > "$DFILE_PATH/.config/.codex/rules/managed.rules"
 printf '.codex/retired.md\n' > "$DFILE_PATH/.config/.codex/obsolete-paths.txt"
 printf 'obsolete\n' > "$HOME/.codex/retired.md"
 printf 'approval\n' > "$HOME/.codex/rules/default.rules"
 sync_codex_config > "$test_root/codex-sync.log"
+[ ! -e "$HOME/.codex/config.toml" ]
 cmp "$DFILE_PATH/.config/.codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
 cmp "$DFILE_PATH/.config/.codex/rules/managed.rules" "$HOME/.codex/rules/managed.rules"
 [ "$(cat "$HOME/.codex/rules/default.rules")" = approval ]

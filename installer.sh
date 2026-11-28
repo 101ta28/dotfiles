@@ -263,7 +263,7 @@ sync_agent_skills() {
   fi
 }
 
-# このリポジトリで管理するCodex指示書と実行ルールをユーザー領域へ同期する
+# このリポジトリで管理するCodex設定・指示書・実行ルールをユーザー領域へ同期する
 sync_codex_config() {
   local codex_source="$DFILE_PATH/.config/.codex"
   local obsolete_manifest="$codex_source/obsolete-paths.txt"
@@ -277,8 +277,13 @@ sync_codex_config() {
     return
   fi
 
-  log_info "Syncing Codex instructions and rules..."
+  log_info "Syncing Codex configuration, instructions and rules..."
   mkdir -p "$HOME/.codex/rules"
+
+  if [ -f "$codex_source/config.toml" ]; then
+    uv run --script "$DFILE_PATH/sync-codex-config.py" \
+      "$codex_source/config.toml" "$HOME/.codex/config.toml" || return $?
+  fi
 
   if [ -f "$obsolete_manifest" ]; then
     while read -r obsolete_path extra || [ -n "${obsolete_path:-}" ]; do
@@ -328,7 +333,7 @@ sync_codex_config() {
     cp "$rule_file" "$HOME/.codex/rules/"
   done
 
-  log_success "Codex instructions and rules updated"
+  log_success "Codex configuration, instructions and rules updated"
 }
 
 # curlでインストールする汎用関数（第5引数でシェルを指定可）
@@ -566,6 +571,9 @@ fi
 # Browser tools (including Linux browser dependencies)
 install_browser_tools
 
+# uv runs the TOML merge with the version of tomlkit declared in the script.
+install_via_curl "uv" "https://astral.sh/uv/install.sh" "uv"
+
 # Codex configuration and Agent Skills
 sync_codex_config
 sync_agent_skills
@@ -627,9 +635,6 @@ if command_exists "bun"; then
 else
   log_warn "Bun not found, skipping Codex CLI installation"
 fi
-
-# uv
-install_via_curl "uv" "https://astral.sh/uv/install.sh" "uv"
 
 # Herdr
 install_via_curl "Herdr" "https://herdr.dev/install.sh" "herdr"

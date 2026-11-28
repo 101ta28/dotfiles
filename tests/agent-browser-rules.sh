@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# docker run --rm --network none -v "$PWD:/repo:ro" ubuntu:24.04 bash /repo/tests/agent-browser-rules.sh
+# Run in a fresh Ubuntu container with uv and Python 3.9+ installed.
 set -euo pipefail
 
 if [[ ! -f /.dockerenv || -e "$HOME/.codex" ]]; then

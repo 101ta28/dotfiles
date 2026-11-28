@@ -100,7 +100,7 @@ JujutsuとGitを併用するcheckoutでは、`jj git fetch` で取得し、設�
 - `.config/agents/skills.txt` - `~/.agents/skills/` へ復元する外部・ローカルの全Agent Skills一覧
 - `.config/agents/skills/` - ローカルスキルと外部スキルへの上書きファイル
 - `AGENTS.md` - このリポジトリのコントリビューターガイド
-- `.config/.codex/` - `~/.codex/` へ同期されるCodex向け指示書と実行ポリシールール。削除済みの管理対象は `obsolete-paths.txt` に従って除去されます
+- `.config/.codex/` - `~/.codex/` へ同期する Codex の設定、指示書、実行ポリシールール。同期時に削除する古いファイルは `obsolete-paths.txt` に記載されています
 - `.zshrc` - Prezto使用のZshシェル設定
 - `.zshrc.gpu` - `--gpu` を指定してインストール・更新した場合だけリンクするCUDAのパス設定
 
@@ -172,7 +172,9 @@ codex --version
 nvim ~/.codex/AGENTS.md
 ```
 
-`installer.sh` と `update.sh` は `.config/.codex/rules/*.rules` を `~/.codex/rules/` へコピーします。同名ファイルは更新し、それ以外のルールファイルは保持します。ローカルで保存した承認を含む `default.rules` も保持されます。同期後は Codex を再起動してルールを読み込んでください。
+`installer.sh` と `update.sh` は、`.config/.codex/config.toml` にある項目を `~/.codex/config.toml` に反映します。初回は `uv` が TOML ライブラリの `tomlkit` を取得します。現在の同期対象は `tui.status_line` です。更新するたびに、権限と承認モードを含む表示項目の一覧を適用します。キー割り当てなどの個人設定は保持します。
+
+両スクリプトは `.config/.codex/rules/*.rules` を `~/.codex/rules/` へコピーします。同名ファイルは更新し、それ以外のルールファイルは保持します。ローカルで保存した承認を含む `default.rules` も保持されます。同期後は Codex を再起動して設定とルールを読み込んでください。
 
 管理対象の `jj.rules` は、[公式の Git 承認設定例](https://learn.chatgpt.com/docs/enterprise/security-cookbook#require-approval-for-sensitive-commands)の区分を参考にしています。`jj status`・`jj log`・`jj diff` などの閲覧はサンドボックス外での実行を許可し、コミット、履歴変更（`restore`・`abandon`・`rebase` など）、リモート操作（`git fetch`・`git push`）、設定変更、外部コマンドの実行は確認対象にします。ブックマークや操作履歴も、閲覧は許可し、変更は確認対象です。Jujutsu は閲覧時にも作業コピーをスナップショットすることがあるため、避けたい場合は `--ignore-working-copy` を使ってください。
 
