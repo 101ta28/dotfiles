@@ -184,6 +184,8 @@ nvim ~/.codex/AGENTS.md
 
 管理対象の `herdr-app.rules` は、`hc`・`herdr-app`・`herdr-app.exe` の全サブコマンドを許可します。端末でのコマンド実行やアプリの変更操作も含みます。このルールだけを同期する場合は `cp .config/.codex/rules/herdr-app.rules ~/.codex/rules/herdr-app.rules` を実行し、Codex を再起動します。
 
+Codex は Herdr コマンドを単独で実行し、返ってきた出力から必要な項目を取り出します。たとえば、端末の作業ディレクトリは `hc get <id>` が返す JSON の `foreground.cwd` で確認します。`hc get <id> | jq .foreground.cwd` のようにパイプでつなぐと、Codex は `jq` を個別に判定するため、承認を求めることがあります。
+
 ### pnpm
 
 nvmで管理するNode.js LTSの導入後、npmを使ってpnpm 11をグローバルインストールします。WSLではWindowsのPATHから継承されたpnpmを無視し、Linux版を導入します。次のコマンドで確認できます：

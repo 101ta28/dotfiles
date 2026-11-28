@@ -184,6 +184,8 @@ Codex requests approval for direct `agent-browser` commands, including clicks, f
 
 The managed `herdr-app.rules` allows all subcommands of `hc`, `herdr-app`, and `herdr-app.exe`, including terminal execution and app changes. To sync only this rule, run `cp .config/.codex/rules/herdr-app.rules ~/.codex/rules/herdr-app.rules`, then restart Codex.
 
+Codex runs Herdr commands directly and filters the returned output. For example, it reads `foreground.cwd` from the JSON returned by `hc get <id>`. In a pipeline such as `hc get <id> | jq .foreground.cwd`, Codex evaluates `jq` separately and may request approval.
+
 ### pnpm
 
 pnpm 11 is installed globally through npm after the NVM-managed Node.js LTS installation. On WSL, a pnpm executable inherited from the Windows PATH is ignored so that a native Linux installation is used. Verify it with:
